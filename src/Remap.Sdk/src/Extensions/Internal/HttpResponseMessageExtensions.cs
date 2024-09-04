@@ -67,9 +67,10 @@ namespace System.Net.Http
         /// <param name="response">The <see cref="HttpResponseMessage"/>.</param>
         /// <param name="message">The exception message.</param>
         /// <param name="settings">The <see cref="JsonSerializerSettings"/>.</param>
-        /// <returns></returns>
+        /// <param name="innerException">The inner exception.</param>
+        /// <returns>The <see cref="Task"/> containing the instance of <see cref="ApiException"/> type.</returns>
         /// <exception cref="ArgumentNullException">Throws if <paramref name="response"/> is null.</exception>
-        public static async Task<ApiException> ToApiExceptionAsync(this HttpResponseMessage response, string message, JsonSerializerSettings settings = null)
+        public static async Task<ApiException> ToApiExceptionAsync(this HttpResponseMessage response, string message, JsonSerializerSettings settings = null, Exception innerException = null)
         {
             if (response == null)
                 throw new ArgumentNullException(nameof(response));
@@ -77,7 +78,9 @@ namespace System.Net.Http
             var errorMessage = new StringBuilder();
             var status = (int)response.StatusCode;
 
-            errorMessage.AppendLine($"{message} HTTP status code - {status}.");
+            errorMessage
+                .AppendFormat("{0} HTTP status code - {1}.", message, status.ToString())
+                .AppendLine();
 
             var errorsResponse = await response
                 .DeserializeAsync(typeof(ApiErrorsResponse), settings)
@@ -86,14 +89,43 @@ namespace System.Net.Http
             {
                 for (var i = 0; i < errorsResponse.Errors.Length; i++)
                 {
-                    errorMessage.AppendLine($"\tError {i}:");
-                    errorMessage.AppendLine($"\t\tCode: {errorsResponse.Errors[i].Code}");
-                    errorMessage.AppendLine($"\t\tDescription: {errorsResponse.Errors[i].Error}");
-                    errorMessage.Append($"\t\tMore info: {errorsResponse.Errors[i].MoreInfo}{(i == errorsResponse.Errors.Length - 1 ? string.Empty : Environment.NewLine)}");
+                    errorMessage
+                        .AppendFormat("\tError {0}:", i.ToString())
+                        .AppendLine();
+
+                    if (errorsResponse.Errors[i].Code.HasValue)
+                    {
+                        errorMessage
+                            .AppendFormat("\t\tCode: {0}:", errorsResponse.Errors[i].Code.ToString())
+                            .AppendLine();
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(errorsResponse.Errors[i].Error))
+                    {
+                        errorMessage
+                            .AppendFormat("\t\tDescription: {0}:", errorsResponse.Errors[i].Error)
+                            .AppendLine();
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(errorsResponse.Errors[i].MoreInfo))
+                    {
+                        errorMessage
+                            .AppendFormat("\t\tMore info: {0}:", errorsResponse.Errors[i].MoreInfo)
+                            .AppendLine();
+                    }
+
+                    if (i != errorsResponse.Errors.Length - 1)
+                        errorMessage.AppendLine();
                 }
             }
 
-            return new ApiException(status, errorMessage.ToString(), response.Headers.ToDictionary(), errorsResponse?.Errors);
+            return new ApiException(
+                status,
+                errorMessage.ToString(),
+                response.Headers.ToDictionary(),
+                errorsResponse?.Errors,
+                innerException
+            );
         }
 
         #endregion Methods

@@ -204,13 +204,13 @@ namespace Confiti.MoySklad.Remap.Client
                 }
                 catch (HttpRequestException e)
                 {
+                    var errorMessage = $"Error when calling '{GetType().Name}.{callerName}'.";
+
                     using (response)
                     {
-                        var errorMessage = $"Error when calling '{GetType().Name}.{callerName}'.";
-
                         throw response != null
                             ? await response
-                                .ToApiExceptionAsync(errorMessage, _defaultReadSettings)
+                                .ToApiExceptionAsync(errorMessage, _defaultReadSettings, e)
                                 .ConfigureAwait(false)
                             : new ApiException(errorMessage, e);
                     }

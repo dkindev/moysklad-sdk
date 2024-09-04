@@ -15,7 +15,7 @@ namespace System.Net.Http.Headers
         /// </summary>
         /// <param name="headers">The headers.</param>
         /// <returns>The <see cref="IDictionary{Name, Value}"/>.</returns>
-        public static IDictionary<string, string> ToDictionary(this HttpResponseHeaders headers)
+        public static Dictionary<string, string> ToDictionary(this HttpResponseHeaders headers)
         {
             return headers?.ToDictionary(nameValues => nameValues.Key, nameValues => string.Join(", ", nameValues.Value));
         }
