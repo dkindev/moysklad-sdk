@@ -1,8 +1,11 @@
+﻿using System;
+
 namespace Confiti.MoySklad.Remap.Client
 {
     /// <summary>
     /// Represents a API error.
     /// </summary>
+    [Serializable]
     public sealed class ApiError
     {
         #region Properties

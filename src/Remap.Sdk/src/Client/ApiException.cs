@@ -12,6 +12,16 @@ namespace Confiti.MoySklad.Remap.Client
     public sealed class ApiException : Exception, ISerializable
     {
         private const string C_ERROR_CODE = "ErrorCode";
+        private const string C_ERRORS = "Errors";
+        private const string C_HEADERS = "Headers";
+
+        #region Fields
+
+        private readonly int _errorCode;
+        private readonly ApiError[] _errors;
+        private readonly Dictionary<string, string> _headers;
+
+        #endregion Fields
 
         #region Properties
 
@@ -19,29 +29,23 @@ namespace Confiti.MoySklad.Remap.Client
         /// Gets the error code (HTTP status code).
         /// </summary>
         /// <value>The error code (HTTP status code).</value>
-        public int ErrorCode { get; }
+        public int ErrorCode => _errorCode;
 
         /// <summary>
         /// Gets the errors.
         /// </summary>
         /// <value>The errors.</value>
-        public ApiError[] Errors { get; }
+        public ApiError[] Errors => _errors;
 
         /// <summary>
         /// Gets the HTTP headers.
         /// </summary>
         /// <value>The HTTP headers</value>
-        public IDictionary<string, string> Headers { get; }
+        public Dictionary<string, string> Headers => _headers;
 
         #endregion Properties
 
         #region Ctor
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ApiException"/> class.
-        /// </summary>
-        public ApiException()
-        { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiException"/> class.
@@ -59,12 +63,13 @@ namespace Confiti.MoySklad.Remap.Client
         /// <param name="message">The error message.</param>
         /// <param name="headers">The HTTP headers.</param>
         /// <param name="errors">The errors.</param>
-        public ApiException(int errorCode, string message, IDictionary<string, string> headers, ApiError[] errors)
-            : base(message)
+        /// <param name="innerException">The inner exception.</param>
+        public ApiException(int errorCode, string message, Dictionary<string, string> headers, ApiError[] errors, Exception innerException = null)
+            : base(message, innerException)
         {
-            ErrorCode = errorCode;
-            Headers = headers;
-            Errors = errors;
+            _errorCode = errorCode;
+            _headers = headers;
+            _errors = errors;
         }
 
         /// <summary>
@@ -75,14 +80,16 @@ namespace Confiti.MoySklad.Remap.Client
         public ApiException(int errorCode, string message)
             : base(message)
         {
-            ErrorCode = errorCode;
+            _errorCode = errorCode;
         }
 
         [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.SerializationFormatter)]
         private ApiException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
-            ErrorCode = (int)info.GetValue(C_ERROR_CODE, typeof(int));
+            _errorCode = (int)info.GetValue(C_ERROR_CODE, typeof(int));
+            _headers = (Dictionary<string, string>)info.GetValue(C_HEADERS, typeof(Dictionary<string, string>));
+            _errors = (ApiError[])info.GetValue(C_ERRORS, typeof(ApiError[]));
         }
 
         #endregion Ctor
@@ -93,7 +100,14 @@ namespace Confiti.MoySklad.Remap.Client
         [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.SerializationFormatter)]
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue(C_ERROR_CODE, ErrorCode);
+            info.AddValue(C_ERROR_CODE, _errorCode);
+
+            if (_headers != null)
+                info.AddValue(C_HEADERS, _headers);
+
+            if (_errors != null)
+                info.AddValue(C_ERRORS, _errors);
+
             base.GetObjectData(info, context);
         }
 
