@@ -13,7 +13,7 @@ namespace Confiti.MoySklad.Remap.Api
     {
         #region Fields
 
-        private readonly ConcurrentDictionary<Type, ApiAccessor> _apiAccessors;
+        private readonly ConcurrentDictionary<RuntimeTypeHandle, ApiAccessor> _apiAccessors;
         private HttpClient _client;
         private MoySkladCredentials _credentials;
 
@@ -235,7 +235,7 @@ namespace Confiti.MoySklad.Remap.Api
         public MoySkladApi(MoySkladCredentials credentials = null, HttpClient httpClient = null)
         {
             _credentials = credentials;
-            _apiAccessors = new ConcurrentDictionary<Type, ApiAccessor>();
+            _apiAccessors = new ConcurrentDictionary<RuntimeTypeHandle, ApiAccessor>();
 
             if (httpClient != null)
                 _client = httpClient;
@@ -256,16 +256,10 @@ namespace Confiti.MoySklad.Remap.Api
 
         private TApi GetApi<TApi>() where TApi : ApiAccessor
         {
-            var apiType = typeof(TApi);
-
-            if (!_apiAccessors.TryGetValue(apiType, out var api))
-            {
-                api = (ApiAccessor)Activator.CreateInstance(apiType, _client, _credentials);
-
-                _apiAccessors[apiType] = api;
-            }
-
-            return (TApi)api;
+            return (TApi)_apiAccessors.GetOrAdd(
+                typeof(TApi).TypeHandle,
+                typeHandle => (ApiAccessor)Activator.CreateInstance(Type.GetTypeFromHandle(typeHandle), _client, _credentials)
+            );
         }
 
         #endregion Utilities
