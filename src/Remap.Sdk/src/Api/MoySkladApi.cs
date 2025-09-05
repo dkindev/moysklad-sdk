@@ -9,13 +9,15 @@ namespace Confiti.MoySklad.Remap.Api
     /// <summary>
     /// Represents the API to interact with the MoySklad endpoints.
     /// </summary>
-    public class MoySkladApi
+    public class MoySkladApi : IDisposable
     {
         #region Fields
 
         private readonly ConcurrentDictionary<RuntimeTypeHandle, ApiAccessor> _apiAccessors;
         private HttpClient _client;
         private MoySkladCredentials _credentials;
+        private bool _isDisposed;
+        private bool _useCustomHttpClient = false;
 
         #endregion Fields
 
@@ -36,9 +38,24 @@ namespace Confiti.MoySklad.Remap.Api
         /// </summary>
         public HttpClient Client
         {
-            get => _client;
+            get
+            {
+                if (_isDisposed)
+                    throw new ObjectDisposedException(nameof(MoySkladApi));
+
+                return _client;
+            }
             set
             {
+                if (_isDisposed)
+                    throw new ObjectDisposedException(nameof(MoySkladApi));
+
+                if (!_useCustomHttpClient)
+                {
+                    DisposeDefaultHttpClient();
+                    _useCustomHttpClient = true;
+                }
+
                 _client = value;
 
                 foreach (var api in _apiAccessors.Values)
@@ -64,9 +81,18 @@ namespace Confiti.MoySklad.Remap.Api
         /// </summary>
         public MoySkladCredentials Credentials
         {
-            get => _credentials;
+            get
+            {
+                if (_isDisposed)
+                    throw new ObjectDisposedException(nameof(MoySkladApi));
+
+                return _credentials;
+            }
             set
             {
+                if (_isDisposed)
+                    throw new ObjectDisposedException(nameof(MoySkladApi));
+
                 _credentials = value;
 
                 foreach (var api in _apiAccessors.Values)
@@ -231,31 +257,64 @@ namespace Confiti.MoySklad.Remap.Api
         /// with MoySklad credentials (optional) and the HTTP client (use defaults if not specified).
         /// </summary>
         /// <param name="credentials">The MoySklad credentials.</param>
-        /// <param name="httpClient">The HTTP client.</param>
+        /// <param name="httpClient">The HTTP client (if specified, then the HTTP client should be disposed manually).</param>
         public MoySkladApi(MoySkladCredentials credentials = null, HttpClient httpClient = null)
         {
             _credentials = credentials;
             _apiAccessors = new ConcurrentDictionary<RuntimeTypeHandle, ApiAccessor>();
-
-            if (httpClient != null)
-                _client = httpClient;
-            else
-            {
-                var httpClientHandler = new HttpClientHandler()
-                {
-                    AutomaticDecompression = DecompressionMethods.GZip
-                };
-
-                _client = new HttpClient(httpClientHandler);
-            }
+            _useCustomHttpClient = httpClient != null;
+            _client = httpClient ??
+                new HttpClient(
+                    new HttpClientHandler()
+                    {
+                        AutomaticDecompression = DecompressionMethods.GZip
+                    },
+                    true
+                );
         }
 
         #endregion Ctor
 
+        #region Methods
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting
+        /// unmanaged resources.
+        /// </summary>
+        /// <param name="disposing">A value indicating whether to the managed resources must be disposed.</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_isDisposed)
+            {
+                _isDisposed = true;
+
+                if (disposing && !_useCustomHttpClient)
+                    DisposeDefaultHttpClient();
+            }
+        }
+
+        #endregion Methods
+
         #region Utilities
+
+        private void DisposeDefaultHttpClient()
+        {
+            _client?.Dispose();
+            _client = null;
+        }
 
         private TApi GetApi<TApi>() where TApi : ApiAccessor
         {
+            if (_isDisposed)
+                throw new ObjectDisposedException(nameof(MoySkladApi));
+
             return (TApi)_apiAccessors.GetOrAdd(
                 typeof(TApi).TypeHandle,
                 typeHandle => (ApiAccessor)Activator.CreateInstance(Type.GetTypeFromHandle(typeHandle), _client, _credentials)
