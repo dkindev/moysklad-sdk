@@ -6,10 +6,10 @@
     <Version>0.21.1</Version>
     <Authors>Dmitry Kiselev</Authors>
     <PackageTags>moysklad;moysklad-sdk;moysklad-client</PackageTags>
-    <PackageProjectUrl>https://github.com/holydk/moysklad-sdk</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/dkindev/moysklad-sdk</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageReleaseNotes>https://github.com/holydk/moysklad-sdk/releases</PackageReleaseNotes>
-    <RepositoryUrl>https://github.com/holydk/moysklad-sdk</RepositoryUrl>
+    <PackageReleaseNotes>https://github.com/dkindev/moysklad-sdk/releases</PackageReleaseNotes>
+    <RepositoryUrl>https://github.com/dkindev/moysklad-sdk</RepositoryUrl>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
