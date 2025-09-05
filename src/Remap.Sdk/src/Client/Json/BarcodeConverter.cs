@@ -10,22 +10,6 @@ namespace Confiti.MoySklad.Remap.Client.Json
     /// </summary>
     public class BarcodeConverter : JsonConverter<Barcode>
     {
-        #region Fields
-
-        private bool _canWrite = true;
-
-        #endregion Fields
-
-        #region Properties
-
-        /// <summary>
-        /// Gets a value indicating whether this <see cref="JsonConverter"/> can write JSON.
-        /// </summary>
-        /// <value><c>true</c> if this <see cref="JsonConverter"/> can write JSON; otherwise, <c>false</c>.</value>
-        public override bool CanWrite => _canWrite;
-
-        #endregion Properties
-
         #region Methods
 
         /// <summary>
@@ -59,25 +43,23 @@ namespace Confiti.MoySklad.Remap.Client.Json
         /// <param name="serializer">The calling serializer.</param>
         public override void WriteJson(JsonWriter writer, Barcode value, JsonSerializer serializer)
         {
-            if (value != null)
+            if (value == null)
             {
-                _canWrite = false;
-                var t = JObject.FromObject(value, serializer);
-                _canWrite = true;
-
-                if (t.HasValues)
-                {
-                    writer.WriteStartObject();
-                    writer.WritePropertyName(((t.First as JProperty).Value as JValue).Value.ToString());
-
-                    if (t.Count == 1)
-                        writer.WriteNull();
-                    else
-                        serializer.Serialize(writer, ((t.Last as JProperty).Value as JValue).Value);
-
-                    writer.WriteEndObject();
-                }
+                writer.WriteNull();
+                return;
             }
+
+            var barcodeType = JValue.FromObject(value.Type, serializer) as JValue;
+
+            writer.WriteStartObject();
+            writer.WritePropertyName(barcodeType.Value.ToString());
+
+            if (string.IsNullOrEmpty(value.Value))
+                writer.WriteNull();
+            else
+                serializer.Serialize(writer, value.Value);
+
+            writer.WriteEndObject();
         }
 
         #endregion Methods
