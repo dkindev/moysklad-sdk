@@ -38,7 +38,7 @@ namespace Confiti.MoySklad.Remap.Api
         /// <param name="image">The image to download.</param>
         /// <param name="imageType">The image type.</param>
         /// <returns>The <see cref="Task"/> containing the API response with image data.</returns>
-        public virtual Task<ApiResponse<Stream>> DownloadAsync(Image image, ImageType imageType = ImageType.Normal)
+        public virtual async Task<ApiResponse<Stream>> DownloadAsync(Image image, ImageType imageType = ImageType.Normal)
         {
             if (image == null)
                 throw new ArgumentNullException(nameof(image));
@@ -46,7 +46,7 @@ namespace Confiti.MoySklad.Remap.Api
             var downloadHref = image.GetDownloadHref(imageType);
             var requestContext = new RequestContext(downloadHref);
 
-            return CallAsync<Stream>(requestContext);
+            return await CallAsync<Stream>(requestContext).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -57,12 +57,7 @@ namespace Confiti.MoySklad.Remap.Api
         /// <returns>The <see cref="Task"/> containing the API response with the list of <see cref="Image"/>.</returns>
         public virtual Task<ApiResponse<EntitiesResponse<Image>>> GetAllAsync(Guid entityId, ApiParameterBuilder<Image> query = null)
         {
-            var requestContext = new RequestContext($"{Path}/{entityId}/images");
-
-            if (query != null)
-                requestContext.WithQuery(query.Build());
-
-            return CallAsync<EntitiesResponse<Image>>(requestContext);
+            return CallAsync<EntitiesResponse<Image>>(new RequestContext($"{Path}/{entityId}/images").WithQuery(query));
         }
 
         #endregion Methods

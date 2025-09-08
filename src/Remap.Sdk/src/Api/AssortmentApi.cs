@@ -35,12 +35,7 @@ namespace Confiti.MoySklad.Remap.Api
         /// <returns>The <see cref="Task"/> containing the API response with the list of <see cref="Assortment"/>.</returns>
         public virtual Task<ApiResponse<EntitiesResponse<Assortment>>> GetAllAsync(AssortmentApiParameterBuilder query = null)
         {
-            var requestContext = new RequestContext();
-
-            if (query != null)
-                requestContext.WithQuery(query.Build());
-
-            return CallAsync<EntitiesResponse<Assortment>>(requestContext);
+            return CallAsync<EntitiesResponse<Assortment>>(new RequestContext().WithQuery(query));
         }
 
         #endregion Methods

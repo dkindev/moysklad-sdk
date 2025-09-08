@@ -71,12 +71,7 @@ namespace Confiti.MoySklad.Remap.Api
         /// <returns>The <see cref="Task"/> containing the API response with metadata.</returns>
         public virtual Task<ApiResponse<TResponse>> GetAsync(ApiParameterBuilder<TQuery> query)
         {
-            var requestContext = new RequestContext();
-
-            if (query != null)
-                requestContext.WithQuery(query.Build());
-
-            return CallAsync<TResponse>(requestContext);
+            return CallAsync<TResponse>(new RequestContext().WithQuery(query));
         }
 
         #endregion Methods

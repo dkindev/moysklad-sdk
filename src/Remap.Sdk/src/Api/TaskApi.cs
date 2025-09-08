@@ -33,15 +33,12 @@ namespace Confiti.MoySklad.Remap.Api
         /// <param name="taskId">The <see cref="TaskEntity"/> ID.</param>
         /// <param name="taskNote">The <see cref="TaskNote"/> to create.</param>
         /// <returns>The <see cref="Task"/> containing the API response with the created <see cref="TaskNote"/>.</returns>
-        public virtual Task<ApiResponse<TaskNote>> CreateNoteAsync(Guid taskId, TaskNote taskNote)
+        public virtual async Task<ApiResponse<TaskNote>> CreateNoteAsync(Guid taskId, TaskNote taskNote)
         {
             if (taskNote == null)
                 throw new ArgumentNullException(nameof(taskNote));
 
-            var requestContext = new RequestContext($"{Path}/{taskId}/notes", HttpMethod.Post)
-                .WithBody(taskNote);
-
-            return CallAsync<TaskNote>(requestContext);
+            return await CallAsync<TaskNote>(new RequestContext($"{Path}/{taskId}/notes", HttpMethod.Post).WithBody(taskNote)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -52,9 +49,7 @@ namespace Confiti.MoySklad.Remap.Api
         /// <returns>The <see cref="Task"/> containing the API response.</returns>
         public virtual Task<ApiResponse> DeleteNoteAsync(Guid taskId, Guid taskNoteId)
         {
-            var requestContext = new RequestContext($"{Path}/{taskId}/notes/{taskNoteId}", HttpMethod.Delete);
-
-            return CallAsync(requestContext);
+            return CallAsync(new RequestContext($"{Path}/{taskId}/notes/{taskNoteId}", HttpMethod.Delete));
         }
 
         /// <summary>
@@ -63,16 +58,16 @@ namespace Confiti.MoySklad.Remap.Api
         /// <param name="taskId">The <see cref="TaskEntity"/> ID.</param>
         /// <param name="taskNote">The <see cref="TaskNote"/> to delete.</param>
         /// <returns>The <see cref="Task"/> containing the API response.</returns>
-        public virtual Task<ApiResponse> DeleteNoteAsync(Guid taskId, TaskNote taskNote)
+        public virtual async Task<ApiResponse> DeleteNoteAsync(Guid taskId, TaskNote taskNote)
         {
             if (taskNote == null)
                 throw new ArgumentNullException(nameof(taskNote));
 
             var taskNoteId = taskNote.GetId();
             if (!taskNoteId.HasValue)
-                throw new InvalidOperationException("The entity id cannot be null.");
+                throw new ApiException(400, "The entity id cannot be null.");
 
-            return DeleteNoteAsync(taskId, taskNoteId.Value);
+            return await DeleteNoteAsync(taskId, taskNoteId.Value).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -83,9 +78,7 @@ namespace Confiti.MoySklad.Remap.Api
         /// <returns>The <see cref="Task"/> containing the API response with <see cref="TaskNote"/>.</returns>
         public virtual Task<ApiResponse<TaskNote>> GetNoteAsync(Guid taskId, Guid taskNoteId)
         {
-            var requestContext = new RequestContext($"{Path}/{taskId}/notes/{taskNoteId}");
-
-            return CallAsync<TaskNote>(requestContext);
+            return CallAsync<TaskNote>(new RequestContext($"{Path}/{taskId}/notes/{taskNoteId}"));
         }
 
         /// <summary>
@@ -96,12 +89,7 @@ namespace Confiti.MoySklad.Remap.Api
         /// <returns>The <see cref="Task"/> containing the API response with the list of <see cref="TaskNote"/>.</returns>
         public virtual Task<ApiResponse<EntitiesResponse<TaskNote>>> GetNotesAsync(Guid taskId, ApiParameterBuilder query = null)
         {
-            var requestContext = new RequestContext($"{Path}/{taskId}/notes");
-
-            if (query != null)
-                requestContext.WithQuery(query.Build());
-
-            return CallAsync<EntitiesResponse<TaskNote>>(requestContext);
+            return CallAsync<EntitiesResponse<TaskNote>>(new RequestContext($"{Path}/{taskId}/notes").WithQuery(query));
         }
 
         /// <summary>
@@ -110,19 +98,19 @@ namespace Confiti.MoySklad.Remap.Api
         /// <param name="taskId">The <see cref="TaskEntity"/> ID.</param>
         /// <param name="taskNote">The <see cref="TaskNote"/> to update.</param>
         /// <returns>The <see cref="Task"/> containing the API response with the updated <see cref="TaskNote"/>.</returns>
-        public virtual Task<ApiResponse<TaskNote>> UpdateNoteAsync(Guid taskId, TaskNote taskNote)
+        public virtual async Task<ApiResponse<TaskNote>> UpdateNoteAsync(Guid taskId, TaskNote taskNote)
         {
             if (taskNote == null)
                 throw new ArgumentNullException(nameof(taskNote));
 
             var taskNoteId = taskNote.GetId();
             if (!taskNoteId.HasValue)
-                throw new InvalidOperationException("The entity id cannot be null.");
+                throw new ApiException(400, "The entity id cannot be null.");
 
             var requestContext = new RequestContext($"{Path}/{taskId}/notes/{taskNoteId}", HttpMethod.Put)
                 .WithBody(taskNote);
 
-            return CallAsync<TaskNote>(requestContext);
+            return await CallAsync<TaskNote>(requestContext).ConfigureAwait(false);
         }
 
         #endregion Methods

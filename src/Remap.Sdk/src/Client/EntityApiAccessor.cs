@@ -48,10 +48,7 @@ namespace Confiti.MoySklad.Remap.Client
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            var requestContext = new RequestContext(HttpMethod.Post)
-                .WithBody(entity);
-
-            return await CallAsync<TEntity>(requestContext).ConfigureAwait(false);
+            return await CallAsync<TEntity>(new RequestContext(HttpMethod.Post).WithBody(entity)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -120,14 +117,9 @@ namespace Confiti.MoySklad.Remap.Client
         /// </summary>
         /// <param name="query">The query builder.</param>
         /// <returns>The <see cref="Task"/> containing the API response with the list of <typeparamref name="TEntity"/>.</returns>
-        public virtual async Task<ApiResponse<EntitiesResponse<TEntity>>> GetAllAsync(TEntitiesBuilder query = null)
+        public virtual Task<ApiResponse<EntitiesResponse<TEntity>>> GetAllAsync(TEntitiesBuilder query = null)
         {
-            var requestContext = new RequestContext();
-
-            if (query != null)
-                requestContext.WithQuery(query.Build());
-
-            return await CallAsync<EntitiesResponse<TEntity>>(requestContext).ConfigureAwait(false);
+            return CallAsync<EntitiesResponse<TEntity>>(new RequestContext().WithQuery(query));
         }
 
         /// <summary>
@@ -136,14 +128,9 @@ namespace Confiti.MoySklad.Remap.Client
         /// <param name="id">The entity ID.</param>
         /// <param name="query">The query builder.</param>
         /// <returns>The <see cref="Task"/> containing the API response with the <typeparamref name="TEntity"/>.</returns>
-        public virtual async Task<ApiResponse<TEntity>> GetAsync(Guid id, TEntityBuilder query = null)
+        public virtual Task<ApiResponse<TEntity>> GetAsync(Guid id, TEntityBuilder query = null)
         {
-            var requestContext = new RequestContext($"{Path}/{id}");
-
-            if (query != null)
-                requestContext.WithQuery(query.Build());
-
-            return await CallAsync<TEntity>(requestContext).ConfigureAwait(false);
+            return CallAsync<TEntity>(new RequestContext($"{Path}/{id}").WithQuery(query));
         }
 
         /// <summary>

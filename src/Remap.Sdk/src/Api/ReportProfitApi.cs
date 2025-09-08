@@ -80,12 +80,7 @@ namespace Confiti.MoySklad.Remap.Api
 
         private Task<ApiResponse<EntitiesResponse<TReport>>> GetReportAsync<TReport>(string relativePath, ApiParameterBuilder query = null)
         {
-            var requestContext = new RequestContext($"{Path}/{relativePath}", HttpMethod.Get);
-
-            if (query != null)
-                requestContext.WithQuery(query.Build());
-
-            return CallAsync<EntitiesResponse<TReport>>(requestContext);
+            return CallAsync<EntitiesResponse<TReport>>(new RequestContext($"{Path}/{relativePath}", HttpMethod.Get).WithQuery(query));
         }
 
         #endregion Methods
