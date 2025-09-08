@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.ComponentModel;
+using System.Linq;
 using Newtonsoft.Json.Serialization;
 
 namespace Confiti.MoySklad.Remap.Client.Json
@@ -6,10 +7,14 @@ namespace Confiti.MoySklad.Remap.Client.Json
     /// <summary>
     /// This decorates the real the value provider to detect
     /// the empty object (All object members are null).
-    /// Used to fix serialized nested null fields (e.g. '{ "foo": null }').
+    /// Used to ignore the property default value specified via <see cref="DefaultValueAttribute"/>
+    /// and serialize the null value.
+    /// See <![CDATA[https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-obschie-swedeniq-podderzhka-null]]>
     /// </summary>
-    public class EmptyObjectValueProvider : IValueProvider
+    internal class EmptyObjectValueProvider : IValueProvider
     {
+        internal const string EMPTY_OBJECT_VALUE = "{}";
+
         #region Fields
 
         private readonly IValueProvider _innerProvider;
@@ -42,8 +47,8 @@ namespace Confiti.MoySklad.Remap.Client.Json
             if (val == null)
                 return null;
 
-            if (val?.GetType().GetProperties().All(p => p.GetValue(val) == null) ?? false)
-                return "{}";
+            if (val.GetType().GetProperties().All(p => p.GetValue(val) == null))
+                return EMPTY_OBJECT_VALUE;
 
             return val;
         }

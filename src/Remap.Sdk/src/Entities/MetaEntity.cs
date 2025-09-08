@@ -1,9 +1,9 @@
-using System;
+﻿using System;
 
 namespace Confiti.MoySklad.Remap.Entities
 {
     /// <summary>
-    /// Represents an entity containing <see cref="Meta"/>.
+    /// Represents an entity containing <see cref="Entities.Meta"/>.
     /// </summary>
     public abstract class MetaEntity : IHasMeta<Meta>
     {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using Confiti.MoySklad.Remap.Client.Json;
 using Newtonsoft.Json;
 
 namespace Confiti.MoySklad.Remap.Entities
@@ -69,7 +70,7 @@ namespace Confiti.MoySklad.Remap.Entities
         /// Gets or sets the notes.
         /// </summary>
         /// <value>The notes.</value>
-        [DefaultValue("{}")]
+        [DefaultValue(EmptyObjectValueProvider.EMPTY_OBJECT_VALUE)]
         [JsonProperty(NullValueHandling = NullValueHandling.Include, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public PagedEntities<TaskNote> Notes { get; set; } = new PagedEntities<TaskNote>();
 
