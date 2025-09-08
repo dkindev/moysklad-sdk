@@ -17,11 +17,7 @@ namespace Confiti.MoySklad.Remap.Client.Json
 
         #region Methods
 
-        /// <summary>
-        /// Creates the <see cref="IValueProvider"/> used by the serializer to get and set values from a member.
-        /// </summary>
-        /// <param name="member">The member.</param>
-        /// <returns>The <see cref="IValueProvider"/> used by the serializer to get and set values from a member.</returns>
+        /// <inheritdoc/>
         protected override IValueProvider CreateMemberValueProvider(MemberInfo member)
         {
             var innerProvider = base.CreateMemberValueProvider(member);

@@ -5,20 +5,12 @@ using Newtonsoft.Json.Linq;
 
 namespace Confiti.MoySklad.Remap.Client.Json
 {
-    /// <summary>
-    /// Represents an json converter to <see cref="Discount" />.
-    /// </summary>
+    /// <inheritdoc/>
     public class DiscountConverter : JsonCreationConverter<Discount>
     {
         #region Methods
 
-        /// <summary>
-        /// Create an instance of object, based on properties in the JSON object.
-        /// </summary>
-        /// <param name="objectType">The type of object expected.</param>
-        /// <param name="jObject">The contents of JSON object that will be deserialized.</param>
-        /// <param name="serializer">The calling serializer.</param>
-        /// <returns>The object value.</returns>
+        /// <inheritdoc/>
         protected override Discount Create(Type objectType, JObject jObject, JsonSerializer serializer)
         {
             if (jObject.HasValues && jObject["meta"] is JObject jMeta)

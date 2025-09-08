@@ -12,7 +12,7 @@ namespace Confiti.MoySklad.Remap.Queries
         #region Properties
 
         /// <summary>
-        /// Gets or sets the alcoholic product information.
+        /// Gets or sets the alcoholic product information. If set, then <see cref="Service"/>'s and <see cref="Bundle"/>'s are ignored.
         /// Note: 'filter' (nested) is allowed.
         /// </summary>
         /// <value>The alcoholic product information.</value>
@@ -189,7 +189,7 @@ namespace Confiti.MoySklad.Remap.Queries
         public double Quantity { get; set; }
 
         /// <summary>
-        /// Gets or sets the quantity mode.
+        /// Gets or sets the quantity mode. If set, then <see cref="Service"/>'s and <see cref="Bundle"/>'s are ignored.
         /// Note: 'filter' is allowed.
         /// </summary>
         /// <value>The quantity mode.</value>
@@ -234,7 +234,7 @@ namespace Confiti.MoySklad.Remap.Queries
         public double Stock { get; set; }
 
         /// <summary>
-        /// Gets or sets the stock mode.
+        /// Gets or sets the stock mode. If set, then <see cref="Service"/>'s and <see cref="Bundle"/>'s are ignored.
         /// Note: 'filter' is allowed.
         /// </summary>
         /// <value>The stock mode.</value>
@@ -280,7 +280,7 @@ namespace Confiti.MoySklad.Remap.Queries
         public string UpdatedBy { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to the entity is Weighed.
+        /// Gets or sets a value indicating whether to the entity is Weighed. If set, then <see cref="Service"/>'s and <see cref="Bundle"/>'s are ignored.
         /// Note: 'filter' is allowed.
         /// </summary>
         /// <value>The value indicating whether to the entity is Weighed.</value>

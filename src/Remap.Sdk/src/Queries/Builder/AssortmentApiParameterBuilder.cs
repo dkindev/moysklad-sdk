@@ -17,10 +17,7 @@ namespace Confiti.MoySklad.Remap.Queries
 
         #region Methods
 
-        /// <summary>
-        /// Builds the API parameters.
-        /// </summary>
-        /// <returns>The query.</returns>
+        /// <inheritdoc/>
         public override Dictionary<string, string> Build()
         {
             var query = base.Build();
