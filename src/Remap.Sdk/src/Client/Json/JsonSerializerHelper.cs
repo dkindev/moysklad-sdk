@@ -58,7 +58,16 @@ namespace Confiti.MoySklad.Remap.Client.Json
 
             using (var streamReader = new StreamReader(stream))
             using (var reader = new JsonTextReader(streamReader))
-                return await Task.Run(() => JsonSerializer.Create(_defaultReadSettings).Deserialize(reader, type)).ConfigureAwait(false);
+            {
+                try
+                {
+                    return await Task.Run(() => JsonSerializer.Create(_defaultReadSettings).Deserialize(reader, type)).ConfigureAwait(false);
+                }
+                catch (JsonException e)
+                {
+                    throw new ApiException($"Error when deserializing HTTP response content. {e.Message}", e);
+                }
+            }
         }
 
         public static async Task<Stream> WriteToStreamAsync(object body)
@@ -70,7 +79,15 @@ namespace Confiti.MoySklad.Remap.Client.Json
             using (var streamWriter = new StreamWriter(memStream, _utf8EncodingWithoutPreamble, _bufferSize, leaveOpen: true))
             using (var jsonTextWriter = new JsonTextWriter(streamWriter) { Formatting = Formatting.None })
             {
-                JsonSerializer.Create(_defaultWriteSettings).Serialize(jsonTextWriter, body);
+                try
+                {
+                    JsonSerializer.Create(_defaultWriteSettings).Serialize(jsonTextWriter, body);
+                }
+                catch (JsonException e)
+                {
+                    throw new ApiException($"Error when serializing HTTP request content. {e.Message}", e);
+                }
+
                 await jsonTextWriter.FlushAsync().ConfigureAwait(false);
 
                 memStream.Seek(0, SeekOrigin.Begin);

@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Confiti.MoySklad.Remap.Client;
 using Confiti.MoySklad.Remap.Client.Json;
-using Newtonsoft.Json;
 
 namespace System.Net.Http
 {
@@ -44,16 +43,9 @@ namespace System.Net.Http
 
                 if (response.Content.Headers.ContentType.MediaType.Contains("application/json"))
                 {
-                    try
-                    {
-                        return await JsonSerializerHelper
-                            .ReadFromStreamAsync(stream, type)
-                            .ConfigureAwait(false);
-                    }
-                    catch (JsonException e)
-                    {
-                        throw new ApiException($"Error when deserializing HTTP response content. {e.Message}", e);
-                    }
+                    return await JsonSerializerHelper
+                        .ReadFromStreamAsync(stream, type)
+                        .ConfigureAwait(false);
                 }
             }
 
