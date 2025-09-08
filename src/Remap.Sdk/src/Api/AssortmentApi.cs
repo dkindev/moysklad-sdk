@@ -1,7 +1,9 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Confiti.MoySklad.Remap.Client;
 using Confiti.MoySklad.Remap.Entities;
+using Confiti.MoySklad.Remap.Extensions;
 using Confiti.MoySklad.Remap.Queries;
 
 namespace Confiti.MoySklad.Remap.Api
@@ -27,6 +29,23 @@ namespace Confiti.MoySklad.Remap.Api
         #endregion Ctor
 
         #region Methods
+
+        /// <summary>
+        /// Deletes the assortment.
+        /// </summary>
+        /// <param name="entities">The assortment to delete.</param>
+        /// <returns>The <see cref="Task"/> containing the API response.</returns>
+        public virtual async Task<ApiResponse> DeleteAsync(Assortment[] entities)
+        {
+            if (entities == null)
+                throw new ArgumentNullException(nameof(entities));
+
+            var requestContext = new RequestContext($"{Path}/delete", HttpMethod.Post)
+                .WithBody(entities)
+                .WithApiExceptionFactory(CommonHelpers.CreateApiExceptionWithBulkOfErrorsAsync);
+
+            return await CallAsync(requestContext).ConfigureAwait(false);
+        }
 
         /// <summary>
         /// Gets the assortment.
