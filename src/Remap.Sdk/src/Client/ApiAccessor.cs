@@ -172,15 +172,29 @@ namespace Confiti.MoySklad.Remap.Client
                 }
                 catch (HttpRequestException e)
                 {
-                    var errorMessage = $"Error when calling '{GetType().Name}.{callerName}'.";
+                    var errorMessage = $"Error when calling '{GetType().Name}.{callerName}'. HTTP status code - {(int)response.StatusCode}.";
 
                     using (response)
                     {
-                        throw response != null
-                            ? await response
-                                .ToApiExceptionAsync(errorMessage, e)
-                                .ConfigureAwait(false)
-                            : new ApiException(errorMessage, e);
+                        ApiException apiException = null;
+
+                        if (context.ApiExceptionFactory != null)
+                        {
+                            apiException = await context
+                                .ApiExceptionFactory(errorMessage, response, e)
+                                .ConfigureAwait(false);
+                        }
+                        else
+                        {
+                            apiException = response != null
+                                ? await response
+                                    .ToApiExceptionAsync(errorMessage, e)
+                                    .ConfigureAwait(false)
+                                : new ApiException(errorMessage, e);
+                        }
+
+                        if (apiException != null)
+                            throw apiException;
                     }
                 }
             }

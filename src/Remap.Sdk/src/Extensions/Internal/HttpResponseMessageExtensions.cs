@@ -65,7 +65,6 @@ namespace System.Net.Http
         /// </summary>
         /// <param name="response">The <see cref="HttpResponseMessage"/>.</param>
         /// <param name="message">The exception message.</param>
-        /// <param name="settings">The <see cref="JsonSerializerSettings"/>.</param>
         /// <param name="innerException">The inner exception.</param>
         /// <returns>The <see cref="Task"/> containing the instance of <see cref="ApiException"/> type.</returns>
         /// <exception cref="ArgumentNullException">Throws if <paramref name="response"/> is null.</exception>
@@ -75,17 +74,16 @@ namespace System.Net.Http
                 throw new ArgumentNullException(nameof(response));
 
             var errorMessage = new StringBuilder();
-            var status = (int)response.StatusCode;
 
-            errorMessage
-                .AppendFormat("{0} HTTP status code - {1}.", message, status.ToString())
-                .AppendLine();
+            errorMessage.Append(message);
 
             var errorsResponse = await response
-                .DeserializeAsync(typeof(ApiErrorsResponse), settings)
+                .DeserializeAsync(typeof(ApiErrorsResponse))
                 .ConfigureAwait(false) as ApiErrorsResponse;
             if (errorsResponse?.Errors?.Any() == true)
             {
+                errorMessage.AppendLine();
+
                 for (var i = 0; i < errorsResponse.Errors.Length; i++)
                 {
                     errorMessage
@@ -119,7 +117,7 @@ namespace System.Net.Http
             }
 
             return new ApiException(
-                status,
+                (int)response.StatusCode,
                 errorMessage.ToString(),
                 response.Headers.ToDictionary(),
                 errorsResponse?.Errors,
