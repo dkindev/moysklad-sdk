@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Confiti.MoySklad.Remap.Entities;
 using Confiti.MoySklad.Remap.Queries;
@@ -52,6 +55,23 @@ namespace Confiti.MoySklad.Remap.Client
         }
 
         /// <summary>
+        /// Creates or updates the <typeparamref name="TEntity"/>'s.
+        /// </summary>
+        /// <param name="entities">The <typeparamref name="TEntity"/>'s to create or update.</param>
+        /// <returns>The <see cref="Task"/> containing the API response with the array of <typeparamref name="TEntity"/>.</returns>
+        public virtual async Task<ApiResponse<TEntity[]>> CreateOrUpdateAsync(TEntity[] entities)
+        {
+            if (entities == null)
+                throw new ArgumentNullException(nameof(entities));
+
+            var requestContext = new RequestContext(HttpMethod.Post)
+                .WithBody(entities)
+                .WithApiExceptionFactory(CreateApiExceptionWithBulkOfErrorsAsync);
+
+            return await CallAsync<TEntity[]>(requestContext).ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Deletes the <typeparamref name="TEntity"/>.
         /// </summary>
         /// <param name="entity">The <typeparamref name="TEntity"/> to delete.</param>
@@ -66,6 +86,23 @@ namespace Confiti.MoySklad.Remap.Client
                 throw new ApiException(400, "The entity ID cannot be null.");
 
             return await DeleteAsync(id.Value).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Deletes the <typeparamref name="TEntity"/>'s.
+        /// </summary>
+        /// <param name="entities">The <typeparamref name="TEntity"/>'s to delete.</param>
+        /// <returns>The <see cref="Task"/> containing the API response.</returns>
+        public virtual async Task<ApiResponse> DeleteAsync(TEntity[] entities)
+        {
+            if (entities == null)
+                throw new ArgumentNullException(nameof(entities));
+
+            var requestContext = new RequestContext($"{Path}/delete", HttpMethod.Post)
+                .WithBody(entities)
+                .WithApiExceptionFactory(CreateApiExceptionWithBulkOfErrorsAsync);
+
+            return await CallAsync<TEntity>(requestContext).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -130,5 +167,43 @@ namespace Confiti.MoySklad.Remap.Client
         }
 
         #endregion Methods
+
+        #region Utilities
+
+        /// <summary>
+        /// Creates the <see cref="ApiException"/> with bulk of <see cref="ApiErrorsResponse"/>.
+        /// </summary>
+        /// <param name="message">The error message.</param>
+        /// <param name="response">The <see cref="HttpResponseMessage"/>.</param>
+        /// <param name="exception">The inner exception.</param>
+        /// <returns>The <see cref="Task"/> containing the instance of <see cref="ApiException"/> type.</returns>
+        protected internal async Task<ApiException> CreateApiExceptionWithBulkOfErrorsAsync(string message, HttpResponseMessage response, HttpRequestException exception)
+        {
+            if (response == null)
+                return new ApiException(message, exception);
+
+            var errorsResponse = await response
+                .DeserializeAsync(typeof(ApiErrorsResponse[]))
+                .ConfigureAwait(false) as ApiErrorsResponse[];
+
+            var errors = new List<ApiError>();
+            foreach (var errorResponse in errorsResponse)
+            {
+                if (errorResponse == null || errorResponse.Errors == null)
+                    continue;
+
+                errors.AddRange(errorResponse.Errors);
+            }
+
+            return new ApiException(
+                (int)response.StatusCode,
+                message,
+                response.Headers.ToDictionary(),
+                errors.ToArray(),
+                exception
+            );
+        }
+
+        #endregion Utilities
     }
 }
