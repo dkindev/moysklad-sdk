@@ -21,11 +21,10 @@ namespace System.Net.Http
         /// </summary>
         /// <param name="response">The <see cref="HttpResponseMessage"/>.</param>
         /// <param name="type">The destination type.</param>
-        /// <param name="settings">The <see cref="JsonSerializerSettings"/>.</param>
         /// <returns>The <see cref="Task"/> containing the object or null.</returns>
         /// <exception cref="ArgumentNullException">Throws if <paramref name="response"/> or <paramref name="type"/> is null.</exception>
         /// <exception cref="ApiException">Throws if deserialization failed with an error.</exception>
-        public static async Task<object> DeserializeAsync(this HttpResponseMessage response, Type type, JsonSerializerSettings settings = null)
+        public static async Task<object> DeserializeAsync(this HttpResponseMessage response, Type type)
         {
             if (response == null)
                 throw new ArgumentNullException(nameof(response));
@@ -48,7 +47,7 @@ namespace System.Net.Http
                     try
                     {
                         return await JsonSerializerHelper
-                            .ReadFromStreamAsync(stream, type, settings)
+                            .ReadFromStreamAsync(stream, type)
                             .ConfigureAwait(false);
                     }
                     catch (JsonException e)
@@ -70,7 +69,7 @@ namespace System.Net.Http
         /// <param name="innerException">The inner exception.</param>
         /// <returns>The <see cref="Task"/> containing the instance of <see cref="ApiException"/> type.</returns>
         /// <exception cref="ArgumentNullException">Throws if <paramref name="response"/> is null.</exception>
-        public static async Task<ApiException> ToApiExceptionAsync(this HttpResponseMessage response, string message, JsonSerializerSettings settings = null, Exception innerException = null)
+        public static async Task<ApiException> ToApiExceptionAsync(this HttpResponseMessage response, string message, Exception innerException = null)
         {
             if (response == null)
                 throw new ArgumentNullException(nameof(response));

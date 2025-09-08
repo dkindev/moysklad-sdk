@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -8,8 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using Confiti.MoySklad.Remap.Client.Json;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace Confiti.MoySklad.Remap.Client
 {
@@ -18,35 +15,6 @@ namespace Confiti.MoySklad.Remap.Client
     /// </summary>
     public abstract class ApiAccessor
     {
-        private static readonly IList<JsonConverter> _defaultConverters = new JsonConverter[]
-        {
-            new StringEnumConverter(),
-            new AbstractProductConverter(),
-            new AssortmentConverter(),
-            new AttributeValueConverter(),
-            new BarcodeConverter(),
-            new DiscountConverter(),
-            new PaymentDocumentConverter()
-        };
-
-        #region Fields
-
-        private readonly JsonSerializerSettings _defaultReadSettings = new JsonSerializerSettings
-        {
-            ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
-            Converters = _defaultConverters
-        };
-
-        private readonly JsonSerializerSettings _defaultWriteSettings = new JsonSerializerSettings
-        {
-            DateFormatString = ApiDefaults.DEFAULT_DATETIME_FORMAT,
-            NullValueHandling = NullValueHandling.Ignore,
-            ContractResolver = DefaultMoySkladContractResolver.Instance,
-            Converters = _defaultConverters
-        };
-
-        #endregion Fields
-
         #region Properties
 
         /// <summary>
@@ -102,7 +70,7 @@ namespace Confiti.MoySklad.Remap.Client
                     (int)httpResponse.StatusCode,
                     httpResponse.Headers.ToDictionary(),
                     await httpResponse
-                        .DeserializeAsync(typeof(TResponse), _defaultReadSettings)
+                        .DeserializeAsync(typeof(TResponse))
                         .ConfigureAwait(false) as TResponse
                 );
             }
@@ -173,7 +141,7 @@ namespace Confiti.MoySklad.Remap.Client
             {
                 request.Content = new StreamContent(
                     await JsonSerializerHelper
-                        .WriteToStreamAsync(context.Body, _defaultWriteSettings)
+                        .WriteToStreamAsync(context.Body)
                         .ConfigureAwait(false)
                 );
                 request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
@@ -210,7 +178,7 @@ namespace Confiti.MoySklad.Remap.Client
                     {
                         throw response != null
                             ? await response
-                                .ToApiExceptionAsync(errorMessage, _defaultReadSettings, e)
+                                .ToApiExceptionAsync(errorMessage, e)
                                 .ConfigureAwait(false)
                             : new ApiException(errorMessage, e);
                     }
