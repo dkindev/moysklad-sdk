@@ -41,6 +41,7 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
             query.Parameter(p => p.StockStore).Should().Be("https://api.moysklad.ru/api/remap/1.2/entity/store/59a894aa-0ea3-11ea-0a80-006c00081b5b");
             query.Parameter(p => p.StockMode).Should().Be(StockMode.All);
             query.Parameter(p => p.QuantityMode).Should().Be(QuantityMode.All);
+            query.Parameter(p => p.IsSerialTrackable).Should().Be(false);
             query.Search("foo");
             query.Order().By(p => p.Name);
             query.Limit(100);

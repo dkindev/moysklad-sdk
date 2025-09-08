@@ -132,6 +132,14 @@ namespace Confiti.MoySklad.Remap.Queries
         public bool IsAlcoholic { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to the entity should be tracked with serial number.
+        /// Note: 'filter' is allowed.
+        /// </summary>
+        [Filter(allowContinueConstraint: false)]
+        [Parameter("isSerialTrackable")]
+        public bool IsSerialTrackable { get; set; }
+
+        /// <summary>
         /// Gets or sets the entity name.
         /// Note: 'filter', 'order' are allowed.
         /// </summary>
