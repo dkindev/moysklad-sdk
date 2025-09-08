@@ -24,7 +24,9 @@ namespace Confiti.MoySklad.Remap.Client.Json
             var jObject = JObject.Load(reader);
 
             T target = Create(objectType, jObject, serializer);
-            serializer.Populate(jObject.CreateReader(), target);
+
+            using (var jsonReader = jObject.CreateReader())
+                serializer.Populate(jsonReader, target);
 
             PostPopulate(target, serializer);
 
