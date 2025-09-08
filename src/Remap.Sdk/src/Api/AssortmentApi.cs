@@ -57,6 +57,24 @@ namespace Confiti.MoySklad.Remap.Api
             return CallAsync<EntitiesResponse<Assortment>>(new RequestContext().WithQuery(query));
         }
 
+        /// <summary>
+        /// Gets the settings.
+        /// </summary>
+        /// <returns>The <see cref="Task"/> containing the API response with <see cref="AssortmentSettings"/>.</returns>
+        public virtual Task<ApiResponse<AssortmentSettings>> GetSettingsAsync()
+        {
+            return CallAsync<AssortmentSettings>(new RequestContext($"{Path}/settings"));
+        }
+
+        /// <summary>
+        /// Updates the settings.
+        /// </summary>
+        /// <returns>The <see cref="Task"/> containing the API response with updated <see cref="AssortmentSettings"/>.</returns>
+        public virtual Task<ApiResponse<AssortmentSettings>> UpdateSettingsAsync(AssortmentSettings settings)
+        {
+            return CallAsync<AssortmentSettings>(new RequestContext($"{Path}/settings", HttpMethod.Put).WithBody(settings));
+        }
+
         #endregion Methods
     }
 }

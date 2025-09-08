@@ -1,4 +1,4 @@
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
 namespace Confiti.MoySklad.Remap.Entities
 {
@@ -7,6 +7,12 @@ namespace Confiti.MoySklad.Remap.Entities
     /// </summary>
     public enum EntityType
     {
+        /// <summary>
+        /// AssortmentSettings entity type.
+        /// </summary>
+        [EnumMember(Value = "assortmentsettings")]
+        AssortmentSettings,
+
         /// <summary>
         /// Employee entity type.
         /// </summary>

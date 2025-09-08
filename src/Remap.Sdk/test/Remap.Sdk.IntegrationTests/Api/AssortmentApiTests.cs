@@ -16,7 +16,7 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
         private AssortmentApi _subject;
 
         [Test]
-        public async Task GetAssortmentAsync_should_return_status_code_200()
+        public async Task GetAllAsync_should_return_status_code_200()
         {
             var query = new AssortmentApiParameterBuilder();
             query.Limit(100);
@@ -27,7 +27,7 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
         }
 
         [Test]
-        public async Task GetAssortmentAsync_with_query_should_return_status_code_200()
+        public async Task GetAllAsync_with_query_should_return_status_code_200()
         {
             var query = new AssortmentApiParameterBuilder();
 
@@ -52,6 +52,14 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
             response.StatusCode.Should().Be(200);
         }
 
+        [Test]
+        public async Task GetSettingsAsync_should_return_status_code_200()
+        {
+            var response = await _subject.GetSettingsAsync();
+
+            response.StatusCode.Should().Be(200);
+        }
+
         [SetUp]
         public void Init()
         {
@@ -67,6 +75,18 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
                 AutomaticDecompression = DecompressionMethods.GZip
             };
             _subject = new AssortmentApi(new HttpClient(httpClientHandler), _credentials);
+        }
+
+        [Test]
+        public async Task UpdateSettingsAsync_should_return_status_code_200()
+        {
+            var response = await _subject.GetSettingsAsync();
+
+            response.StatusCode.Should().Be(200);
+
+            response = await _subject.UpdateSettingsAsync(response.Payload);
+
+            response.StatusCode.Should().Be(200);
         }
     }
 }
