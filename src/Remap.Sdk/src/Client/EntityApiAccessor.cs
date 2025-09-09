@@ -15,8 +15,8 @@ namespace Confiti.MoySklad.Remap.Client
     /// <typeparam name="TEntitiesBuilder">The type of the <see cref="ApiParameterBuilder"/> to get list of the entity.</typeparam>
     public abstract class EntityApiAccessor<TEntity, TEntityBuilder, TEntitiesBuilder> : ApiAccessor
         where TEntity : MetaEntity
-        where TEntityBuilder : ApiParameterBuilder
-        where TEntitiesBuilder : ApiParameterBuilder
+        where TEntityBuilder : ApiParameterBuilder, new()
+        where TEntitiesBuilder : ApiParameterBuilder, new()
     {
         #region Ctor
 
@@ -111,24 +111,26 @@ namespace Confiti.MoySklad.Remap.Client
         }
 
         /// <summary>
-        /// Gets the list of <typeparamref name="TEntity"/> by query (optional).
+        /// Gets the list of <typeparamref name="TEntity"/> with query (optional).
         /// </summary>
-        /// <param name="query">The query builder.</param>
+        /// <param name="buildQuery">The action to build the query.</param>
         /// <returns>The <see cref="Task"/> containing the API response with the list of <typeparamref name="TEntity"/>.</returns>
-        public virtual Task<ApiResponse<EntitiesResponse<TEntity>>> GetAllAsync(TEntitiesBuilder query = null)
+        public virtual async Task<ApiResponse<EntitiesResponse<TEntity>>> GetAllAsync(Action<TEntitiesBuilder> buildQuery = null)
         {
-            return CallAsync<EntitiesResponse<TEntity>>(new RequestContext().WithQuery(query));
+            return await CallAsync<EntitiesResponse<TEntity>>(new RequestContext().WithQuery(buildQuery))
+                .ConfigureAwait(false);
         }
 
         /// <summary>
         /// Gets the <typeparamref name="TEntity"/> by ID and query (optional).
         /// </summary>
         /// <param name="id">The entity ID.</param>
-        /// <param name="query">The query builder.</param>
+        /// <param name="buildQuery">The action to build the query.</param>
         /// <returns>The <see cref="Task"/> containing the API response with the <typeparamref name="TEntity"/>.</returns>
-        public virtual Task<ApiResponse<TEntity>> GetAsync(Guid id, TEntityBuilder query = null)
+        public virtual async Task<ApiResponse<TEntity>> GetAsync(Guid id, Action<TEntityBuilder> buildQuery = null)
         {
-            return CallAsync<TEntity>(new RequestContext($"{Path}/{id}").WithQuery(query));
+            return await CallAsync<TEntity>(new RequestContext($"{Path}/{id}").WithQuery(buildQuery))
+                .ConfigureAwait(false);
         }
 
         /// <summary>

@@ -10,16 +10,16 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
 {
     public class VariantApiTests
     {
+        #region Fields
+
         private MoySkladCredentials _credentials;
         private VariantApi _subject;
 
-        [Test]
-        public async Task GetMetadataAsync_should_return_status_code_200()
-        {
-            var response = await _subject.Metadata.GetAsync();
+        #endregion Fields
 
-            response.StatusCode.Should().Be(200);
-        }
+        #region Methods
+
+        #region SetUp
 
         [SetUp]
         public void Init()
@@ -37,5 +37,16 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
             };
             _subject = new VariantApi(new HttpClient(httpClientHandler), _credentials);
         }
+
+        #endregion SetUp
+
+        [Test]
+        public async Task GetMetadataAsync_should_return_status_code_200()
+        {
+            var response = await _subject.Metadata.GetAsync();
+            response.StatusCode.Should().Be(200);
+        }
+
+        #endregion Methods
     }
 }

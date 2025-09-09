@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Confiti.MoySklad.Remap.Client;
 using Confiti.MoySklad.Remap.Entities;
@@ -67,11 +68,12 @@ namespace Confiti.MoySklad.Remap.Api
         /// <summary>
         /// Gets the metadata.
         /// </summary>
-        /// <param name="query">The meta entity query.</param>
+        /// <param name="buildQuery">The action to build the query.</param>
         /// <returns>The <see cref="Task"/> containing the API response with metadata.</returns>
-        public virtual Task<ApiResponse<TResponse>> GetAsync(ApiParameterBuilder<TQuery> query)
+        public virtual async Task<ApiResponse<TResponse>> GetAsync(Action<ApiParameterBuilder<TQuery>> buildQuery)
         {
-            return CallAsync<TResponse>(new RequestContext().WithQuery(query));
+            return await CallAsync<TResponse>(new RequestContext().WithQuery(buildQuery))
+                .ConfigureAwait(false);
         }
 
         #endregion Methods

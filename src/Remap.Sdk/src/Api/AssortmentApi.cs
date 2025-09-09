@@ -50,11 +50,12 @@ namespace Confiti.MoySklad.Remap.Api
         /// <summary>
         /// Gets the assortment.
         /// </summary>
-        /// <param name="query">The query builder.</param>
+        /// <param name="buildQuery">The action to build the query.</param>
         /// <returns>The <see cref="Task"/> containing the API response with the list of <see cref="Assortment"/>.</returns>
-        public virtual Task<ApiResponse<EntitiesResponse<Assortment>>> GetAllAsync(AssortmentApiParameterBuilder query = null)
+        public virtual async Task<ApiResponse<EntitiesResponse<Assortment>>> GetAllAsync(Action<AssortmentApiParameterBuilder> buildQuery = null)
         {
-            return CallAsync<EntitiesResponse<Assortment>>(new RequestContext().WithQuery(query));
+            return await CallAsync<EntitiesResponse<Assortment>>(new RequestContext().WithQuery(buildQuery))
+                .ConfigureAwait(false);
         }
 
         /// <summary>

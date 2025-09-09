@@ -85,11 +85,12 @@ namespace Confiti.MoySklad.Remap.Api
         /// Gets the list of <see cref="TaskNote"/> for related <see cref="TaskEntity"/> ID and query (optional).
         /// </summary>
         /// <param name="taskId">The <see cref="TaskEntity"/> ID.</param>
-        /// <param name="query">The query builder.</param>
+        /// <param name="buildQuery">The action to build the query.</param>
         /// <returns>The <see cref="Task"/> containing the API response with the list of <see cref="TaskNote"/>.</returns>
-        public virtual Task<ApiResponse<EntitiesResponse<TaskNote>>> GetNotesAsync(Guid taskId, ApiParameterBuilder query = null)
+        public virtual async Task<ApiResponse<EntitiesResponse<TaskNote>>> GetNotesAsync(Guid taskId, Action<ApiParameterBuilder> buildQuery = null)
         {
-            return CallAsync<EntitiesResponse<TaskNote>>(new RequestContext($"{Path}/{taskId}/notes").WithQuery(query));
+            return await CallAsync<EntitiesResponse<TaskNote>>(new RequestContext($"{Path}/{taskId}/notes").WithQuery(buildQuery))
+                .ConfigureAwait(false);
         }
 
         /// <summary>

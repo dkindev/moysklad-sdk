@@ -11,8 +11,16 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
 {
     public class OAuthApiTests
     {
+        #region Fields
+
         private MoySkladCredentials _credentials;
         private OAuthApi _subject;
+
+        #endregion Fields
+
+        #region Methods
+
+        #region SetUp
 
         [SetUp]
         public void Init()
@@ -30,6 +38,8 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
             };
             _subject = new OAuthApi(new HttpClient(httpClientHandler), _credentials);
         }
+
+        #endregion SetUp
 
         [Test]
         public async Task ObtainTokenAsync_should_return_access_token()
@@ -70,5 +80,7 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
             Func<Task> getAccessToken = () => _subject.GetAsync();
             await getAccessToken.Should().ThrowAsync<ApiException>();
         }
+
+        #endregion Methods
     }
 }

@@ -11,19 +11,16 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
 {
     public class RetailShiftApiTests
     {
+        #region Fields
+
         private MoySkladCredentials _credentials;
         private RetailShiftApi _subject;
 
-        [Test]
-        public async Task GetAllAsync_should_return_status_code_200()
-        {
-            var query = new ApiParameterBuilder();
-            query.Order().By("moment", OrderBy.Desc);
-            query.Limit(100);
-            var response = await _subject.GetAllAsync(query);
+        #endregion Fields
 
-            response.StatusCode.Should().Be(200);
-        }
+        #region Methods
+
+        #region SetUp
 
         [SetUp]
         public void Init()
@@ -41,5 +38,28 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
             };
             _subject = new RetailShiftApi(new HttpClient(httpClientHandler), _credentials);
         }
+
+        #endregion SetUp
+
+        [Test]
+        public async Task GetAllAsync_should_return_status_code_200()
+        {
+            var response = await _subject.GetAllAsync();
+            response.StatusCode.Should().Be(200);
+        }
+
+        [Test]
+        public async Task GetAllAsync_with_query_should_return_status_code_200()
+        {
+            var response = await _subject.GetAllAsync(query =>
+            {
+                query.Order().By("moment", OrderBy.Desc);
+                query.Limit(100);
+            });
+
+            response.StatusCode.Should().Be(200);
+        }
+
+        #endregion Methods
     }
 }

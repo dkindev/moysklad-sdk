@@ -193,6 +193,30 @@ namespace Confiti.MoySklad.Remap.Client
         }
 
         /// <summary>
+        /// Adds the query to the request context.
+        /// </summary>
+        /// <param name="context">The request context.</param>
+        /// <param name="buildQuery">The action to build the query.</param>
+        /// <returns>The request context.</returns>
+        /// <exception cref="ArgumentNullException">Throws if <paramref name="context"/> is null.</exception>
+        public static RequestContext WithQuery<TEntityBuilder>(this RequestContext context, Action<TEntityBuilder> buildQuery)
+            where TEntityBuilder : ApiParameterBuilder, new()
+        {
+            if (context == null)
+                throw new ArgumentNullException(nameof(context));
+
+            if (buildQuery != null)
+            {
+                var query = new TEntityBuilder();
+                buildQuery(query);
+
+                context.WithQuery(query);
+            }
+
+            return context;
+        }
+
+        /// <summary>
         /// Adds the query parameter to the request context.
         /// </summary>
         /// <param name="context">The request context.</param>

@@ -4,7 +4,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Confiti.MoySklad.Remap.Api;
 using Confiti.MoySklad.Remap.Client;
-using Confiti.MoySklad.Remap.Queries;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -12,78 +11,16 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
 {
     public class ReportProfitApiTests
     {
+        #region Fields
+
         private MoySkladCredentials _credentials;
         private ReportProfitApi _subject;
 
-        [Test]
-        public async Task GetByCounterpartyAsync_should_return_status_code_200()
-        {
-            var query = new ApiParameterBuilder();
+        #endregion Fields
 
-            query.Limit(100);
-            query.MomentFrom(DateTime.Today.AddDays(-7));
-            query.MomentTo(DateTime.Now);
+        #region Methods
 
-            var response = await _subject.GetByCounterpartyAsync(query);
-
-            response.StatusCode.Should().Be(200);
-        }
-
-        [Test]
-        public async Task GetByEmployeeAsync_should_return_status_code_200()
-        {
-            var query = new ApiParameterBuilder();
-
-            query.Limit(100);
-            query.MomentFrom(DateTime.Today.AddDays(-7));
-            query.MomentTo(DateTime.Now);
-
-            var response = await _subject.GetByEmployeeAsync(query);
-
-            response.StatusCode.Should().Be(200);
-        }
-
-        [Test]
-        public async Task GetByProductAsync_should_return_status_code_200()
-        {
-            var query = new ApiParameterBuilder();
-
-            query.Limit(100);
-            query.MomentFrom(DateTime.Today.AddDays(-7));
-            query.MomentTo(DateTime.Now);
-
-            var response = await _subject.GetByProductAsync(query);
-
-            response.StatusCode.Should().Be(200);
-        }
-
-        [Test]
-        public async Task GetBySalesChannelAsync_should_return_status_code_200()
-        {
-            var query = new ApiParameterBuilder();
-
-            query.Limit(100);
-            query.MomentFrom(DateTime.Today.AddDays(-7));
-            query.MomentTo(DateTime.Now);
-
-            var response = await _subject.GetBySalesChannelAsync(query);
-
-            response.StatusCode.Should().Be(200);
-        }
-
-        [Test]
-        public async Task GetByVariantAsync_should_return_status_code_200()
-        {
-            var query = new ApiParameterBuilder();
-
-            query.Limit(100);
-            query.MomentFrom(DateTime.Today.AddDays(-7));
-            query.MomentTo(DateTime.Now);
-
-            var response = await _subject.GetByVariantAsync(query);
-
-            response.StatusCode.Should().Be(200);
-        }
+        #region SetUp
 
         [SetUp]
         public void Init()
@@ -101,5 +38,74 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
             };
             _subject = new ReportProfitApi(new HttpClient(httpClientHandler), _credentials);
         }
+
+        #endregion SetUp
+
+        [Test]
+        public async Task GetByCounterpartyAsync_should_return_status_code_200()
+        {
+            var response = await _subject.GetByCounterpartyAsync(query =>
+            {
+                query.Limit(100);
+                query.MomentFrom(DateTime.Today.AddDays(-7));
+                query.MomentTo(DateTime.Now);
+            });
+
+            response.StatusCode.Should().Be(200);
+        }
+
+        [Test]
+        public async Task GetByEmployeeAsync_should_return_status_code_200()
+        {
+            var response = await _subject.GetByEmployeeAsync(query =>
+            {
+                query.Limit(100);
+                query.MomentFrom(DateTime.Today.AddDays(-7));
+                query.MomentTo(DateTime.Now);
+            });
+
+            response.StatusCode.Should().Be(200);
+        }
+
+        [Test]
+        public async Task GetByProductAsync_should_return_status_code_200()
+        {
+            var response = await _subject.GetByProductAsync(query =>
+            {
+                query.Limit(100);
+                query.MomentFrom(DateTime.Today.AddDays(-7));
+                query.MomentTo(DateTime.Now);
+            });
+
+            response.StatusCode.Should().Be(200);
+        }
+
+        [Test]
+        public async Task GetBySalesChannelAsync_should_return_status_code_200()
+        {
+            var response = await _subject.GetBySalesChannelAsync(query =>
+            {
+                query.Limit(100);
+                query.MomentFrom(DateTime.Today.AddDays(-7));
+                query.MomentTo(DateTime.Now);
+            });
+
+            response.StatusCode.Should().Be(200);
+        }
+
+        [Test]
+        public async Task GetByVariantAsync_should_return_status_code_200()
+        {
+            var response = await _subject.GetByVariantAsync(query =>
+            {
+                query.Limit(100);
+                query.MomentFrom(DateTime.Today.AddDays(-7));
+                query.MomentTo(DateTime.Now);
+            });
+
+            response.StatusCode.Should().Be(200);
+        }
+
+        #endregion Methods
     }
 }

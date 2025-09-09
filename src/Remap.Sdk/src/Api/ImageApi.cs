@@ -53,11 +53,12 @@ namespace Confiti.MoySklad.Remap.Api
         /// Gets the images.
         /// </summary>
         /// <param name="entityId">The id to get images of entity.</param>
-        /// <param name="query">The query builder.</param>
+        /// <param name="buildQuery">The action to build the query.</param>
         /// <returns>The <see cref="Task"/> containing the API response with the list of <see cref="Image"/>.</returns>
-        public virtual Task<ApiResponse<EntitiesResponse<Image>>> GetAllAsync(Guid entityId, ApiParameterBuilder<Image> query = null)
+        public virtual async Task<ApiResponse<EntitiesResponse<Image>>> GetAllAsync(Guid entityId, Action<ApiParameterBuilder> buildQuery = null)
         {
-            return CallAsync<EntitiesResponse<Image>>(new RequestContext($"{Path}/{entityId}/images").WithQuery(query));
+            return await CallAsync<EntitiesResponse<Image>>(new RequestContext($"{Path}/{entityId}/images").WithQuery(buildQuery))
+                .ConfigureAwait(false);
         }
 
         #endregion Methods

@@ -3,7 +3,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Confiti.MoySklad.Remap.Api;
 using Confiti.MoySklad.Remap.Client;
-using Confiti.MoySklad.Remap.Queries;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -11,17 +10,16 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
 {
     public class CustomerOrderApiTests
     {
+        #region Fields
+
         private MoySkladCredentials _credentials;
         private CustomerOrderApi _subject;
 
-        [Test]
-        public async Task GetCustomerOrdersAsync_should_return_status_code_200()
-        {
-            var query = new ApiParameterBuilder<CustomerOrdersQuery>();
-            var response = await _subject.GetAllAsync(query);
+        #endregion Fields
 
-            response.StatusCode.Should().Be(200);
-        }
+        #region Methods
+
+        #region SetUp
 
         [SetUp]
         public void Init()
@@ -39,5 +37,16 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
             };
             _subject = new CustomerOrderApi(new HttpClient(httpClientHandler), _credentials);
         }
+
+        #endregion SetUp
+
+        [Test]
+        public async Task GetAllAsync_should_return_status_code_200()
+        {
+            var response = await _subject.GetAllAsync();
+            response.StatusCode.Should().Be(200);
+        }
+
+        #endregion Methods
     }
 }
