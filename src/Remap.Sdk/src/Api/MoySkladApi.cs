@@ -300,17 +300,13 @@ namespace Confiti.MoySklad.Remap.Api
             }
         }
 
-        #endregion Methods
-
-        #region Utilities
-
-        private void DisposeDefaultHttpClient()
-        {
-            _client?.Dispose();
-            _client = null;
-        }
-
-        private TApi GetApi<TApi>() where TApi : ApiAccessor
+        /// <summary>
+        /// Gets the instance of <typeparamref name="TApi"/> class.
+        /// </summary>
+        /// <typeparam name="TApi">The type of the <see cref="ApiAccessor"/>.</typeparam>
+        /// <returns>The instance of <typeparamref name="TApi"/> class.</returns>
+        /// <exception cref="ObjectDisposedException">Throws if object was disposed.</exception>
+        protected TApi GetApi<TApi>() where TApi : ApiAccessor
         {
             if (_isDisposed)
                 throw new ObjectDisposedException(nameof(MoySkladApi));
@@ -319,6 +315,16 @@ namespace Confiti.MoySklad.Remap.Api
                 typeof(TApi).TypeHandle,
                 typeHandle => (ApiAccessor)Activator.CreateInstance(Type.GetTypeFromHandle(typeHandle), _client, _credentials)
             );
+        }
+
+        #endregion Methods
+
+        #region Utilities
+
+        private void DisposeDefaultHttpClient()
+        {
+            _client?.Dispose();
+            _client = null;
         }
 
         #endregion Utilities
