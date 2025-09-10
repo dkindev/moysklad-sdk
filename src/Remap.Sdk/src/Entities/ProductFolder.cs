@@ -10,6 +10,24 @@ namespace Confiti.MoySklad.Remap.Entities
     /// </summary>
     public class ProductFolder : MetaEntity
     {
+        #region Ctor
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="ProductFolder" /> class.
+        /// </summary>
+        public ProductFolder()
+            : this(true)
+        {
+        }
+
+        private ProductFolder(bool createParent)
+        {
+            if (createParent)
+                ParentProductFolder = new ProductFolder(false);
+        }
+
+        #endregion Ctor
+
         #region Properties
 
         /// <summary>
