@@ -20,6 +20,12 @@ namespace Confiti.MoySklad.Remap.Entities
         Employee,
 
         /// <summary>
+        /// Files entity type.
+        /// </summary>
+        [EnumMember(Value = "files")]
+        Files,
+
+        /// <summary>
         /// Contract entity type.
         /// </summary>
         [EnumMember(Value = "contract")]

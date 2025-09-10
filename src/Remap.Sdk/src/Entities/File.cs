@@ -1,9 +1,9 @@
-namespace Confiti.MoySklad.Remap.Entities
+﻿namespace Confiti.MoySklad.Remap.Entities
 {
     /// <summary>
     /// Represents an file.
     /// </summary>
-    public class File
+    public class File : MetaEntity
     {
         #region Properties
 

@@ -22,7 +22,7 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
 
         #region SetUp
 
-        [SetUp]
+        [OneTimeSetUp]
         public void Init()
         {
             var account = TestAccount.Create();

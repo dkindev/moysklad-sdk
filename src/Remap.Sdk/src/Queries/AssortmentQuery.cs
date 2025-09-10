@@ -4,7 +4,7 @@ using Confiti.MoySklad.Remap.Entities;
 namespace Confiti.MoySklad.Remap.Queries
 {
     /// <summary>
-    /// Represents a assortment query.
+    /// Represents an query for list of <see cref="Assortment"/>.
     /// See also: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-assortiment.
     /// </summary>
     public class AssortmentQuery
@@ -22,10 +22,12 @@ namespace Confiti.MoySklad.Remap.Queries
 
         /// <summary>
         /// Gets or sets a value indicating whether to the entity is archived.
-        /// Note: 'filter' is allowed.
+        /// <see cref="FilterAttribute"/>;
+        /// <see cref="AllowOrderAttribute"/>
+        /// allowed.
         /// </summary>
-        /// <value>The value indicating whether to the entity is archived.</value>
         [Filter]
+        [AllowOrder]
         [Parameter("archived")]
         public bool Archived { get; set; }
 
@@ -69,38 +71,45 @@ namespace Confiti.MoySklad.Remap.Queries
 
         /// <summary>
         /// Gets or sets the description.
-        /// Note: 'filter' is allowed.
+        /// <see cref="FilterAttribute"/>;
+        /// <see cref="AllowOrderAttribute"/>
+        /// allowed.
         /// </summary>
-        /// <value>The description.</value>
         [Filter]
+        [AllowOrder]
         [Parameter("description")]
         public string Description { get; set; }
 
         /// <summary>
         /// Gets or sets the external code.
-        /// Note: 'filter' is allowed.
+        /// <see cref="FilterAttribute"/>;
+        /// <see cref="AllowOrderAttribute"/>
+        /// allowed.
         /// </summary>
-        /// <value>The external code.</value>
         [Filter]
+        [AllowOrder]
         [Parameter("externalCode")]
         public string ExternalCode { get; set; }
 
         /// <summary>
         /// Gets or sets the group.
-        /// Note: 'filter', 'expand' are allowed.
+        /// <see cref="FilterAttribute"/>;
+        /// <see cref="AllowExpandAttribute"/>
+        /// allowed.
         /// </summary>
-        /// <value>The group.</value>
         [Filter(allowNull: false)]
         [AllowExpand]
         [Parameter("group")]
         public Group Group { get; set; }
 
         /// <summary>
-        /// Gets or sets the entity id.
-        /// Note: 'filter' is allowed.
+        /// Gets or sets the ID.
+        /// <see cref="FilterAttribute"/>;
+        /// <see cref="AllowOrderAttribute"/>
+        /// allowed.
         /// </summary>
-        /// <value>The entity id.</value>
         [Filter]
+        [AllowOrder]
         [Parameter("id")]
         public Guid Id { get; set; }
 
@@ -140,10 +149,11 @@ namespace Confiti.MoySklad.Remap.Queries
         public bool IsSerialTrackable { get; set; }
 
         /// <summary>
-        /// Gets or sets the entity name.
-        /// Note: 'filter', 'order' are allowed.
+        /// Gets or sets the name.
+        /// <see cref="FilterAttribute"/>;
+        /// <see cref="AllowOrderAttribute"/>
+        /// allowed.
         /// </summary>
-        /// <value>The entity name.</value>
         [Filter(allowNull: false)]
         [AllowOrder]
         [Parameter("name")]
@@ -151,9 +161,10 @@ namespace Confiti.MoySklad.Remap.Queries
 
         /// <summary>
         /// Gets or sets the owner.
-        /// Note: 'filter', 'expand' are allowed.
+        /// <see cref="FilterAttribute"/>;
+        /// <see cref="AllowExpandAttribute"/>
+        /// allowed.
         /// </summary>
-        /// <value>The owner.</value>
         [Filter]
         [AllowExpand]
         [Parameter("owner")]
@@ -225,9 +236,9 @@ namespace Confiti.MoySklad.Remap.Queries
 
         /// <summary>
         /// Gets or sets a value indicating whether to the entity is shared.
-        /// Note: 'filter' is allowed.
+        /// <see cref="FilterAttribute"/>;
+        /// allowed.
         /// </summary>
-        /// <value>The value indicating whether to the entity is shared.</value>
         [Filter(allowContinueConstraint: false)]
         [Parameter("shared")]
         public bool Shared { get; set; }
@@ -271,10 +282,12 @@ namespace Confiti.MoySklad.Remap.Queries
 
         /// <summary>
         /// Gets or sets the date when the entity has been updated.
-        /// Note: 'filter' is allowed.
+        /// <see cref="FilterAttribute"/>;
+        /// <see cref="AllowOrderAttribute"/>
+        /// allowed.
         /// </summary>
-        /// <value>The date when the entity has been updated.</value>
         [Filter]
+        [AllowOrder]
         [Parameter("updated")]
         public DateTime Updated { get; set; }
 

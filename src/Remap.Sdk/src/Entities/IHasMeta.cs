@@ -1,4 +1,4 @@
-namespace Confiti.MoySklad.Remap.Entities
+﻿namespace Confiti.MoySklad.Remap.Entities
 {
     /// <summary>
     /// Represents an object containing the paged metadata about entity.
@@ -8,7 +8,6 @@ namespace Confiti.MoySklad.Remap.Entities
         /// <summary>
         /// Gets the metadata about entity.
         /// </summary>
-        /// <value>The metadata about entity.</value>
         TMeta Meta { get; set; }
     }
 }

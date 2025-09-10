@@ -6,7 +6,7 @@ using Confiti.MoySklad.Remap.Queries;
 namespace Confiti.MoySklad.Remap.Api
 {
     /// <inheritdoc/>
-    public class CounterpartyApi : EntityApiAccessor<Counterparty, ApiParameterBuilder, ApiParameterBuilder<CounterpartiesQuery>>
+    public class CounterpartyApi : EntityApiAccessor<Counterparty, ApiParameterBuilder<CounterpartyQuery>, ApiParameterBuilder<CounterpartiesQuery>>
     {
         #region Ctor
 

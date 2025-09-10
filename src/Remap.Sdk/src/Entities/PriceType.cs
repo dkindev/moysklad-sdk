@@ -1,4 +1,4 @@
-namespace Confiti.MoySklad.Remap.Entities
+﻿namespace Confiti.MoySklad.Remap.Entities
 {
     /// <summary>
     /// Represents an price type.
@@ -10,7 +10,6 @@ namespace Confiti.MoySklad.Remap.Entities
         /// <summary>
         /// Gets or sets the external code.
         /// </summary>
-        /// <value>The external code.</value>
         public string ExternalCode { get; set; }
 
         #endregion Properties

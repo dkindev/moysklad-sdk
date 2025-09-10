@@ -1,4 +1,4 @@
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
 namespace Confiti.MoySklad.Remap.Entities
 {
@@ -23,6 +23,42 @@ namespace Confiti.MoySklad.Remap.Entities
         /// Individual company type.
         /// </summary>
         [EnumMember(Value = "individual")]
-        Individual
+        Individual,
+
+        /// <summary>
+        /// Individual company type for UZ.
+        /// </summary>
+        [EnumMember(Value = "legalUZ")]
+        LegalUZ,
+
+        /// <summary>
+        /// Entrepreneur company type for UZ.
+        /// </summary>
+        [EnumMember(Value = "entrepreneurUZ")]
+        EntrepreneurUZ,
+
+        /// <summary>
+        /// Individual company type for UZ.
+        /// </summary>
+        [EnumMember(Value = "individualUZ")]
+        IndividualUZ,
+
+        /// <summary>
+        /// Individual company type for KZ.
+        /// </summary>
+        [EnumMember(Value = "legalKZ")]
+        LegalKZ,
+
+        /// <summary>
+        /// Entrepreneur company type for KZ.
+        /// </summary>
+        [EnumMember(Value = "entrepreneurKZ")]
+        EntrepreneurKZ,
+
+        /// <summary>
+        /// Individual company type for KZ.
+        /// </summary>
+        [EnumMember(Value = "individualKZ")]
+        IndividualKZ,
     }
 }

@@ -12,25 +12,19 @@ namespace Confiti.MoySklad.Remap.Entities
         /// <summary>
         /// Gets or sets the account id.
         /// </summary>
-        /// <value>The account id.</value>
         public string AccountId { get; set; }
 
         /// <summary>
         /// Gets or sets the entity id.
         /// </summary>
-        /// <value>The entity id.</value>
         public Guid? Id { get; set; }
 
-        /// <summary>
-        /// Gets the metadata about entity.
-        /// </summary>
-        /// <value>The metadata about entity.</value>
+        /// <inheritdoc/>
         public Meta Meta { get; set; }
 
         /// <summary>
         /// Gets or sets the entity name.
         /// </summary>
-        /// <value>The entity name.</value>
         public string Name { get; set; }
 
         #endregion Properties
