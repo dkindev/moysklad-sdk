@@ -3,7 +3,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Confiti.MoySklad.Remap.Client;
 using Confiti.MoySklad.Remap.Entities;
-using Confiti.MoySklad.Remap.Extensions;
 using Confiti.MoySklad.Remap.Queries;
 
 namespace Confiti.MoySklad.Remap.Api
@@ -42,7 +41,7 @@ namespace Confiti.MoySklad.Remap.Api
 
             var requestContext = new RequestContext($"{Path}/delete", HttpMethod.Post)
                 .WithBody(entities)
-                .WithApiExceptionFactory(CommonHelpers.CreateApiExceptionWithBulkOfErrorsAsync);
+                .WithBulkOfErrors();
 
             return await CallAsync(requestContext).ConfigureAwait(false);
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Confiti.MoySklad.Remap.Extensions;
 using Confiti.MoySklad.Remap.Queries;
 
 namespace Confiti.MoySklad.Remap.Client
@@ -63,6 +64,20 @@ namespace Confiti.MoySklad.Remap.Client
 
             context.Body = body;
             return context;
+        }
+
+        /// <summary>
+        /// Adds the factory to create the <see cref="ApiException"/> with bulk of <see cref="ApiErrorsResponse"/> to the request context.
+        /// </summary>
+        /// <param name="context">The request context.</param>
+        /// <returns>The request context.</returns>
+        /// <exception cref="ArgumentNullException">Throws if <paramref name="context"/> is null.</exception>
+        public static RequestContext WithBulkOfErrors(this RequestContext context)
+        {
+            if (context == null)
+                throw new ArgumentNullException(nameof(context));
+
+            return context.WithApiExceptionFactory(CommonHelpers.CreateApiExceptionWithBulkOfErrorsAsync);
         }
 
         /// <summary>
