@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,36 +11,40 @@ namespace Confiti.MoySklad.Remap.Client.Json
     {
         #region Type fields
 
+        public static readonly JsonSerializerSettings DefaultReadSettings;
+        public static readonly JsonSerializerSettings DefaultWriteSettings;
         private static readonly int _bufferSize = 1024;
-
-        private static readonly IList<JsonConverter> _defaultConverters = new JsonConverter[]
-        {
-            new StringEnumConverter(),
-            new AbstractProductConverter(),
-            new AssortmentConverter(),
-            new AttributeValueConverter(),
-            new BarcodeConverter(),
-            new DiscountConverter(),
-            new PaymentDocumentConverter()
-        };
-
-        private static readonly JsonSerializerSettings _defaultReadSettings = new JsonSerializerSettings
-        {
-            ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
-            Converters = _defaultConverters
-        };
-
-        private static readonly JsonSerializerSettings _defaultWriteSettings = new JsonSerializerSettings
-        {
-            DateFormatString = ApiDefaults.DEFAULT_DATETIME_FORMAT,
-            NullValueHandling = NullValueHandling.Ignore,
-            ContractResolver = DefaultMoySkladContractResolver.Instance,
-            Converters = _defaultConverters
-        };
-
         private static readonly UTF8Encoding _utf8EncodingWithoutPreamble = new UTF8Encoding(false);
 
         #endregion Type fields
+
+        static JsonSerializerHelper()
+        {
+            var converters = new JsonConverter[]
+            {
+                new StringEnumConverter(),
+                new AbstractProductConverter(),
+                new AssortmentConverter(),
+                new AttributeValueConverter(),
+                new BarcodeConverter(),
+                new DiscountConverter(),
+                new PaymentDocumentConverter()
+            };
+
+            DefaultReadSettings = new JsonSerializerSettings
+            {
+                ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
+                Converters = converters
+            };
+
+            DefaultWriteSettings = new JsonSerializerSettings
+            {
+                DateFormatString = ApiDefaults.DEFAULT_DATETIME_FORMAT,
+                NullValueHandling = NullValueHandling.Ignore,
+                ContractResolver = DefaultMoySkladContractResolver.Instance,
+                Converters = converters
+            };
+        }
 
         #region Methods
 
@@ -61,7 +64,7 @@ namespace Confiti.MoySklad.Remap.Client.Json
             {
                 try
                 {
-                    return await Task.Run(() => JsonSerializer.Create(_defaultReadSettings).Deserialize(reader, type)).ConfigureAwait(false);
+                    return await Task.Run(() => JsonSerializer.Create(DefaultReadSettings).Deserialize(reader, type)).ConfigureAwait(false);
                 }
                 catch (JsonException e)
                 {
@@ -81,7 +84,7 @@ namespace Confiti.MoySklad.Remap.Client.Json
             {
                 try
                 {
-                    JsonSerializer.Create(_defaultWriteSettings).Serialize(jsonTextWriter, body);
+                    JsonSerializer.Create(DefaultWriteSettings).Serialize(jsonTextWriter, body);
                 }
                 catch (JsonException e)
                 {
