@@ -1,45 +1,14 @@
-﻿using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Confiti.MoySklad.Remap.Api;
-using Confiti.MoySklad.Remap.Client;
 using Confiti.MoySklad.Remap.Queries;
 using FluentAssertions;
 using NUnit.Framework;
 
 namespace Confiti.MoySklad.Remap.IntegrationTests.Api
 {
-    public class RetailShiftApiTests
+    public class RetailShiftApiTests : ApiAccessorTests<RetailShiftApi>
     {
-        #region Fields
-
-        private MoySkladCredentials _credentials;
-        private RetailShiftApi _subject;
-
-        #endregion Fields
-
         #region Methods
-
-        #region SetUp
-
-        [OneTimeSetUp]
-        public void Init()
-        {
-            var account = TestAccount.Create();
-            _credentials = new MoySkladCredentials()
-            {
-                Username = account.Username,
-                Password = account.Password
-            };
-
-            var httpClientHandler = new HttpClientHandler()
-            {
-                AutomaticDecompression = DecompressionMethods.GZip
-            };
-            _subject = new RetailShiftApi(new HttpClient(httpClientHandler), _credentials);
-        }
-
-        #endregion SetUp
 
         [Test]
         public async Task GetAllAsync_should_return_status_code_200()

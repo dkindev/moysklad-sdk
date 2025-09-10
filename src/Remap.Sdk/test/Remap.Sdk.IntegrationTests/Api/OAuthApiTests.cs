@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Confiti.MoySklad.Remap.Api;
 using Confiti.MoySklad.Remap.Client;
@@ -9,37 +7,9 @@ using NUnit.Framework;
 
 namespace Confiti.MoySklad.Remap.IntegrationTests.Api
 {
-    public class OAuthApiTests
+    public class OAuthApiTests : ApiAccessorTests<OAuthApi>
     {
-        #region Fields
-
-        private MoySkladCredentials _credentials;
-        private OAuthApi _subject;
-
-        #endregion Fields
-
         #region Methods
-
-        #region SetUp
-
-        [OneTimeSetUp]
-        public void Init()
-        {
-            var account = TestAccount.Create();
-            _credentials = new MoySkladCredentials()
-            {
-                Username = account.Username,
-                Password = account.Password
-            };
-
-            var httpClientHandler = new HttpClientHandler()
-            {
-                AutomaticDecompression = DecompressionMethods.GZip
-            };
-            _subject = new OAuthApi(new HttpClient(httpClientHandler), _credentials);
-        }
-
-        #endregion SetUp
 
         [Test]
         public async Task ObtainTokenAsync_should_return_access_token()
