@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.Reflection;
+﻿using System.Reflection;
 using Newtonsoft.Json.Serialization;
 
 namespace Confiti.MoySklad.Remap.Client.Json
@@ -27,7 +26,7 @@ namespace Confiti.MoySklad.Remap.Client.Json
                 var propType = ((PropertyInfo)member).PropertyType;
                 if (propType.IsClass
                         && !propType.IsAssignableFrom(typeof(string))
-                            && member.IsDefined(typeof(DefaultValueAttribute)))
+                            && member.IsDefined(typeof(EmptyObjectValueAttribute)))
                 {
                     return new EmptyObjectValueProvider(innerProvider);
                 }

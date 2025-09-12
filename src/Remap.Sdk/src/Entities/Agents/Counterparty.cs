@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using Confiti.MoySklad.Remap.Client.Json;
 using Newtonsoft.Json;
 
@@ -87,7 +86,7 @@ namespace Confiti.MoySklad.Remap.Entities
         /// <summary>
         /// Gets or sets the files.
         /// </summary>
-        [DefaultValue(EmptyObjectValueProvider.EMPTY_OBJECT_VALUE)]
+        [EmptyObjectValue]
         [JsonProperty(NullValueHandling = NullValueHandling.Include, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public PagedEntities<File> Files { get; set; } = new PagedEntities<File>();
 
@@ -99,14 +98,14 @@ namespace Confiti.MoySklad.Remap.Entities
         /// <summary>
         /// Gets or sets the notes.
         /// </summary>
-        [DefaultValue(EmptyObjectValueProvider.EMPTY_OBJECT_VALUE)]
+        [EmptyObjectValue]
         [JsonProperty(NullValueHandling = NullValueHandling.Include, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public PagedEntities<CounterpartyNote> Notes { get; set; } = new PagedEntities<CounterpartyNote>();
 
         /// <summary>
         /// Gets or sets the owner.
         /// </summary>
-        [DefaultValue(EmptyObjectValueProvider.EMPTY_OBJECT_VALUE)]
+        [EmptyObjectValue]
         [JsonProperty(NullValueHandling = NullValueHandling.Include, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Employee Owner { get; set; } = new Employee();
 
@@ -150,7 +149,7 @@ namespace Confiti.MoySklad.Remap.Entities
         /// <summary>
         /// Gets or sets the accounts.
         /// </summary>
-        [DefaultValue(EmptyObjectValueProvider.EMPTY_OBJECT_VALUE)]
+        [EmptyObjectValue]
         [JsonProperty(NullValueHandling = NullValueHandling.Include, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public PagedEntities<AgentAccount> Accounts { get; set; } = new PagedEntities<AgentAccount>();
 
@@ -172,7 +171,7 @@ namespace Confiti.MoySklad.Remap.Entities
         /// <summary>
         /// Gets or sets the contact persons.
         /// </summary>
-        [DefaultValue(EmptyObjectValueProvider.EMPTY_OBJECT_VALUE)]
+        [EmptyObjectValue]
         [JsonProperty("contactpersons", NullValueHandling = NullValueHandling.Include, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public PagedEntities<ContactPerson> ContactPersons { get; set; } = new PagedEntities<ContactPerson>();
 

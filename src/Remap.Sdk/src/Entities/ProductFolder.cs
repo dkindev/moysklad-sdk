@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using Confiti.MoySklad.Remap.Client.Json;
 using Newtonsoft.Json;
 
@@ -20,7 +19,7 @@ namespace Confiti.MoySklad.Remap.Entities
         {
         }
 
-        private ProductFolder(bool createParent)
+        internal ProductFolder(bool createParent)
         {
             if (createParent)
                 ParentProductFolder = new ProductFolder(false);
@@ -64,7 +63,7 @@ namespace Confiti.MoySklad.Remap.Entities
         /// Gets or sets the product folder.
         /// </summary>
         /// <value>The product folder.</value>
-        [DefaultValue(EmptyObjectValueProvider.EMPTY_OBJECT_VALUE)]
+        [EmptyObjectValue]
         [JsonProperty("productFolder", NullValueHandling = NullValueHandling.Include, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public ProductFolder ParentProductFolder { get; set; }
 

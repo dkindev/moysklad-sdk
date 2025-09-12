@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using Confiti.MoySklad.Remap.Client.Json;
 using Newtonsoft.Json;
 
@@ -58,7 +57,7 @@ namespace Confiti.MoySklad.Remap.Entities
         /// Gets or sets the owner.
         /// </summary>
         /// <value>The owner.</value>
-        [DefaultValue(EmptyObjectValueProvider.EMPTY_OBJECT_VALUE)]
+        [EmptyObjectValue]
         [JsonProperty(NullValueHandling = NullValueHandling.Include, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Employee Owner { get; set; } = new Employee();
 

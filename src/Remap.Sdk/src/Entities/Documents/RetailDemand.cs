@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using Confiti.MoySklad.Remap.Client.Json;
+﻿using Confiti.MoySklad.Remap.Client.Json;
 using Newtonsoft.Json;
 
 namespace Confiti.MoySklad.Remap.Entities
@@ -111,7 +110,7 @@ namespace Confiti.MoySklad.Remap.Entities
         /// Gets or sets the positions.
         /// </summary>
         /// <value>The positions.</value>
-        [DefaultValue(EmptyObjectValueProvider.EMPTY_OBJECT_VALUE)]
+        [EmptyObjectValue]
         [JsonProperty(NullValueHandling = NullValueHandling.Include, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public PagedEntities<RetailSalesPosition> Positions { get; set; } = new PagedEntities<RetailSalesPosition>();
 
