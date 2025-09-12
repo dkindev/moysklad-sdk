@@ -1,9 +1,10 @@
-using System;
+﻿using System;
 
 namespace Confiti.MoySklad.Remap.Entities
 {
     /// <summary>
     /// Represents an unit of measure.
+    /// See also: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-edinica-izmereniq
     /// </summary>
     public class Uom : MetaEntity
     {

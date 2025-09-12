@@ -14,16 +14,7 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
         [Test]
         public async Task CreateAsync_should_return_status_code_200()
         {
-            var counterparty = await CreateCounterpartyAsync();
-
-            try
-            {
-                counterparty.Should().NotBeNull();
-            }
-            finally
-            {
-                await DeleteCounterpartyAsync(counterparty);
-            }
+            await PerformWithNewEntityAsync();
         }
 
         [Test]
@@ -71,68 +62,93 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
         [Test]
         public async Task GetAsync_should_return_status_code_200()
         {
-            var counterparty = await CreateCounterpartyAsync();
-
-            try
+            await PerformWithNewEntityAsync(async newCounterparty =>
             {
-                counterparty.Should().NotBeNull();
-                counterparty.Id.Should().NotBeNull();
+                newCounterparty.Id.Should().NotBeNull();
 
-                var response = await _subject.GetAsync(counterparty.Id.Value);
+                var response = await _subject.GetAsync(newCounterparty.Id.Value);
 
                 response.StatusCode.Should().Be(200);
                 response.Payload.Should().NotBeNull();
-                response.Payload.Id.Should().Be(counterparty.Id.Value);
-            }
-            finally
+                response.Payload.Id.Should().Be(newCounterparty.Id.Value);
+            });
+        }
+
+        [Test]
+        public async Task GetAsync_with_query_should_return_status_code_200()
+        {
+            await PerformWithNewEntityAsync(async newCounterparty =>
             {
-                await DeleteCounterpartyAsync(counterparty);
-            }
+                newCounterparty.Id.Should().NotBeNull();
+
+                var response = await _subject.GetAsync(newCounterparty.Id.Value, query =>
+                {
+                    query.Expand()
+                        .With(p => p.Accounts).And
+                        .With(p => p.ContactPersons).And
+                        .With(p => p.Files).And
+                        .With(p => p.Group).And
+                        .With(p => p.Notes).And
+                        .With(p => p.Owner).And
+                        .With(p => p.PriceType).And
+                        .With(p => p.State);
+                });
+
+                response.StatusCode.Should().Be(200);
+                response.Payload.Should().NotBeNull();
+                response.Payload.Id.Should().Be(newCounterparty.Id.Value);
+            });
         }
 
         [Test]
         public async Task UpdateAsync_should_return_status_code_200()
         {
-            var counterparty = await CreateCounterpartyAsync();
-
-            try
+            await PerformWithNewEntityAsync(async newCounterparty =>
             {
-                counterparty.Should().NotBeNull();
+                newCounterparty.Name = $"{newCounterparty.Name} (Updated)";
 
-                counterparty.Name = "Sample Counterparty (Updated)";
-
-                var response = await _subject.UpdateAsync(counterparty);
+                var response = await _subject.UpdateAsync(newCounterparty);
 
                 response.StatusCode.Should().Be(200);
                 response.Payload.Should().NotBeNull();
-                response.Payload.Name.Should().Be(counterparty.Name);
-            }
-            finally
-            {
-                await DeleteCounterpartyAsync(counterparty);
-            }
+                response.Payload.Name.Should().Be(newCounterparty.Name);
+            });
         }
 
         #endregion Methods
 
         #region Utilities
 
-        private async Task<Counterparty> CreateCounterpartyAsync()
+        private async Task PerformWithNewEntityAsync(Func<Counterparty, Task> buildAssertions = null)
         {
-            var response = await _subject.CreateAsync(new Counterparty
+            var counterparty = new Counterparty
             {
-                Name = "Sample Counterparty"
-            });
+                Name = $"Sample Counterparty {Guid.NewGuid()}"
+            };
 
-            response.StatusCode.Should().Be(200);
+            Counterparty newCounterparty = null;
 
-            return response.Payload;
-        }
+            try
+            {
+                var response = await _subject.CreateAsync(counterparty);
 
-        private async Task DeleteCounterpartyAsync(Counterparty counterparty)
-        {
-            var response = await _subject.DeleteAsync(counterparty);
-            response.StatusCode.Should().Be(200);
+                response.StatusCode.Should().Be(200);
+
+                newCounterparty = response.Payload;
+                newCounterparty.Should().NotBeNull();
+                newCounterparty.Name.Should().Be(counterparty.Name);
+
+                if (buildAssertions != null)
+                    await buildAssertions(newCounterparty);
+            }
+            finally
+            {
+                if (newCounterparty != null)
+                {
+                    var response = await _subject.DeleteAsync(newCounterparty);
+                    response.StatusCode.Should().Be(200);
+                }
+            }
         }
 
         #endregion Utilities

@@ -1,7 +1,9 @@
-﻿namespace Confiti.MoySklad.Remap.Queries
+﻿using Confiti.MoySklad.Remap.Entities;
+
+namespace Confiti.MoySklad.Remap.Queries
 {
     /// <summary>
-    /// Represents a product folder query.
+    /// Represents an query for <see cref="ProductFolder"/>.
     /// </summary>
     public class ProductFolderQuery
     {
@@ -9,9 +11,10 @@
 
         /// <summary>
         /// Gets or sets the path name.
-        /// Note: 'order' is allowed.
+        /// <see cref="FilterAttribute"/>;
+        /// <see cref="AllowOrderAttribute"/>
         /// </summary>
-        /// <value>The path name.</value>
+        [Filter]
         [AllowOrder]
         [Parameter("pathName")]
         public string PathName { get; set; }

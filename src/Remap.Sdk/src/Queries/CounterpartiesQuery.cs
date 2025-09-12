@@ -88,6 +88,8 @@ namespace Confiti.MoySklad.Remap.Queries
 
         /// <summary>
         /// Gets or sets the information about a counterparty from Kazakhstan.
+        /// <see cref="FilterAttribute"/>
+        /// allowed.
         /// </summary>
         [Filter(allowNesting: true)]
         [Parameter("mod__requisites__kz")]
@@ -95,6 +97,8 @@ namespace Confiti.MoySklad.Remap.Queries
 
         /// <summary>
         /// Gets or sets the information about a counterparty from Uzbekistan.
+        /// <see cref="FilterAttribute"/>
+        /// allowed.
         /// </summary>
         [Filter(allowNesting: true)]
         [Parameter("mod__requisites__uz")]
@@ -225,15 +229,17 @@ namespace Confiti.MoySklad.Remap.Queries
         /// <summary>
         /// Gets or sets a value indicating whether to the entity is shared.
         /// <see cref="FilterAttribute"/>;
+        /// <see cref="AllowOrderAttribute"/>
         /// allowed.
         /// </summary>
         [Filter(allowContinueConstraint: false)]
+        [AllowOrder]
         [Parameter("shared")]
         public bool Shared { get; set; }
 
         /// <summary>
         /// Gets or sets the synchronization id.
-        /// <see cref="FilterAttribute"/>;
+        /// <see cref="FilterAttribute"/>
         /// allowed.
         /// </summary>
         [Filter(overriddenOperators: new[] { "=", "!=" })]

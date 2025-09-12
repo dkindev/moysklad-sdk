@@ -1,3 +1,7 @@
+﻿using System;
+using Confiti.MoySklad.Remap.Client.Json;
+using Newtonsoft.Json;
+
 namespace Confiti.MoySklad.Remap.Entities
 {
     /// <summary>
@@ -10,55 +14,54 @@ namespace Confiti.MoySklad.Remap.Entities
         /// <summary>
         /// Gets or sets the alcoholic product information.
         /// </summary>
-        /// <value>The alcoholic product information.</value>
         public Alcoholic Alcoholic { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to the entity is serial trackable.
         /// </summary>
-        /// <value>The value indicating whether to the entity is serial trackable.</value>
         public bool? IsSerialTrackable { get; set; }
 
         /// <summary>
         /// Gets or sets the minimum balance.
         /// </summary>
-        /// <value>The minimum balance.</value>
+        [Obsolete]
         public double? MinimumBalance { get; set; }
 
         /// <summary>
         /// Gets or sets the packs.
         /// </summary>
-        /// <value>The packs.</value>
         public Pack[] Packs { get; set; }
+
+        /// <summary>
+        /// Gets or sets the code of the type of nomenclature classification of medical personal protective equipment.
+        /// </summary>
+        public string PpeType { get; set; }
 
         /// <summary>
         /// Gets or sets the supplier.
         /// </summary>
-        /// <value>The supplier.</value>
-        public Counterparty Supplier { get; set; }
+        [EmptyObjectValue]
+        [JsonProperty(NullValueHandling = NullValueHandling.Include, DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public Counterparty Supplier { get; set; } = new Counterparty();
 
         /// <summary>
         /// Gets or sets the serial numbers.
         /// </summary>
-        /// <value>The serial numbers.</value>
         public string[] Things { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to the product is tobacco.
         /// </summary>
-        /// <value>The value indicating whether to the entity is tobacco.</value>
         public bool? Tobacco { get; set; }
 
         /// <summary>
         /// Gets or sets the variants count.
         /// </summary>
-        /// <value>The variants count.</value>
         public int? VariantsCount { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to the entity is weighed.
         /// </summary>
-        /// <value>The value indicating whether to the entity is weighed.</value>
         public bool? Weighed { get; set; }
 
         #endregion Properties

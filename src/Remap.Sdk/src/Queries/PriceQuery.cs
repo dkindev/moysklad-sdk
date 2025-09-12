@@ -1,7 +1,9 @@
-﻿namespace Confiti.MoySklad.Remap.Queries
+﻿using Confiti.MoySklad.Remap.Entities;
+
+namespace Confiti.MoySklad.Remap.Queries
 {
     /// <summary>
-    /// Represents a price query.
+    /// Represents an query for <see cref="Price"/>.
     /// </summary>
     public class PriceQuery
     {
@@ -9,9 +11,9 @@
 
         /// <summary>
         /// Gets or sets the currency query.
-        /// Note: 'expand' is allowed.
+        /// <see cref="AllowExpandAttribute"/>
+        /// allowed.
         /// </summary>
-        /// <value>The currency query.</value>
         [AllowExpand]
         [Parameter("currency")]
         public CurrencyQuery Currency { get; set; }

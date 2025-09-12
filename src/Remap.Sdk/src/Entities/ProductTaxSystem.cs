@@ -1,9 +1,10 @@
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
 namespace Confiti.MoySklad.Remap.Entities
 {
     /// <summary>
     /// Represents an tax system.
+    /// See also: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-towar-towary-atributy-suschnosti-kod-sistemy-nalogooblozheniq
     /// </summary>
     public enum ProductTaxSystem
     {

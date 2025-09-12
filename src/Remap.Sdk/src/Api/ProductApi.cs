@@ -7,7 +7,7 @@ namespace Confiti.MoySklad.Remap.Api
 {
     /// <inheritdoc/>
     public class ProductApi :
-        EntityApiAccessor<Product, ApiParameterBuilder<ProductQuery>, ApiParameterBuilder<ProductQuery>>,
+        EntityApiAccessor<Product, ApiParameterBuilder<ProductQuery>, ApiParameterBuilder<ProductsQuery>>,
         IHasMetadataApi<MetadataApi<ProductMetadata, ProductMetadataQuery>>,
         IHasImageApi
     {
