@@ -1,7 +1,9 @@
-﻿namespace Confiti.MoySklad.Remap.Queries
+﻿using Confiti.MoySklad.Remap.Entities;
+
+namespace Confiti.MoySklad.Remap.Queries
 {
     /// <summary>
-    /// Represents a alcoholic query.
+    /// Represents an query for <see cref="Alcoholic"/>.
     /// </summary>
     public class AlcoholicQuery
     {
@@ -9,8 +11,9 @@
 
         /// <summary>
         /// Gets or sets the code of the type product.
+        /// <see cref="FilterAttribute"/>
+        /// allowed.
         /// </summary>
-        /// <value>The code of the type product.</value>
         [Filter(overriddenOperators: new[] { "=", "!=" })]
         [Parameter("type")]
         public int? Type { get; set; }

@@ -13,48 +13,57 @@ namespace Confiti.MoySklad.Remap.Queries
 
         /// <summary>
         /// Gets or sets the alcoholic product information. If set, then <see cref="Service"/>'s and <see cref="Bundle"/>'s are ignored.
-        /// Note: 'filter' (nested) is allowed.
+        /// <see cref="FilterAttribute"/>
+        /// allowed.
         /// </summary>
-        /// <value>The alcoholic product information.</value>
         [Filter(allowNesting: true, allowFilterByRootNestingMember: false)]
         [Parameter("alcoholic")]
         public AlcoholicQuery Alcoholic { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to the entity is archived.
+        /// <see cref="FilterAttribute"/>
+        /// allowed.
+        /// </summary>
+        [Filter]
+        [Parameter("archived")]
+        public bool Archived { get; set; }
+
+        /// <summary>
+        /// Gets or sets the article.
         /// <see cref="FilterAttribute"/>;
         /// <see cref="AllowOrderAttribute"/>
         /// allowed.
         /// </summary>
         [Filter]
         [AllowOrder]
-        [Parameter("archived")]
-        public bool Archived { get; set; }
-
-        /// <summary>
-        /// Gets or sets the article.
-        /// Note: 'filter', 'order' are allowed.
-        /// </summary>
-        /// <value>The article.</value>
-        [Filter]
-        [AllowOrder]
         [Parameter("article")]
         public string Article { get; set; }
 
         /// <summary>
-        /// Gets or sets the buy price query.
-        /// Note: 'expand' is allowed.
+        /// Gets or sets the barcode.
+        /// <see cref="FilterAttribute"/>
+        /// allowed.
         /// </summary>
-        /// <value>The buy price query.</value>
+        [Filter]
+        [Parameter("barcode")]
+        public string Barcode { get; set; }
+
+        /// <summary>
+        /// Gets or sets the buy price query.
+        /// <see cref="AllowExpandAttribute"/>
+        /// allowed.
+        /// </summary>
         [AllowExpand]
         [Parameter("buyPrice")]
         public PriceQuery BuyPrice { get; set; }
 
         /// <summary>
         /// Gets or sets the code.
-        /// Note: 'filter', 'order' are allowed.
+        /// <see cref="FilterAttribute"/>;
+        /// <see cref="AllowOrderAttribute"/>
+        /// allowed.
         /// </summary>
-        /// <value>The code.</value>
         [Filter]
         [AllowOrder]
         [Parameter("code")]
@@ -62,9 +71,9 @@ namespace Confiti.MoySklad.Remap.Queries
 
         /// <summary>
         /// Gets or sets the components query.
-        /// Note: 'expand' is allowed.
+        /// <see cref="AllowExpandAttribute"/>
+        /// allowed.
         /// </summary>
-        /// <value>The components query.</value>
         [AllowExpand]
         [Parameter("components")]
         public BundleComponentQuery Components { get; set; }
@@ -92,6 +101,15 @@ namespace Confiti.MoySklad.Remap.Queries
         public string ExternalCode { get; set; }
 
         /// <summary>
+        /// Gets or sets the path name for filtering.
+        /// <see cref="FilterAttribute"/>
+        /// allowed.
+        /// </summary>
+        [Filter]
+        [Parameter("pathname")]
+        public string FilterByPathName { get; set; }
+
+        /// <summary>
         /// Gets or sets the group.
         /// <see cref="FilterAttribute"/>;
         /// <see cref="AllowExpandAttribute"/>
@@ -115,38 +133,48 @@ namespace Confiti.MoySklad.Remap.Queries
 
         /// <summary>
         /// Gets or sets the images.
-        /// Note: 'expand' is allowed.
+        /// <see cref="AllowExpandAttribute"/>
+        /// allowed.
         /// </summary>
-        /// <value>The images.</value>
         [AllowExpand]
         [Parameter("images")]
         public PagedEntities<Image> Images { get; set; }
 
         /// <summary>
         /// Gets or sets the count of the items in transit.
-        /// Note: 'order' is allowed.
+        /// <see cref="AllowOrderAttribute"/>
+        /// allowed.
         /// </summary>
-        /// <value>The count of the items in transit.</value>
         [AllowOrder]
         [Parameter("inTransit")]
         public double InTransit { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to the entity should be alcoholic.
-        /// Note: 'filter' is allowed.
+        /// <see cref="FilterAttribute"/>
+        /// allowed.
         /// </summary>
-        /// <value>The value indicating whether to the entity should be alcoholic.</value>
         [Filter(allowNull: false, allowContinueConstraint: false)]
         [Parameter("alcoholic")]
         public bool IsAlcoholic { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to the entity should be tracked with serial number.
-        /// Note: 'filter' is allowed.
+        /// <see cref="FilterAttribute"/>
+        /// allowed.
         /// </summary>
         [Filter(allowContinueConstraint: false)]
         [Parameter("isSerialTrackable")]
         public bool IsSerialTrackable { get; set; }
+
+        /// <summary>
+        /// Gets or sets the minimum price query.
+        /// <see cref="AllowExpandAttribute"/>
+        /// allowed.
+        /// </summary>
+        [AllowExpand]
+        [Parameter("minPrice")]
+        public PriceQuery MinPrice { get; set; }
 
         /// <summary>
         /// Gets or sets the name.
@@ -172,71 +200,81 @@ namespace Confiti.MoySklad.Remap.Queries
 
         /// <summary>
         /// Gets or sets the path name.
-        /// Note: 'order' is allowed.
+        /// <see cref="AllowOrderAttribute"/>
+        /// allowed.
         /// </summary>
-        /// <value>The path name.</value>
         [AllowOrder]
         [Parameter("pathName")]
         public string PathName { get; set; }
 
         /// <summary>
         /// Gets or sets the product query.
-        /// Note: 'expand' is allowed.
+        /// <see cref="AllowExpandAttribute"/>
+        /// allowed.
         /// </summary>
-        /// <value>The product query.</value>
         [AllowExpand]
         [Parameter("product")]
         public ProductQuery Product { get; set; }
 
         /// <summary>
         /// Gets or sets the product folder.
-        /// Note: 'filter', 'expand' are allowed.
+        /// <see cref="FilterAttribute"/>;
+        /// <see cref="AllowExpandAttribute"/>
+        /// allowed.
         /// </summary>
-        /// <value>The product folder.</value>
         [Filter]
         [AllowExpand]
         [Parameter("productFolder")]
-        public ProductFolder ProductFolder { get; set; }
+        public ProductFolderQuery ProductFolder { get; set; }
 
         /// <summary>
         /// Gets or sets the quantity.
-        /// Note: 'order' is allowed.
+        /// <see cref="AllowOrderAttribute"/>
+        /// allowed.
         /// </summary>
-        /// <value>The quantity.</value>
         [AllowOrder]
         [Parameter("quantity")]
         public double Quantity { get; set; }
 
         /// <summary>
         /// Gets or sets the quantity mode. If set, then <see cref="Service"/>'s and <see cref="Bundle"/>'s are ignored.
-        /// Note: 'filter' is allowed.
+        /// <see cref="FilterAttribute"/>
+        /// allowed.
         /// </summary>
-        /// <value>The quantity mode.</value>
         [Filter]
         [Parameter("quantityMode")]
         public QuantityMode QuantityMode { get; set; }
 
         /// <summary>
         /// Gets or sets the reserve.
-        /// Note: 'order' is allowed.
+        /// <see cref="AllowOrderAttribute"/>
+        /// allowed.
         /// </summary>
-        /// <value>The reserve.</value>
         [AllowOrder]
         [Parameter("reserve")]
         public double Reserve { get; set; }
 
         /// <summary>
         /// Gets or sets the sale prices query.
-        /// Note: 'expand' is allowed.
+        /// <see cref="AllowExpandAttribute"/>
+        /// allowed.
         /// </summary>
-        /// <value>The sale prices query.</value>
         [AllowExpand]
         [Parameter("salePrices")]
         public PriceQuery SalePrices { get; set; }
 
         /// <summary>
+        /// Gets or sets the path name.
+        /// <see cref="FilterAttribute"/>
+        /// allowed.
+        /// </summary>
+        [Filter(overriddenOperators: new[] { "=" })]
+        [Parameter("search")]
+        public string Search { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether to the entity is shared.
-        /// <see cref="FilterAttribute"/>;
+        /// <see cref="FilterAttribute"/>
         /// allowed.
         /// </summary>
         [Filter(allowContinueConstraint: false)]
@@ -245,40 +283,59 @@ namespace Confiti.MoySklad.Remap.Queries
 
         /// <summary>
         /// Gets or sets the stock.
-        /// Note: 'order' is allowed.
+        /// <see cref="AllowOrderAttribute"/>
+        /// allowed.
         /// </summary>
-        /// <value>The stock.</value>
         [AllowOrder]
         [Parameter("stock")]
         public double Stock { get; set; }
 
         /// <summary>
         /// Gets or sets the stock mode. If set, then <see cref="Service"/>'s and <see cref="Bundle"/>'s are ignored.
-        /// Note: 'filter' is allowed.
+        /// <see cref="FilterAttribute"/>
+        /// allowed.
         /// </summary>
-        /// <value>The stock mode.</value>
         [Filter]
         [Parameter("stockMode")]
         public StockMode StockMode { get; set; }
 
         /// <summary>
-        /// Gets or sets the stock store.
-        /// Note: 'filter' is allowed.
+        /// Gets or sets the datetime at which the balances need to be withdrawn.
+        /// <see cref="FilterAttribute"/>
+        /// allowed.
         /// </summary>
-        /// <value>The stock store.</value>
+        [Filter]
+        [Parameter("stockMoment")]
+        public DateTime StockMoment { get; set; }
+
+        /// <summary>
+        /// Gets or sets the stock store.
+        /// <see cref="FilterAttribute"/>
+        /// allowed.
+        /// </summary>
         [Filter]
         [Parameter("stockStore")]
         public Store StockStore { get; set; }
 
         /// <summary>
         /// Gets or sets the supplier.
-        /// Note: 'filter', 'expand' are allowed.
+        /// <see cref="FilterAttribute"/>;
+        /// <see cref="AllowOrderAttribute"/>
+        /// allowed.
         /// </summary>
-        /// <value>The supplier.</value>
         [Filter]
         [AllowExpand]
         [Parameter("supplier")]
-        public Counterparty Supplier { get; set; }
+        public CounterpartyQuery Supplier { get; set; }
+
+        /// <summary>
+        /// Gets or sets the entity type.
+        /// <see cref="FilterAttribute"/>
+        /// allowed.
+        /// </summary>
+        [Filter(overriddenOperators: new[] { "=" })]
+        [Parameter("type")]
+        public EntityType Type { get; set; }
 
         /// <summary>
         /// Gets or sets the date when the entity has been updated.
@@ -293,21 +350,33 @@ namespace Confiti.MoySklad.Remap.Queries
 
         /// <summary>
         /// Gets or sets the parameter to filter by author of the latest update.
-        /// Note: 'filter' is allowed.
+        /// <see cref="FilterAttribute"/>
+        /// allowed.
         /// </summary>
-        /// <value>The parameter to filter by author of the latest update.</value>
         [Filter(allowNull: false, overriddenOperators: new[] { "=", "!=" })]
         [Parameter("updatedBy")]
         public string UpdatedBy { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to the entity is Weighed. If set, then <see cref="Service"/>'s and <see cref="Bundle"/>'s are ignored.
-        /// Note: 'filter' is allowed.
+        /// <see cref="FilterAttribute"/>
+        /// allowed.
         /// </summary>
-        /// <value>The value indicating whether to the entity is Weighed.</value>
         [Filter(allowContinueConstraint: false)]
         [Parameter("weighed")]
         public bool Weighed { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to the assortment will be displayed taking into account subgroups.
+        /// Works only if there is a non-empty filter by productFolder.
+        /// By default, true, products from child subgroups of the filtered product group / groups are displayed.
+        /// When false is passed, only products from the filtered group / groups are displayed, without taking into account subgroups.
+        /// <see cref="FilterAttribute"/>
+        /// allowed.
+        /// </summary>
+        [Filter(allowContinueConstraint: false)]
+        [Parameter("withSubFolders")]
+        public bool WithSubFolders { get; set; }
 
         #endregion Properties
     }
