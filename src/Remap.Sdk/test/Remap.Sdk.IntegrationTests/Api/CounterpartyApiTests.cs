@@ -18,9 +18,23 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
         }
 
         [Test]
+        public async Task DeleteAsync_with_counterparty_array_should_return_status_code_200()
+        {
+            await PerformWithNewEntityAsync(async newCounterparty =>
+            {
+                var response = await _subject.DeleteAsync(new[] { newCounterparty });
+
+                response.Should().NotBeNull();
+                response.StatusCode.Should().Be(200);
+            }, false);
+        }
+
+        [Test]
         public async Task GetAllAsync_should_return_status_code_200()
         {
             var response = await _subject.GetAllAsync();
+
+            response.Should().NotBeNull();
             response.StatusCode.Should().Be(200);
         }
 
@@ -56,6 +70,8 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
                 query.Limit(100);
                 query.Offset(50);
             });
+
+            response.Should().NotBeNull();
             response.StatusCode.Should().Be(200);
         }
 
@@ -68,6 +84,7 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
 
                 var response = await _subject.GetAsync(newCounterparty.Id.Value);
 
+                response.Should().NotBeNull();
                 response.StatusCode.Should().Be(200);
                 response.Payload.Should().NotBeNull();
                 response.Payload.Id.Should().Be(newCounterparty.Id.Value);
@@ -94,6 +111,7 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
                         .With(p => p.State);
                 });
 
+                response.Should().NotBeNull();
                 response.StatusCode.Should().Be(200);
                 response.Payload.Should().NotBeNull();
                 response.Payload.Id.Should().Be(newCounterparty.Id.Value);
@@ -109,6 +127,7 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
 
                 var response = await _subject.UpdateAsync(newCounterparty);
 
+                response.Should().NotBeNull();
                 response.StatusCode.Should().Be(200);
                 response.Payload.Should().NotBeNull();
                 response.Payload.Name.Should().Be(newCounterparty.Name);
@@ -119,7 +138,7 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
 
         #region Utilities
 
-        private async Task PerformWithNewEntityAsync(Func<Counterparty, Task> buildAssertions = null)
+        private async Task PerformWithNewEntityAsync(Func<Counterparty, Task> buildAssertions = null, bool deleteCounterparty = true)
         {
             var counterparty = new Counterparty
             {
@@ -132,6 +151,7 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
             {
                 var response = await _subject.CreateAsync(counterparty);
 
+                response.Should().NotBeNull();
                 response.StatusCode.Should().Be(200);
 
                 newCounterparty = response.Payload;
@@ -143,9 +163,11 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
             }
             finally
             {
-                if (newCounterparty != null)
+                if (newCounterparty != null && deleteCounterparty)
                 {
                     var response = await _subject.DeleteAsync(newCounterparty);
+
+                    response.Should().NotBeNull();
                     response.StatusCode.Should().Be(200);
                 }
             }

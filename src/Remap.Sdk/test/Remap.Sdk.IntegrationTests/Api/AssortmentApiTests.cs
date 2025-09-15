@@ -15,6 +15,8 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
         public async Task GetAllAsync_should_return_status_code_200()
         {
             var response = await _subject.GetAllAsync();
+
+            response.Should().NotBeNull();
             response.StatusCode.Should().Be(200);
         }
 
@@ -42,6 +44,7 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
                 query.Expand().With(m => m.Components).And.With(m => m.Components.Assortment);
             });
 
+            response.Should().NotBeNull();
             response.StatusCode.Should().Be(200);
         }
 
@@ -49,6 +52,8 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
         public async Task GetSettingsAsync_should_return_status_code_200()
         {
             var response = await _subject.GetSettingsAsync();
+
+            response.Should().NotBeNull();
             response.StatusCode.Should().Be(200);
         }
 
@@ -57,10 +62,12 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
         {
             var response = await _subject.GetSettingsAsync();
 
+            response.Should().NotBeNull();
             response.StatusCode.Should().Be(200);
 
             response = await _subject.UpdateSettingsAsync(response.Payload);
 
+            response.Should().NotBeNull();
             response.StatusCode.Should().Be(200);
         }
 

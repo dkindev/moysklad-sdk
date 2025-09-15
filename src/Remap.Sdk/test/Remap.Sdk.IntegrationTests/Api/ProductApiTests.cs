@@ -18,9 +18,23 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
         }
 
         [Test]
+        public async Task DeleteAsync_with_product_array_should_return_status_code_200()
+        {
+            await PerformWithNewEntityAsync(async newProduct =>
+            {
+                var response = await _subject.DeleteAsync(new[] { newProduct });
+
+                response.Should().NotBeNull();
+                response.StatusCode.Should().Be(200);
+            }, false);
+        }
+
+        [Test]
         public async Task GetAllAsync_should_return_status_code_200()
         {
             var response = await _subject.GetAllAsync();
+
+            response.Should().NotBeNull();
             response.StatusCode.Should().Be(200);
         }
 
@@ -52,6 +66,8 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
                 query.Limit(100);
                 query.Offset(50);
             });
+
+            response.Should().NotBeNull();
             response.StatusCode.Should().Be(200);
         }
 
@@ -64,6 +80,7 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
 
                 var response = await _subject.GetAsync(newProduct.Id.Value);
 
+                response.Should().NotBeNull();
                 response.StatusCode.Should().Be(200);
                 response.Payload.Should().NotBeNull();
                 response.Payload.Id.Should().Be(newProduct.Id.Value);
@@ -91,6 +108,7 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
                         .With(p => p.Images);
                 });
 
+                response.Should().NotBeNull();
                 response.StatusCode.Should().Be(200);
                 response.Payload.Should().NotBeNull();
                 response.Payload.Id.Should().Be(newProduct.Id.Value);
@@ -116,7 +134,7 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
 
         #region Utilities
 
-        private async Task PerformWithNewEntityAsync(Func<Product, Task> buildAssertions = null)
+        private async Task PerformWithNewEntityAsync(Func<Product, Task> buildAssertions = null, bool deleteProduct = true)
         {
             var product = new Product
             {
@@ -129,6 +147,7 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
             {
                 var response = await _subject.CreateAsync(product);
 
+                response.Should().NotBeNull();
                 response.StatusCode.Should().Be(200);
 
                 newProduct = response.Payload;
@@ -140,9 +159,11 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
             }
             finally
             {
-                if (newProduct != null)
+                if (newProduct != null && deleteProduct)
                 {
                     var response = await _subject.DeleteAsync(newProduct);
+
+                    response.Should().NotBeNull();
                     response.StatusCode.Should().Be(200);
                 }
             }
