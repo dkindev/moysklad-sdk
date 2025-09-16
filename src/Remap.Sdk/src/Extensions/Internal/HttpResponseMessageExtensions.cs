@@ -1,10 +1,10 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
 using Confiti.MoySklad.Remap.Client;
 using Confiti.MoySklad.Remap.Client.Json;
+using Confiti.MoySklad.Remap.Extensions;
 
 namespace System.Net.Http
 {
@@ -65,52 +65,13 @@ namespace System.Net.Http
             if (response == null)
                 throw new ArgumentNullException(nameof(response));
 
-            var errorMessage = new StringBuilder();
-
-            errorMessage.Append(message);
-
             var errorsResponse = await response
                 .DeserializeAsync(typeof(ApiErrorsResponse))
                 .ConfigureAwait(false) as ApiErrorsResponse;
-            if (errorsResponse?.Errors?.Any() == true)
-            {
-                errorMessage.AppendLine();
-
-                for (var i = 0; i < errorsResponse.Errors.Length; i++)
-                {
-                    errorMessage
-                        .AppendFormat("\tError {0}:", i.ToString())
-                        .AppendLine();
-
-                    if (errorsResponse.Errors[i].Code.HasValue)
-                    {
-                        errorMessage
-                            .AppendFormat("\t\tCode: {0}:", errorsResponse.Errors[i].Code.ToString())
-                            .AppendLine();
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(errorsResponse.Errors[i].Error))
-                    {
-                        errorMessage
-                            .AppendFormat("\t\tDescription: {0}:", errorsResponse.Errors[i].Error)
-                            .AppendLine();
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(errorsResponse.Errors[i].MoreInfo))
-                    {
-                        errorMessage
-                            .AppendFormat("\t\tMore info: {0}:", errorsResponse.Errors[i].MoreInfo)
-                            .AppendLine();
-                    }
-
-                    if (i != errorsResponse.Errors.Length - 1)
-                        errorMessage.AppendLine();
-                }
-            }
 
             return new ApiException(
                 (int)response.StatusCode,
-                errorMessage.ToString(),
+                CommonHelpers.SerializeErrors(message, errorsResponse?.Errors),
                 response.Headers.ToDictionary(),
                 errorsResponse?.Errors,
                 innerException
