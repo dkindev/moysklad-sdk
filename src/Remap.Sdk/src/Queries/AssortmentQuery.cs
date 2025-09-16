@@ -264,7 +264,7 @@ namespace Confiti.MoySklad.Remap.Queries
         public PriceQuery SalePrices { get; set; }
 
         /// <summary>
-        /// Gets or sets the path name.
+        /// Gets or sets the prefix search on string fields.
         /// <see cref="FilterAttribute"/>
         /// allowed.
         /// </summary>
