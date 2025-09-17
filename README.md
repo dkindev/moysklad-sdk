@@ -23,15 +23,15 @@
 - [Сборка и запуск тестов](#build-and-test)
 - [Поддержка](#support)
 
-## <a href="#remap-api" id="remap-api" name="remap-api">Remap API</a>
+## <a id="remap-api">Remap API</a>
 
-### <a href="#remap-api__install" id="remap-api__install" name="remap-api__install">Установка / .NET CLI</a>
+### <a id="remap-api__install">Установка / .NET CLI</a>
 
 ```
 dotnet add package Confiti.MoySklad.Remap.Sdk
 ```
 
-### <a href="#remap-api__quick-start" id="remap-api__quick-start" name="remap-api__quick-start">Быстрый старт</a>
+### <a id="remap-api__quick-start">Быстрый старт</a>
 
 ```csharp
 var credentials = new MoySkladCredentials()
@@ -45,7 +45,7 @@ var api = new MoySkladApi(credentials);
 var response = await api.Assortment.GetAllAsync();
 ```
 
-### <a href="#remap-api__custom-http-client" id="remap-api__custom-http-client" name="remap-api__custom-http-client">Пользовательский HttpClient</a>
+### <a id="remap-api__custom-http-client">Пользовательский HttpClient</a>
 
 Создайте свой _HttpClient_
 
@@ -77,7 +77,7 @@ services
     });
 ```
 
-### <a href="#remap-api__exceptions-processing" id="remap-api__exceptions-processing" name="remap-api__exceptions-processing">Обработка исключений</a>
+### <a id="remap-api__exceptions-processing">Обработка исключений</a>
 
 ````csharp
 try
@@ -98,7 +98,7 @@ catch (ApiException ex)
 }
 ````
 
-### <a href="#remap-api__auth" id="remap-api__auth" name="remap-api__auth">Аутентификация</a>
+### <a id="remap-api__auth">Аутентификация</a>
 
 ```csharp
 var api = new MoySkladApi(new MoySkladCredentials()
@@ -118,7 +118,7 @@ var response = await api.OAuth.GetAsync();
 var accessToken = response.Payload.AccessToken;
 ```
 
-### <a href="#remap-api__download-images" id="remap-api__download-images" name="remap-api__download-images">Загрузка картинок</a>
+### <a id="remap-api__download-images">Загрузка картинок</a>
 
 ```csharp
 var imagesResponse = await api.Product.Images.GetAllAsync(Guid.Parse("product-id"));
@@ -139,13 +139,13 @@ foreach (var image in imagesResponse.Payload.Rows)
 }
 ```
 
-### <a href="#remap-api__get-metadata" id="remap-api__get-metadata" name="remap-api__get-metadata">Получение метаданных</a>
+### <a id="remap-api__get-metadata">Получение метаданных</a>
 
 ````csharp
 await api.Product.Metadata.GetAsync();
 ````
 
-### <a href="#remap-api__filter" id="remap-api__filter" name="remap-api__filter">Фильтрация</a>
+### <a id="remap-api__filter">Фильтрация</a>
 
 ```csharp
 var response = await api.Assortment.GetAllAsync(query => 
@@ -184,51 +184,66 @@ var response = await api.Assortment.GetAllAsync(query =>
 });
 ```
 
-### <a href="#remap-api__sort" id="remap-api__sort" name="remap-api__sort">Сортировка</a>
+### <a id="remap-api__sort">Сортировка</a>
 
 ```csharp
-query.Order().By(p => p.Name)
-    // пользовательское поле
-    .And.By("your-custom-property-name");
+var response = await api.Assortment.GetAllAsync(query => 
+{
+    query.Order().By(p => p.Name)
+        // пользовательское поле
+        .And.By("your-custom-property-name");
 
-// по убыванию
-query.Order().By(p => p.Name, OrderBy.Desc)
+    // по убыванию
+    query.Order().By(p => p.Name, OrderBy.Desc)
+});
 ```
 
-### <a href="#remap-api__limit-offset" id="remap-api__limit-offset" name="remap-api__limit-offset">Limit и Offset</a>
+### <a id="remap-api__limit-offset">Limit и Offset</a>
 
 ````csharp
-query.Limit(100);
-query.Offset(50);
+var response = await api.Assortment.GetAllAsync(query => 
+{
+    query.Limit(100);
+    query.Offset(50);
+});
 ````
 
-### <a href="#remap-api__searching" id="remap-api__searching" name="remap-api__searching">Контекстный поиск</a>
+### <a id="remap-api__searching">Контекстный поиск</a>
 
 ````csharp
-query.Search("foo");
+var response = await api.Assortment.GetAllAsync(query => 
+{
+    query.Search("foo");
+});
 ````
 
-### <a href="#remap-api__grouping" id="remap-api__grouping" name="remap-api__grouping">Группировка</a>
+### <a id="remap-api__grouping">Группировка</a>
 
 ````csharp
-query.GroupBy(GroupBy.Consignment);
+var response = await api.Assortment.GetAllAsync(query => 
+{
+    query.GroupBy(GroupBy.Consignment);
+});
 ````
 
-### <a href="#remap-api__expand" id="remap-api__expand" name="remap-api__expand">Expand / вложенные объекты</a>
+### <a id="remap-api__expand">Expand / вложенные объекты</a>
 
 ````csharp
-query.Expand().With(p => p.Images)
-    .And.With(p => p.Product)
-    // вложенный
-    .And.With(p => p.SalePrices.Currency)
-    .And.With(p => p.BuyPrice.Currency)
-    .And.With(p => p.Product.SalePrices.Currency)
-    .And.With(p => p.Product.BuyPrice.Currency)
-    // или в виде строки
-    .And.With("salePrices.currency")
+var response = await api.Assortment.GetAllAsync(query => 
+{
+    query.Expand().With(p => p.Images)
+        .And.With(p => p.Product)
+        // вложенный
+        .And.With(p => p.SalePrices.Currency)
+        .And.With(p => p.BuyPrice.Currency)
+        .And.With(p => p.Product.SalePrices.Currency)
+        .And.With(p => p.Product.BuyPrice.Currency)
+        // или в виде строки
+        .And.With("salePrices.currency")
+});
 ````
 
-## <a href="#build-and-test" id="build-and-test" name="build-and-test">Сборка и запуск тестов</a>
+## <a id="build-and-test">Сборка и запуск тестов</a>
 
 В корневой папке в файле `build.ps1` укажите `API_LOGIN` и `API_PASSWORD`
 
@@ -239,7 +254,7 @@ query.Expand().With(p => p.Images)
 # $Env:API_PASSWORD = "enter-your-api-password-here"
 ```
 
-## <a href="#support" id="support" name="support">Поддержка</a>
+## <a id="support">Поддержка</a>
 
 Я открыт для любого сотрудничества и расширения функционала данного проекта. Pull requests приветствуются, однако сначала откройте issue для обсуждения.
 
