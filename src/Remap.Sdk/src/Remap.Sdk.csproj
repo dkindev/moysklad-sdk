@@ -3,7 +3,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>Confiti.MoySklad.Remap.Sdk</PackageId>
     <Description>The C# client for interaction with the Remap API of the MoySklad.</Description>
-    <Version>0.21.1</Version>
+    <Version>0.22.0</Version>
     <Authors>Dmitry Kiselev</Authors>
     <PackageTags>moysklad;moysklad-sdk;moysklad-client</PackageTags>
     <PackageProjectUrl>https://github.com/dkindev/moysklad-sdk</PackageProjectUrl>
