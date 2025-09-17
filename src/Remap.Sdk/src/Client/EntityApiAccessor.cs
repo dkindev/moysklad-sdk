@@ -39,27 +39,34 @@ namespace Confiti.MoySklad.Remap.Client
         /// Creates the <typeparamref name="TEntity"/>.
         /// </summary>
         /// <param name="entity">The <typeparamref name="TEntity"/> to create.</param>
+        /// <param name="buildQuery">The action to build the query.</param>
         /// <returns>The <see cref="Task"/> containing the API response with the created <typeparamref name="TEntity"/>.</returns>
-        public virtual async Task<ApiResponse<TEntity>> CreateAsync(TEntity entity)
+        public virtual async Task<ApiResponse<TEntity>> CreateAsync(TEntity entity, Action<TEntityBuilder> buildQuery = null)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            return await CallAsync<TEntity>(new RequestContext(HttpMethod.Post).WithBody(entity)).ConfigureAwait(false);
+            var requestContext = new RequestContext(HttpMethod.Post)
+                .WithBody(entity)
+                .WithQuery(buildQuery);
+
+            return await CallAsync<TEntity>(requestContext).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Creates or updates the <typeparamref name="TEntity"/>'s.
         /// </summary>
         /// <param name="entities">The <typeparamref name="TEntity"/>'s to create or update.</param>
+        /// <param name="buildQuery">The action to build the query.</param>
         /// <returns>The <see cref="Task"/> containing the API response with the array of <typeparamref name="TEntity"/>.</returns>
-        public virtual async Task<ApiResponse<TEntity[]>> CreateOrUpdateAsync(TEntity[] entities)
+        public virtual async Task<ApiResponse<TEntity[]>> CreateOrUpdateAsync(TEntity[] entities, Action<TEntityBuilder> buildQuery = null)
         {
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
 
             var requestContext = new RequestContext(HttpMethod.Post)
                 .WithBody(entities)
+                .WithQuery(buildQuery)
                 .WithBulkOfErrors();
 
             return await CallAsync<TEntity[]>(requestContext).ConfigureAwait(false);
@@ -136,8 +143,9 @@ namespace Confiti.MoySklad.Remap.Client
         /// Updates the <typeparamref name="TEntity"/>.
         /// </summary>
         /// <param name="entity">The <typeparamref name="TEntity"/> to update.</param>
+        /// <param name="buildQuery">The action to build the query.</param>
         /// <returns>The <see cref="Task"/> containing the API response with the updated <typeparamref name="TEntity"/>.</returns>
-        public virtual async Task<ApiResponse<TEntity>> UpdateAsync(TEntity entity)
+        public virtual async Task<ApiResponse<TEntity>> UpdateAsync(TEntity entity, Action<TEntityBuilder> buildQuery = null)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
@@ -147,7 +155,8 @@ namespace Confiti.MoySklad.Remap.Client
                 throw new ApiException(400, "The entity ID cannot be null.");
 
             var requestContext = new RequestContext($"{Path}/{id}", HttpMethod.Put)
-                .WithBody(entity);
+                .WithBody(entity)
+                .WithQuery(buildQuery);
 
             return await CallAsync<TEntity>(requestContext).ConfigureAwait(false);
         }
