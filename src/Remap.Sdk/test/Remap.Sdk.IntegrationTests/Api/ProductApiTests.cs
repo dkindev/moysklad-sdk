@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Confiti.MoySklad.Remap.Api;
 using Confiti.MoySklad.Remap.Entities;
@@ -18,15 +20,46 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
         }
 
         [Test]
-        public async Task DeleteAsync_with_product_array_should_return_status_code_200()
+        public async Task CreateOrUpdateAsync_should_return_status_code_200()
         {
-            await PerformWithNewEntityAsync(async newProduct =>
+            var productsCount = 3;
+            var products = new List<Product>();
+
+            for (var i = 0; i < productsCount; i++)
             {
-                var response = await _subject.DeleteAsync(new[] { newProduct });
+                products.Add(new Product
+                {
+                    Name = $"Sample Product {Guid.NewGuid()} {i}"
+                });
+            }
+
+            Product[] newProducts = null;
+
+            try
+            {
+                var response = await _subject.CreateOrUpdateAsync(products.ToArray());
 
                 response.Should().NotBeNull();
                 response.StatusCode.Should().Be(200);
-            }, false);
+
+                newProducts = response.Payload;
+                newProducts.Should().NotBeNull();
+
+                newProducts
+                    .All(newProduct => products.Any(product => product.Name.Equals(newProduct.Name)))
+                    .Should()
+                    .BeTrue();
+            }
+            finally
+            {
+                if (newProducts != null && newProducts.Length > 0)
+                {
+                    var response = await _subject.DeleteAsync(newProducts);
+
+                    response.Should().NotBeNull();
+                    response.StatusCode.Should().Be(200);
+                }
+            }
         }
 
         [Test]
@@ -134,7 +167,7 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
 
         #region Utilities
 
-        private async Task PerformWithNewEntityAsync(Func<Product, Task> buildAssertions = null, bool deleteProduct = true)
+        private async Task PerformWithNewEntityAsync(Func<Product, Task> buildAssertions = null)
         {
             var product = new Product
             {
@@ -159,7 +192,7 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
             }
             finally
             {
-                if (newProduct != null && deleteProduct)
+                if (newProduct != null)
                 {
                     var response = await _subject.DeleteAsync(newProduct);
 
