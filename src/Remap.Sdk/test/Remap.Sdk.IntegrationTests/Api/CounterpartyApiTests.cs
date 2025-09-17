@@ -22,44 +22,29 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
         [Test]
         public async Task CreateOrUpdateAsync_should_return_status_code_200()
         {
-            var counterpartiesCount = 3;
-            var counterparties = new List<Counterparty>();
+            await PerformWithNewEntitiesAsync();
+        }
 
-            for (var i = 0; i < counterpartiesCount; i++)
+        [Test]
+        public async Task CreateOrUpdateAsync_with_updated_counterparties_should_return_status_code_200()
+        {
+            await PerformWithNewEntitiesAsync(async newCounterparties =>
             {
-                counterparties.Add(new Counterparty
+                foreach (var newCounterparty in newCounterparties)
                 {
-                    Name = $"Sample Counterparty {Guid.NewGuid()} {i}"
-                });
-            }
+                    newCounterparty.Name = $"{newCounterparty.Name} (Updated)";
+                }
 
-            Counterparty[] newCounterparties = null;
-
-            try
-            {
-                var response = await _subject.CreateOrUpdateAsync(counterparties.ToArray());
+                var response = await _subject.CreateOrUpdateAsync(newCounterparties);
 
                 response.Should().NotBeNull();
                 response.StatusCode.Should().Be(200);
-
-                newCounterparties = response.Payload;
-                newCounterparties.Should().NotBeNull();
-
-                newCounterparties
-                    .All(newCounterparty => counterparties.Any(counterparty => counterparty.Name.Equals(newCounterparty.Name)))
+                response.Payload.Should().NotBeNull();
+                response.Payload
+                    .All(updatedCounterparty => newCounterparties.Any(counterparty => counterparty.Name.Equals(updatedCounterparty.Name)))
                     .Should()
                     .BeTrue();
-            }
-            finally
-            {
-                if (newCounterparties != null && newCounterparties.Length > 0)
-                {
-                    var response = await _subject.DeleteAsync(newCounterparties);
-
-                    response.Should().NotBeNull();
-                    response.StatusCode.Should().Be(200);
-                }
-            }
+            });
         }
 
         [Test]
@@ -170,6 +155,51 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
         #endregion Methods
 
         #region Utilities
+
+        private async Task PerformWithNewEntitiesAsync(Func<Counterparty[], Task> buildAssertions = null)
+        {
+            var counterpartiesCount = 3;
+            var counterparties = new List<Counterparty>();
+
+            for (var i = 0; i < counterpartiesCount; i++)
+            {
+                counterparties.Add(new Counterparty
+                {
+                    Name = $"Sample Counterparty {Guid.NewGuid()} {i}"
+                });
+            }
+
+            Counterparty[] newCounterparties = null;
+
+            try
+            {
+                var response = await _subject.CreateOrUpdateAsync(counterparties.ToArray());
+
+                response.Should().NotBeNull();
+                response.StatusCode.Should().Be(200);
+
+                newCounterparties = response.Payload;
+                newCounterparties.Should().NotBeNull();
+
+                newCounterparties
+                    .All(newCounterparty => counterparties.Any(counterparty => counterparty.Name.Equals(newCounterparty.Name)))
+                    .Should()
+                    .BeTrue();
+
+                if (buildAssertions != null)
+                    await buildAssertions(newCounterparties);
+            }
+            finally
+            {
+                if (newCounterparties != null && newCounterparties.Length > 0)
+                {
+                    var response = await _subject.DeleteAsync(newCounterparties);
+
+                    response.Should().NotBeNull();
+                    response.StatusCode.Should().Be(200);
+                }
+            }
+        }
 
         private async Task PerformWithNewEntityAsync(Func<Counterparty, Task> buildAssertions = null)
         {

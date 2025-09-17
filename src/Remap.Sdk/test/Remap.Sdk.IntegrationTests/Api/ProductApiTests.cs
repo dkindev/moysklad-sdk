@@ -63,6 +63,28 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
         }
 
         [Test]
+        public async Task CreateOrUpdateAsync_with_updated_products_should_return_status_code_200()
+        {
+            await PerformWithNewEntitiesAsync(async newProducts =>
+            {
+                foreach (var newProduct in newProducts)
+                {
+                    newProduct.Name = $"{newProduct.Name} (Updated)";
+                }
+
+                var response = await _subject.CreateOrUpdateAsync(newProducts);
+
+                response.Should().NotBeNull();
+                response.StatusCode.Should().Be(200);
+                response.Payload.Should().NotBeNull();
+                response.Payload
+                    .All(updatedProduct => newProducts.Any(product => product.Name.Equals(updatedProduct.Name)))
+                    .Should()
+                    .BeTrue();
+            });
+        }
+
+        [Test]
         public async Task GetAllAsync_should_return_status_code_200()
         {
             var response = await _subject.GetAllAsync();
@@ -166,6 +188,51 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
         #endregion Methods
 
         #region Utilities
+
+        private async Task PerformWithNewEntitiesAsync(Func<Product[], Task> buildAssertions = null)
+        {
+            var productsCount = 3;
+            var products = new List<Product>();
+
+            for (var i = 0; i < productsCount; i++)
+            {
+                products.Add(new Product
+                {
+                    Name = $"Sample Product {Guid.NewGuid()} {i}"
+                });
+            }
+
+            Product[] newProducts = null;
+
+            try
+            {
+                var response = await _subject.CreateOrUpdateAsync(products.ToArray());
+
+                response.Should().NotBeNull();
+                response.StatusCode.Should().Be(200);
+
+                newProducts = response.Payload;
+                newProducts.Should().NotBeNull();
+
+                newProducts
+                    .All(newProduct => products.Any(product => product.Name.Equals(newProduct.Name)))
+                    .Should()
+                    .BeTrue();
+
+                if (buildAssertions != null)
+                    await buildAssertions(newProducts);
+            }
+            finally
+            {
+                if (newProducts != null && newProducts.Length > 0)
+                {
+                    var response = await _subject.DeleteAsync(newProducts);
+
+                    response.Should().NotBeNull();
+                    response.StatusCode.Should().Be(200);
+                }
+            }
+        }
 
         private async Task PerformWithNewEntityAsync(Func<Product, Task> buildAssertions = null)
         {
