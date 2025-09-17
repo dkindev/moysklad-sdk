@@ -34,7 +34,7 @@ namespace Confiti.MoySklad.Remap.Api
         /// </summary>
         /// <param name="buildQuery">The action to build the query.</param>
         /// <returns>The <see cref="Task"/> containing the API response with the list of <see cref="ReportProfitByCounterparty"/>.</returns>
-        public virtual Task<ApiResponse<EntitiesResponse<ReportProfitByCounterparty>>> GetByCounterpartyAsync(Action<ApiParameterBuilder> buildQuery = null)
+        public virtual Task<ApiResponse<EntitiesResponse<ReportProfitByCounterparty>>> GetByCounterpartyAsync(Action<ReportProfitApiParameterBuilder> buildQuery = null)
         {
             return GetReportAsync<ReportProfitByCounterparty>("bycounterparty", buildQuery);
         }
@@ -44,7 +44,7 @@ namespace Confiti.MoySklad.Remap.Api
         /// </summary>
         /// <param name="buildQuery">The action to build the query.</param>
         /// <returns>The <see cref="Task"/> containing the API response with the list of <see cref="ReportProfitByEmployee"/>.</returns>
-        public virtual Task<ApiResponse<EntitiesResponse<ReportProfitByEmployee>>> GetByEmployeeAsync(Action<ApiParameterBuilder> buildQuery = null)
+        public virtual Task<ApiResponse<EntitiesResponse<ReportProfitByEmployee>>> GetByEmployeeAsync(Action<ReportProfitApiParameterBuilder> buildQuery = null)
         {
             return GetReportAsync<ReportProfitByEmployee>("byemployee", buildQuery);
         }
@@ -54,7 +54,7 @@ namespace Confiti.MoySklad.Remap.Api
         /// </summary>
         /// <param name="buildQuery">The action to build the query.</param>
         /// <returns>The <see cref="Task"/> containing the API response with the list of <see cref="ReportProfitByProduct"/>.</returns>
-        public virtual Task<ApiResponse<EntitiesResponse<ReportProfitByProduct>>> GetByProductAsync(Action<ApiParameterBuilder> buildQuery = null)
+        public virtual Task<ApiResponse<EntitiesResponse<ReportProfitByProduct>>> GetByProductAsync(Action<ReportProfitApiParameterBuilder> buildQuery = null)
         {
             return GetReportAsync<ReportProfitByProduct>("byproduct", buildQuery);
         }
@@ -64,7 +64,7 @@ namespace Confiti.MoySklad.Remap.Api
         /// </summary>
         /// <param name="buildQuery">The action to build the query.</param>
         /// <returns>The <see cref="Task"/> containing the API response with the list of <see cref="ReportProfitBySalesChannel"/>.</returns>
-        public virtual Task<ApiResponse<EntitiesResponse<ReportProfitBySalesChannel>>> GetBySalesChannelAsync(Action<ApiParameterBuilder> buildQuery = null)
+        public virtual Task<ApiResponse<EntitiesResponse<ReportProfitBySalesChannel>>> GetBySalesChannelAsync(Action<ReportProfitApiParameterBuilder> buildQuery = null)
         {
             return GetReportAsync<ReportProfitBySalesChannel>("bysaleschannel", buildQuery);
         }
@@ -74,7 +74,7 @@ namespace Confiti.MoySklad.Remap.Api
         /// </summary>
         /// <param name="buildQuery">The action to build the query.</param>
         /// <returns>The <see cref="Task"/> containing the API response with the list of <see cref="ReportProfitByVariant"/>.</returns>
-        public virtual Task<ApiResponse<EntitiesResponse<ReportProfitByVariant>>> GetByVariantAsync(Action<ApiParameterBuilder> buildQuery = null)
+        public virtual Task<ApiResponse<EntitiesResponse<ReportProfitByVariant>>> GetByVariantAsync(Action<ReportProfitApiParameterBuilder> buildQuery = null)
         {
             return GetReportAsync<ReportProfitByVariant>("byvariant", buildQuery);
         }
@@ -83,7 +83,7 @@ namespace Confiti.MoySklad.Remap.Api
 
         #region Utilities
 
-        private async Task<ApiResponse<EntitiesResponse<TReport>>> GetReportAsync<TReport>(string relativePath, Action<ApiParameterBuilder> buildQuery = null)
+        private async Task<ApiResponse<EntitiesResponse<TReport>>> GetReportAsync<TReport>(string relativePath, Action<ReportProfitApiParameterBuilder> buildQuery = null)
         {
             return await CallAsync<EntitiesResponse<TReport>>(new RequestContext($"{Path}/{relativePath}", HttpMethod.Get).WithQuery(buildQuery))
                 .ConfigureAwait(false);
