@@ -3,7 +3,7 @@
 namespace Confiti.MoySklad.Remap.Queries
 {
     /// <summary>
-    /// Represents a <see cref="ProductMetadata"/> query.
+    /// Represents an query for <see cref="ProductMetadata"/>.
     /// </summary>
     public class ProductMetadataQuery
     {
@@ -11,9 +11,9 @@ namespace Confiti.MoySklad.Remap.Queries
 
         /// <summary>
         /// Gets or sets the attributes.
-        /// Note: 'expand' is allowed.
+        /// <see cref="AllowExpandAttribute"/>
+        /// allowed.
         /// </summary>
-        /// <value>The attributes.</value>
         [AllowExpand]
         [Parameter("attributes")]
         public PagedEntities<AttributeDefinition> Attributes { get; set; }

@@ -171,6 +171,27 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
         }
 
         [Test]
+        public async Task Metadata_GetAsync_should_return_status_code_200()
+        {
+            var response = await _subject.Metadata.GetAsync();
+
+            response.Should().NotBeNull();
+            response.Payload.Should().NotBeNull();
+        }
+
+        [Test]
+        public async Task Metadata_GetAsync_with_query_should_return_status_code_200()
+        {
+            var response = await _subject.Metadata.GetAsync(query =>
+            {
+                query.Expand().With(p => p.Attributes);
+            });
+
+            response.Should().NotBeNull();
+            response.Payload.Should().NotBeNull();
+        }
+
+        [Test]
         public async Task UpdateAsync_should_return_status_code_200()
         {
             await PerformWithNewEntityAsync(async newProduct =>
