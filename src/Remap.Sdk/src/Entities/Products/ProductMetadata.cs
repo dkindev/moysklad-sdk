@@ -10,8 +10,12 @@
         /// <summary>
         /// Gets or sets the attributes.
         /// </summary>
-        /// <value>The attributes.</value>
         public PagedEntities<AttributeDefinition> Attributes { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to the products should be created as shared.
+        /// </summary>
+        public bool CreateShared { get; set; }
 
         #endregion Properties
     }
