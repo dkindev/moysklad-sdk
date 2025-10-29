@@ -1,4 +1,4 @@
-namespace Confiti.MoySklad.Remap.Entities
+﻿namespace Confiti.MoySklad.Remap.Entities
 {
     /// <summary>
     /// Represents an abstract attribute.
@@ -10,7 +10,6 @@ namespace Confiti.MoySklad.Remap.Entities
         /// <summary>
         /// Gets or sets the attribute type.
         /// </summary>
-        /// <value>The attribute type.</value>
         public AttributeType? Type { get; set; }
 
         #endregion Properties

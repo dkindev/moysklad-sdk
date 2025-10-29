@@ -7,9 +7,7 @@
     {
         #region Properties
 
-        /// <summary>
-        /// Gets the paged metadata.
-        /// </summary>
+        /// <inheritdoc/>
         public PagedMeta Meta { get; set; }
 
         /// <summary>

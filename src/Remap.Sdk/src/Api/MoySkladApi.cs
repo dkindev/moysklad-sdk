@@ -24,16 +24,6 @@ namespace Confiti.MoySklad.Remap.Api
         #region Properties
 
         /// <summary>
-        /// Gets the <see cref="AssortmentApi"/>.
-        /// </summary>
-        public AssortmentApi Assortment => GetApi<AssortmentApi>();
-
-        /// <summary>
-        /// Gets the <see cref="BundleApi"/>.
-        /// </summary>
-        public BundleApi Bundle => GetApi<BundleApi>();
-
-        /// <summary>
         /// Gets or sets the <see cref="HttpClient"/>.
         /// </summary>
         public HttpClient Client
@@ -72,11 +62,6 @@ namespace Confiti.MoySklad.Remap.Api
         }
 
         /// <summary>
-        /// Gets the <see cref="CounterpartyApi"/>.
-        /// </summary>
-        public CounterpartyApi Counterparty => GetApi<CounterpartyApi>();
-
-        /// <summary>
         /// Gets or sets the <see cref="MoySkladCredentials"/>.
         /// </summary>
         public MoySkladCredentials Credentials
@@ -107,6 +92,164 @@ namespace Confiti.MoySklad.Remap.Api
                 }
             }
         }
+
+        /// <summary>
+        /// Gets the API to interact with MoySklad '/entity' endpoint.
+        /// </summary>
+        public EntityEndpoint Entity { get; }
+
+        /// <summary>
+        /// Gets the API to interact with MoySklad '/report' endpoint.
+        /// </summary>
+        public ReportEndpoint Report { get; }
+
+        #endregion Properties
+
+        #region Ctor
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="MoySkladApi" /> class
+        /// with MoySklad credentials (optional) and the HTTP client (use defaults if not specified).
+        /// </summary>
+        /// <param name="credentials">The MoySklad credentials.</param>
+        /// <param name="httpClient">The HTTP client (if specified, then the HTTP client should be disposed manually).</param>
+        public MoySkladApi(MoySkladCredentials credentials = null, HttpClient httpClient = null)
+        {
+            _credentials = credentials;
+            _apiAccessors = new ConcurrentDictionary<RuntimeTypeHandle, ApiAccessor>();
+            _useCustomHttpClient = httpClient != null;
+            _client = httpClient ??
+                new HttpClient(
+                    new HttpClientHandler()
+                    {
+                        AutomaticDecompression = DecompressionMethods.GZip
+                    },
+                    true
+                );
+
+            Entity = new EntityEndpoint(GetApi);
+            Report = new ReportEndpoint(GetApi);
+        }
+
+        #endregion Ctor
+
+        #region Methods
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting
+        /// unmanaged resources.
+        /// </summary>
+        /// <param name="disposing">A value indicating whether to the managed resources must be disposed.</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_isDisposed)
+            {
+                _isDisposed = true;
+
+                if (disposing && !_useCustomHttpClient)
+                    DisposeDefaultHttpClient();
+            }
+        }
+
+        /// <summary>
+        /// Gets the instance of the specific <see cref="ApiAccessor"/> class.
+        /// </summary>
+        /// <param name="apiAccessorType">The type of the specific <see cref="ApiAccessor"/>.</param>
+        /// <returns>The instance of the specific <see cref="ApiAccessor"/> class.</returns>
+        /// <exception cref="ObjectDisposedException">Throws if object was disposed.</exception>
+        protected ApiAccessor GetApi(Type apiAccessorType)
+        {
+            if (_isDisposed)
+                throw new ObjectDisposedException(nameof(MoySkladApi));
+
+            return _apiAccessors.GetOrAdd(
+                apiAccessorType.TypeHandle,
+                typeHandle => (ApiAccessor)Activator.CreateInstance(Type.GetTypeFromHandle(typeHandle), _client, _credentials)
+            );
+        }
+
+        #endregion Methods
+
+        #region Utilities
+
+        private void DisposeDefaultHttpClient()
+        {
+            _client?.Dispose();
+            _client = null;
+        }
+
+        #endregion Utilities
+    }
+
+    #region Endpoints
+
+    /// <summary>
+    /// Represents an abstraction to interact with MoySklad endpoint.
+    /// </summary>
+    public abstract class Endpoint
+    {
+        #region Fields
+
+        private readonly Func<Type, ApiAccessor> _apiAccessorFactory;
+
+        #endregion Fields
+
+        #region Ctor
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="Endpoint" /> class with <see cref="ApiAccessor"/> factory.
+        /// </summary>
+        /// <param name="apiAccessorFactory">The factory to create the instance of the specific <see cref="ApiAccessor"/> class.</param>
+        internal Endpoint(Func<Type, ApiAccessor> apiAccessorFactory)
+        {
+            _apiAccessorFactory = apiAccessorFactory;
+        }
+
+        #endregion Ctor
+
+        #region Methods
+
+        /// <summary>
+        /// Gets the instance of <typeparamref name="TApi"/> class.
+        /// </summary>
+        /// <typeparam name="TApi">The type of the <see cref="ApiAccessor"/>.</typeparam>
+        /// <returns>The instance of <typeparamref name="TApi"/> class.</returns>
+        protected TApi GetApi<TApi>() where TApi : ApiAccessor
+        {
+            return (TApi)_apiAccessorFactory(typeof(TApi));
+        }
+
+        #endregion Methods
+    }
+
+    /// <summary>
+    /// Represents an API to interact with MoySklad '/entity' endpoint.
+    /// </summary>
+    public class EntityEndpoint : Endpoint
+    {
+        #region Properties
+
+        /// <summary>
+        /// Gets the <see cref="AssortmentApi"/>.
+        /// </summary>
+        public AssortmentApi Assortment => GetApi<AssortmentApi>();
+
+        /// <summary>
+        /// Gets the <see cref="BundleApi"/>.
+        /// </summary>
+        public BundleApi Bundle => GetApi<BundleApi>();
+
+        /// <summary>
+        /// Gets the <see cref="CounterpartyApi"/>.
+        /// </summary>
+        public CounterpartyApi Counterparty => GetApi<CounterpartyApi>();
 
         /// <summary>
         /// Gets the <see cref="CustomerOrderApi"/>.
@@ -189,11 +332,6 @@ namespace Confiti.MoySklad.Remap.Api
         public PurchaseReturnApi PurchaseReturn => GetApi<PurchaseReturnApi>();
 
         /// <summary>
-        /// Gets the <see cref="ReportProfitApi"/>.
-        /// </summary>
-        public ReportProfitApi ReportProfit => GetApi<ReportProfitApi>();
-
-        /// <summary>
         /// Gets the <see cref="RetailDemandApi"/>.
         /// </summary>
         public RetailDemandApi RetailDemand => GetApi<RetailDemandApi>();
@@ -253,80 +391,44 @@ namespace Confiti.MoySklad.Remap.Api
         #region Ctor
 
         /// <summary>
-        /// Creates a new instance of the <see cref="MoySkladApi" /> class
-        /// with MoySklad credentials (optional) and the HTTP client (use defaults if not specified).
+        /// Creates a new instance of the <see cref="EntityEndpoint" /> class with <see cref="ApiAccessor"/> factory.
         /// </summary>
-        /// <param name="credentials">The MoySklad credentials.</param>
-        /// <param name="httpClient">The HTTP client (if specified, then the HTTP client should be disposed manually).</param>
-        public MoySkladApi(MoySkladCredentials credentials = null, HttpClient httpClient = null)
+        /// <param name="apiAccessorFactory">The factory to create the instance of the specific <see cref="ApiAccessor"/> class.</param>
+        internal EntityEndpoint(Func<Type, ApiAccessor> apiAccessorFactory)
+            : base(apiAccessorFactory)
         {
-            _credentials = credentials;
-            _apiAccessors = new ConcurrentDictionary<RuntimeTypeHandle, ApiAccessor>();
-            _useCustomHttpClient = httpClient != null;
-            _client = httpClient ??
-                new HttpClient(
-                    new HttpClientHandler()
-                    {
-                        AutomaticDecompression = DecompressionMethods.GZip
-                    },
-                    true
-                );
         }
 
         #endregion Ctor
-
-        #region Methods
-
-        /// <inheritdoc/>
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting
-        /// unmanaged resources.
-        /// </summary>
-        /// <param name="disposing">A value indicating whether to the managed resources must be disposed.</param>
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_isDisposed)
-            {
-                _isDisposed = true;
-
-                if (disposing && !_useCustomHttpClient)
-                    DisposeDefaultHttpClient();
-            }
-        }
-
-        /// <summary>
-        /// Gets the instance of <typeparamref name="TApi"/> class.
-        /// </summary>
-        /// <typeparam name="TApi">The type of the <see cref="ApiAccessor"/>.</typeparam>
-        /// <returns>The instance of <typeparamref name="TApi"/> class.</returns>
-        /// <exception cref="ObjectDisposedException">Throws if object was disposed.</exception>
-        protected TApi GetApi<TApi>() where TApi : ApiAccessor
-        {
-            if (_isDisposed)
-                throw new ObjectDisposedException(nameof(MoySkladApi));
-
-            return (TApi)_apiAccessors.GetOrAdd(
-                typeof(TApi).TypeHandle,
-                typeHandle => (ApiAccessor)Activator.CreateInstance(Type.GetTypeFromHandle(typeHandle), _client, _credentials)
-            );
-        }
-
-        #endregion Methods
-
-        #region Utilities
-
-        private void DisposeDefaultHttpClient()
-        {
-            _client?.Dispose();
-            _client = null;
-        }
-
-        #endregion Utilities
     }
+
+    /// <summary>
+    /// Represents an API to interact with MoySklad '/report' endpoint.
+    /// </summary>
+    public class ReportEndpoint : Endpoint
+    {
+        #region Properties
+
+        /// <summary>
+        /// Gets the <see cref="ReportProfitApi"/>.
+        /// </summary>
+        public ReportProfitApi ReportProfit => GetApi<ReportProfitApi>();
+
+        #endregion Properties
+
+        #region Ctor
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="ReportEndpoint" /> class with <see cref="ApiAccessor"/> factory.
+        /// </summary>
+        /// <param name="apiAccessorFactory">The factory to create the instance of the specific <see cref="ApiAccessor"/> class.</param>
+        internal ReportEndpoint(Func<Type, ApiAccessor> apiAccessorFactory)
+            : base(apiAccessorFactory)
+        {
+        }
+
+        #endregion Ctor
+    }
+
+    #endregion Endpoints
 }

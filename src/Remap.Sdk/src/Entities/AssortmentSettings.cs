@@ -1,6 +1,4 @@
-﻿using Confiti.MoySklad.Remap.Entities;
-
-namespace Confiti.MoySklad.Remap.Entities
+﻿namespace Confiti.MoySklad.Remap.Entities
 {
     /// <summary>
     /// Represents an assortment barcode rules.

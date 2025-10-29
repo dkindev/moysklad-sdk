@@ -1,4 +1,4 @@
-namespace Confiti.MoySklad.Remap.Entities
+﻿namespace Confiti.MoySklad.Remap.Entities
 {
     /// <summary>
     /// Represents an operation.
@@ -10,13 +10,9 @@ namespace Confiti.MoySklad.Remap.Entities
         /// <summary>
         /// Gets or sets the linked sum.
         /// </summary>
-        /// <value>The linked sum.</value>
         public long? LinkedSum { get; set; }
 
-        /// <summary>
-        /// Gets or sets the link to the operation to which this payment is linked.
-        /// </summary>
-        /// <value>The link to the operation to which this payment is linked.</value>
+        /// <inheritdoc/>
         public Meta Meta { get; set; }
 
         #endregion Properties

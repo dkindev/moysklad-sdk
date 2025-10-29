@@ -1,4 +1,4 @@
-namespace Confiti.MoySklad.Remap.Entities
+﻿namespace Confiti.MoySklad.Remap.Entities
 {
     /// <summary>
     /// Represents the response containing the list of entities with <see cref="Context"/>.
@@ -8,10 +8,7 @@ namespace Confiti.MoySklad.Remap.Entities
     {
         #region Properties
 
-        /// <summary>
-        /// Gets or sets the response context.
-        /// </summary>
-        /// <value>The response context.</value>
+        /// <inheritdoc/>
         public Context Context { get; set; }
 
         #endregion Properties

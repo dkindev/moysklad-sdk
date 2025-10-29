@@ -1,4 +1,4 @@
-namespace Confiti.MoySklad.Remap.Entities
+﻿namespace Confiti.MoySklad.Remap.Entities
 {
     /// <summary>
     /// Represents an object containing the context about employee.
@@ -8,7 +8,6 @@ namespace Confiti.MoySklad.Remap.Entities
         /// <summary>
         /// Gets or sets the context about employee.
         /// </summary>
-        /// <value>The context about employee.</value>
         Context Context { get; set; }
     }
 }
