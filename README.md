@@ -42,7 +42,7 @@ var credentials = new MoySkladCredentials()
     Password = "your-password",
 };
 var api = new MoySkladApi(credentials);
-var response = await api.Assortment.GetAllAsync();
+var response = await api.Entity.Assortment.GetAllAsync();
 ```
 
 ### <a id="remap-api__custom-http-client">Пользовательский HttpClient</a>
@@ -82,7 +82,7 @@ services
 ````csharp
 try
 {
-    await api.Counterparty.GetAllAsync();
+    await api.Entity.Counterparty.GetAllAsync();
 }
 catch (ApiException ex)
 {
@@ -114,18 +114,18 @@ api.Credentials = new MoySkladCredentials()
     Password = "new-password",
 };
 
-var response = await api.OAuth.GetAsync();
+var response = await api.Entity.OAuth.GetAsync();
 var accessToken = response.Payload.AccessToken;
 ```
 
 ### <a id="remap-api__download-images">Загрузка картинок</a>
 
 ```csharp
-var imagesResponse = await api.Product.Images.GetAllAsync(Guid.Parse("product-id"));
+var imagesResponse = await api.Entity.Product.Images.GetAllAsync(Guid.Parse("product-id"));
 
 foreach (var image in imagesResponse.Payload.Rows)
 {
-    var imageDataResponse = await api.Product.Images.DownloadAsync(image);
+    var imageDataResponse = await api.Entity.Product.Images.DownloadAsync(image);
 
     await using (imageDataResponse.Payload)
     {
@@ -142,13 +142,13 @@ foreach (var image in imagesResponse.Payload.Rows)
 ### <a id="remap-api__get-metadata">Получение метаданных</a>
 
 ````csharp
-await api.Product.Metadata.GetAsync();
+await api.Entity.Product.Metadata.GetAsync();
 ````
 
 ### <a id="remap-api__filter">Фильтрация</a>
 
 ```csharp
-var response = await api.Assortment.GetAllAsync(query => 
+var response = await api.Entity.Assortment.GetAllAsync(query => 
 {
     // фильтр '='
     query.Parameter(p => p.Name).Should().Be("foo");
@@ -187,7 +187,7 @@ var response = await api.Assortment.GetAllAsync(query =>
 ### <a id="remap-api__sort">Сортировка</a>
 
 ```csharp
-var response = await api.Assortment.GetAllAsync(query => 
+var response = await api.Entity.Assortment.GetAllAsync(query => 
 {
     query.Order().By(p => p.Name)
         // пользовательское поле
@@ -201,7 +201,7 @@ var response = await api.Assortment.GetAllAsync(query =>
 ### <a id="remap-api__limit-offset">Limit и Offset</a>
 
 ````csharp
-var response = await api.Assortment.GetAllAsync(query => 
+var response = await api.Entity.Assortment.GetAllAsync(query => 
 {
     query.Limit(100);
     query.Offset(50);
@@ -211,7 +211,7 @@ var response = await api.Assortment.GetAllAsync(query =>
 ### <a id="remap-api__searching">Контекстный поиск</a>
 
 ````csharp
-var response = await api.Assortment.GetAllAsync(query => 
+var response = await api.Entity.Assortment.GetAllAsync(query => 
 {
     query.Search("foo");
 });
@@ -220,7 +220,7 @@ var response = await api.Assortment.GetAllAsync(query =>
 ### <a id="remap-api__grouping">Группировка</a>
 
 ````csharp
-var response = await api.Assortment.GetAllAsync(query => 
+var response = await api.Entity.Assortment.GetAllAsync(query => 
 {
     query.GroupBy(GroupBy.Consignment);
 });
@@ -229,7 +229,7 @@ var response = await api.Assortment.GetAllAsync(query =>
 ### <a id="remap-api__expand">Expand / вложенные объекты</a>
 
 ````csharp
-var response = await api.Assortment.GetAllAsync(query => 
+var response = await api.Entity.Assortment.GetAllAsync(query => 
 {
     query.Expand().With(p => p.Images)
         .And.With(p => p.Product)
