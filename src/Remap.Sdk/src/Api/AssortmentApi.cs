@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Confiti.MoySklad.Remap.Client;
@@ -34,7 +35,7 @@ namespace Confiti.MoySklad.Remap.Api
         /// </summary>
         /// <param name="entities">The assortment to delete.</param>
         /// <returns>The <see cref="Task"/> containing the API response.</returns>
-        public virtual async Task<ApiResponse> DeleteAsync(Assortment[] entities)
+        public virtual async Task<ApiResponse> DeleteAsync(IEnumerable<Assortment> entities)
         {
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));

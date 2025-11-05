@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Confiti.MoySklad.Remap.Entities;
@@ -59,7 +60,7 @@ namespace Confiti.MoySklad.Remap.Client
         /// <param name="entities">The <typeparamref name="TEntity"/>'s to create or update.</param>
         /// <param name="buildQuery">The action to build the query.</param>
         /// <returns>The <see cref="Task"/> containing the API response with the array of <typeparamref name="TEntity"/>.</returns>
-        public virtual async Task<ApiResponse<TEntity[]>> CreateOrUpdateAsync(TEntity[] entities, Action<TEntityBuilder> buildQuery = null)
+        public virtual async Task<ApiResponse<TEntity[]>> CreateOrUpdateAsync(IEnumerable<TEntity> entities, Action<TEntityBuilder> buildQuery = null)
         {
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
@@ -94,7 +95,7 @@ namespace Confiti.MoySklad.Remap.Client
         /// </summary>
         /// <param name="entities">The <typeparamref name="TEntity"/>'s to delete.</param>
         /// <returns>The <see cref="Task"/> containing the API response.</returns>
-        public virtual async Task<ApiResponse> DeleteAsync(TEntity[] entities)
+        public virtual async Task<ApiResponse> DeleteAsync(IEnumerable<TEntity> entities)
         {
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
