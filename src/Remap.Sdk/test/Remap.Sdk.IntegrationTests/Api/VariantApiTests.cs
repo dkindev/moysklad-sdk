@@ -5,8 +5,10 @@ using NUnit.Framework;
 
 namespace Confiti.MoySklad.Remap.IntegrationTests.Api
 {
-    public class VariantApiTests : ApiAccessorTests<VariantApi>
+    public class VariantApiTests
     {
+        private static VariantApi _subject = Pipeline.Instance.Api.Entity.Variant;
+
         #region Methods
 
         [Test]

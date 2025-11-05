@@ -1,60 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Confiti.MoySklad.Remap.Api;
 using Confiti.MoySklad.Remap.Entities;
+using Confiti.MoySklad.Remap.Queries;
 using FluentAssertions;
 using NUnit.Framework;
 
 namespace Confiti.MoySklad.Remap.IntegrationTests.Api
 {
-    public class CounterpartyApiTests : ApiAccessorTests<CounterpartyApi>
+    public class CounterpartyApiTests : EntityApiAccessorTests<CounterpartyApi, Counterparty, ApiParameterBuilder<CounterpartyQuery>, ApiParameterBuilder<CounterpartiesQuery>>
     {
+        #region Ctor
+
+        public CounterpartyApiTests() : base(Pipeline.Instance.Api.Entity.Counterparty)
+        {
+        }
+
+        #endregion Ctor
+
         #region Methods
-
-        [Test]
-        public async Task CreateAsync_should_return_status_code_200()
-        {
-            await PerformWithNewEntityAsync();
-        }
-
-        [Test]
-        public async Task CreateOrUpdateAsync_should_return_status_code_200()
-        {
-            await PerformWithNewEntitiesAsync();
-        }
-
-        [Test]
-        public async Task CreateOrUpdateAsync_with_updated_counterparties_should_return_status_code_200()
-        {
-            await PerformWithNewEntitiesAsync(async newCounterparties =>
-            {
-                foreach (var newCounterparty in newCounterparties)
-                {
-                    newCounterparty.Name = $"{newCounterparty.Name} (Updated)";
-                }
-
-                var response = await _subject.CreateOrUpdateAsync(newCounterparties);
-
-                response.Should().NotBeNull();
-                response.StatusCode.Should().Be(200);
-                response.Payload.Should().NotBeNull();
-                response.Payload
-                    .All(updatedCounterparty => newCounterparties.Any(counterparty => counterparty.Name.Equals(updatedCounterparty.Name)))
-                    .Should()
-                    .BeTrue();
-            });
-        }
-
-        [Test]
-        public async Task GetAllAsync_should_return_status_code_200()
-        {
-            var response = await _subject.GetAllAsync();
-
-            response.Should().NotBeNull();
-            response.StatusCode.Should().Be(200);
-        }
 
         [Test]
         public async Task GetAllAsync_with_query_should_return_status_code_200()
@@ -94,148 +58,28 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
         }
 
         [Test]
-        public async Task GetAsync_should_return_status_code_200()
-        {
-            await PerformWithNewEntityAsync(async newCounterparty =>
-            {
-                newCounterparty.Id.Should().NotBeNull();
-
-                var response = await _subject.GetAsync(newCounterparty.Id.Value);
-
-                response.Should().NotBeNull();
-                response.StatusCode.Should().Be(200);
-                response.Payload.Should().NotBeNull();
-                response.Payload.Id.Should().Be(newCounterparty.Id.Value);
-            });
-        }
-
-        [Test]
         public async Task GetAsync_with_query_should_return_status_code_200()
         {
-            await PerformWithNewEntityAsync(async newCounterparty =>
+            var sample = await Pipeline.Instance.GetOrCreateSampleEntityAsync(_subject);
+            var response = await _subject.GetAsync(sample.Id.Value, query =>
             {
-                newCounterparty.Id.Should().NotBeNull();
-
-                var response = await _subject.GetAsync(newCounterparty.Id.Value, query =>
-                {
-                    query.Expand()
-                        .With(p => p.Accounts).And
-                        .With(p => p.ContactPersons).And
-                        .With(p => p.Files).And
-                        .With(p => p.Group).And
-                        .With(p => p.Notes).And
-                        .With(p => p.Owner).And
-                        .With(p => p.PriceType).And
-                        .With(p => p.State);
-                });
-
-                response.Should().NotBeNull();
-                response.StatusCode.Should().Be(200);
-                response.Payload.Should().NotBeNull();
-                response.Payload.Id.Should().Be(newCounterparty.Id.Value);
+                query.Expand()
+                    .With(p => p.Accounts).And
+                    .With(p => p.ContactPersons).And
+                    .With(p => p.Files).And
+                    .With(p => p.Group).And
+                    .With(p => p.Notes).And
+                    .With(p => p.Owner).And
+                    .With(p => p.PriceType).And
+                    .With(p => p.State);
             });
-        }
 
-        [Test]
-        public async Task UpdateAsync_should_return_status_code_200()
-        {
-            await PerformWithNewEntityAsync(async newCounterparty =>
-            {
-                newCounterparty.Name = $"{newCounterparty.Name} (Updated)";
-
-                var response = await _subject.UpdateAsync(newCounterparty);
-
-                response.Should().NotBeNull();
-                response.StatusCode.Should().Be(200);
-                response.Payload.Should().NotBeNull();
-                response.Payload.Name.Should().Be(newCounterparty.Name);
-            });
+            response.Should().NotBeNull();
+            response.StatusCode.Should().Be(200);
+            response.Payload.Should().NotBeNull();
+            response.Payload.Id.Should().Be(sample.Id.Value);
         }
 
         #endregion Methods
-
-        #region Utilities
-
-        private async Task PerformWithNewEntitiesAsync(Func<Counterparty[], Task> buildAssertions = null)
-        {
-            var counterpartiesCount = 3;
-            var counterparties = new List<Counterparty>();
-
-            for (var i = 0; i < counterpartiesCount; i++)
-            {
-                counterparties.Add(new Counterparty
-                {
-                    Name = $"Sample Counterparty {Guid.NewGuid()} {i}"
-                });
-            }
-
-            Counterparty[] newCounterparties = null;
-
-            try
-            {
-                var response = await _subject.CreateOrUpdateAsync(counterparties.ToArray());
-
-                response.Should().NotBeNull();
-                response.StatusCode.Should().Be(200);
-
-                newCounterparties = response.Payload;
-                newCounterparties.Should().NotBeNull();
-
-                newCounterparties
-                    .All(newCounterparty => counterparties.Any(counterparty => counterparty.Name.Equals(newCounterparty.Name)))
-                    .Should()
-                    .BeTrue();
-
-                if (buildAssertions != null)
-                    await buildAssertions(newCounterparties);
-            }
-            finally
-            {
-                if (newCounterparties != null && newCounterparties.Length > 0)
-                {
-                    var response = await _subject.DeleteAsync(newCounterparties);
-
-                    response.Should().NotBeNull();
-                    response.StatusCode.Should().Be(200);
-                }
-            }
-        }
-
-        private async Task PerformWithNewEntityAsync(Func<Counterparty, Task> buildAssertions = null)
-        {
-            var counterparty = new Counterparty
-            {
-                Name = $"Sample Counterparty {Guid.NewGuid()}"
-            };
-
-            Counterparty newCounterparty = null;
-
-            try
-            {
-                var response = await _subject.CreateAsync(counterparty);
-
-                response.Should().NotBeNull();
-                response.StatusCode.Should().Be(200);
-
-                newCounterparty = response.Payload;
-                newCounterparty.Should().NotBeNull();
-                newCounterparty.Name.Should().Be(counterparty.Name);
-
-                if (buildAssertions != null)
-                    await buildAssertions(newCounterparty);
-            }
-            finally
-            {
-                if (newCounterparty != null)
-                {
-                    var response = await _subject.DeleteAsync(newCounterparty);
-
-                    response.Should().NotBeNull();
-                    response.StatusCode.Should().Be(200);
-                }
-            }
-        }
-
-        #endregion Utilities
     }
 }

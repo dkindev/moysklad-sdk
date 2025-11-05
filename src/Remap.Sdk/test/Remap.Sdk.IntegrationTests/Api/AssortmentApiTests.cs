@@ -1,15 +1,29 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Confiti.MoySklad.Remap.Api;
+using Confiti.MoySklad.Remap.Entities;
 using Confiti.MoySklad.Remap.Queries;
 using FluentAssertions;
 using NUnit.Framework;
 
 namespace Confiti.MoySklad.Remap.IntegrationTests.Api
 {
-    public class AssortmentApiTests : ApiAccessorTests<AssortmentApi>
+    public class AssortmentApiTests
     {
+        private static AssortmentApi _subject = Pipeline.Instance.Api.Entity.Assortment;
+
         #region Methods
+
+        [Test]
+        public async Task DeleteAsync_should_return_status_code_200()
+        {
+            var samples = await Pipeline.Instance.CreateSampleEntitiesAsync(Pipeline.Instance.Api.Entity.Product, autoDelete: false);
+            var response = await _subject.DeleteAsync(samples.Select(x => new Assortment { Meta = x.Meta }));
+
+            response.Should().NotBeNull();
+            response.StatusCode.Should().Be(200);
+        }
 
         [Test]
         public async Task GetAllAsync_should_return_status_code_200()

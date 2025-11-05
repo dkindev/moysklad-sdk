@@ -6,8 +6,10 @@ using NUnit.Framework;
 
 namespace Confiti.MoySklad.Remap.IntegrationTests.Api
 {
-    public class RetailShiftApiTests : ApiAccessorTests<RetailShiftApi>
+    public class RetailShiftApiTests
     {
+        private static RetailShiftApi _subject = Pipeline.Instance.Api.Entity.RetailShift;
+
         #region Methods
 
         [Test]

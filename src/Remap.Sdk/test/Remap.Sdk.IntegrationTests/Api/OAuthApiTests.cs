@@ -7,8 +7,10 @@ using NUnit.Framework;
 
 namespace Confiti.MoySklad.Remap.IntegrationTests.Api
 {
-    public class OAuthApiTests : ApiAccessorTests<OAuthApi>
+    public class OAuthApiTests
     {
+        private static OAuthApi _subject = Pipeline.Instance.Api.Entity.OAuth;
+
         #region Methods
 
         [Test]
@@ -30,11 +32,21 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
         [Test]
         public async Task GetAsync_with_invalid_password_should_throw_api_exception()
         {
-            _credentials.Password = null;
+            var oldPassword = _subject.Credentials.Password;
+
+            _subject.Credentials.Password = null;
 
             Func<Task> getAccessToken = () => _subject.GetAsync();
             var apiException = await getAccessToken.Should().ThrowAsync<ApiException>();
-            apiException.And.ErrorCode.Should().Be(401);
+
+            try
+            {
+                apiException.And.ErrorCode.Should().Be(401);
+            }
+            finally
+            {
+                _subject.Credentials.Password = oldPassword;
+            }
         }
 
         #endregion Methods

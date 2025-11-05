@@ -6,8 +6,10 @@ using NUnit.Framework;
 
 namespace Confiti.MoySklad.Remap.IntegrationTests.Api
 {
-    public class ReportProfitApiTests : ApiAccessorTests<ReportProfitApi>
+    public class ReportProfitApiTests
     {
+        private static ReportProfitApi _subject = Pipeline.Instance.Api.Report.Profit;
+
         #region Methods
 
         [Test]

@@ -1,97 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Confiti.MoySklad.Remap.Api;
+using Confiti.MoySklad.Remap.Client;
 using Confiti.MoySklad.Remap.Entities;
+using Confiti.MoySklad.Remap.Queries;
 using FluentAssertions;
 using NUnit.Framework;
 
 namespace Confiti.MoySklad.Remap.IntegrationTests.Api
 {
-    public class ProductApiTests : ApiAccessorTests<ProductApi>
+    public class ProductApiTests : EntityApiAccessorTests<ProductApi, Product, ApiParameterBuilder<ProductQuery>, ApiParameterBuilder<ProductsQuery>>
     {
+        #region Ctor
+
+        public ProductApiTests() : base(Pipeline.Instance.Api.Entity.Product)
+        {
+        }
+
+        #endregion Ctor
+
         #region Methods
-
-        [Test]
-        public async Task CreateAsync_should_return_status_code_200()
-        {
-            await PerformWithNewEntityAsync();
-        }
-
-        [Test]
-        public async Task CreateOrUpdateAsync_should_return_status_code_200()
-        {
-            var productsCount = 3;
-            var products = new List<Product>();
-
-            for (var i = 0; i < productsCount; i++)
-            {
-                products.Add(new Product
-                {
-                    Name = $"Sample Product {Guid.NewGuid()} {i}"
-                });
-            }
-
-            Product[] newProducts = null;
-
-            try
-            {
-                var response = await _subject.CreateOrUpdateAsync(products.ToArray());
-
-                response.Should().NotBeNull();
-                response.StatusCode.Should().Be(200);
-
-                newProducts = response.Payload;
-                newProducts.Should().NotBeNull();
-
-                newProducts
-                    .All(newProduct => products.Any(product => product.Name.Equals(newProduct.Name)))
-                    .Should()
-                    .BeTrue();
-            }
-            finally
-            {
-                if (newProducts != null && newProducts.Length > 0)
-                {
-                    var response = await _subject.DeleteAsync(newProducts);
-
-                    response.Should().NotBeNull();
-                    response.StatusCode.Should().Be(200);
-                }
-            }
-        }
-
-        [Test]
-        public async Task CreateOrUpdateAsync_with_updated_products_should_return_status_code_200()
-        {
-            await PerformWithNewEntitiesAsync(async newProducts =>
-            {
-                foreach (var newProduct in newProducts)
-                {
-                    newProduct.Name = $"{newProduct.Name} (Updated)";
-                }
-
-                var response = await _subject.CreateOrUpdateAsync(newProducts);
-
-                response.Should().NotBeNull();
-                response.StatusCode.Should().Be(200);
-                response.Payload.Should().NotBeNull();
-                response.Payload
-                    .All(updatedProduct => newProducts.Any(product => product.Name.Equals(updatedProduct.Name)))
-                    .Should()
-                    .BeTrue();
-            });
-        }
-
-        [Test]
-        public async Task GetAllAsync_should_return_status_code_200()
-        {
-            var response = await _subject.GetAllAsync();
-
-            response.Should().NotBeNull();
-            response.StatusCode.Should().Be(200);
-        }
 
         [Test]
         public async Task GetAllAsync_with_query_should_return_status_code_200()
@@ -127,47 +55,27 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
         }
 
         [Test]
-        public async Task GetAsync_should_return_status_code_200()
-        {
-            await PerformWithNewEntityAsync(async newProduct =>
-            {
-                newProduct.Id.Should().NotBeNull();
-
-                var response = await _subject.GetAsync(newProduct.Id.Value);
-
-                response.Should().NotBeNull();
-                response.StatusCode.Should().Be(200);
-                response.Payload.Should().NotBeNull();
-                response.Payload.Id.Should().Be(newProduct.Id.Value);
-            });
-        }
-
-        [Test]
         public async Task GetAsync_with_query_should_return_status_code_200()
         {
-            await PerformWithNewEntityAsync(async newProduct =>
+            var sample = await Pipeline.Instance.GetOrCreateSampleEntityAsync(_subject);
+            var response = await _subject.GetAsync(sample.Id.Value, query =>
             {
-                newProduct.Id.Should().NotBeNull();
-
-                var response = await _subject.GetAsync(newProduct.Id.Value, query =>
-                {
-                    query.Expand()
-                        .With(p => p.Packs.Uom).And
-                        .With(p => p.Country).And
-                        .With(p => p.Files).And
-                        .With(p => p.ProductFolder).And
-                        .With(p => p.Group).And
-                        .With(p => p.Owner).And
-                        .With(p => p.Supplier).And
-                        .With(p => p.Uom).And
-                        .With(p => p.Images);
-                });
-
-                response.Should().NotBeNull();
-                response.StatusCode.Should().Be(200);
-                response.Payload.Should().NotBeNull();
-                response.Payload.Id.Should().Be(newProduct.Id.Value);
+                query.Expand()
+                    .With(p => p.Packs.Uom).And
+                    .With(p => p.Country).And
+                    .With(p => p.Files).And
+                    .With(p => p.ProductFolder).And
+                    .With(p => p.Group).And
+                    .With(p => p.Owner).And
+                    .With(p => p.Supplier).And
+                    .With(p => p.Uom).And
+                    .With(p => p.Images);
             });
+
+            response.Should().NotBeNull();
+            response.StatusCode.Should().Be(200);
+            response.Payload.Should().NotBeNull();
+            response.Payload.Id.Should().Be(sample.Id.Value);
         }
 
         [Test]
@@ -192,104 +100,23 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
         }
 
         [Test]
-        public async Task UpdateAsync_should_return_status_code_200()
+        public async Task Metadata_GetAttributesAsync_should_return_status_code_200()
         {
-            await PerformWithNewEntityAsync(async newProduct =>
+            try
             {
-                newProduct.Name = $"{newProduct.Name} (Updated)";
+                var response = await _subject.Metadata.GetAttributesAsync();
 
-                var response = await _subject.UpdateAsync(newProduct);
-
-                response.StatusCode.Should().Be(200);
+                response.Should().NotBeNull();
                 response.Payload.Should().NotBeNull();
-                response.Payload.Name.Should().Be(newProduct.Name);
-            });
+            }
+            catch (ApiException ex)
+            {
+                // skip if not available on this tariff
+                if (ex.ErrorCode != 403)
+                    throw;
+            }
         }
 
         #endregion Methods
-
-        #region Utilities
-
-        private async Task PerformWithNewEntitiesAsync(Func<Product[], Task> buildAssertions = null)
-        {
-            var productsCount = 3;
-            var products = new List<Product>();
-
-            for (var i = 0; i < productsCount; i++)
-            {
-                products.Add(new Product
-                {
-                    Name = $"Sample Product {Guid.NewGuid()} {i}"
-                });
-            }
-
-            Product[] newProducts = null;
-
-            try
-            {
-                var response = await _subject.CreateOrUpdateAsync(products.ToArray());
-
-                response.Should().NotBeNull();
-                response.StatusCode.Should().Be(200);
-
-                newProducts = response.Payload;
-                newProducts.Should().NotBeNull();
-
-                newProducts
-                    .All(newProduct => products.Any(product => product.Name.Equals(newProduct.Name)))
-                    .Should()
-                    .BeTrue();
-
-                if (buildAssertions != null)
-                    await buildAssertions(newProducts);
-            }
-            finally
-            {
-                if (newProducts != null && newProducts.Length > 0)
-                {
-                    var response = await _subject.DeleteAsync(newProducts);
-
-                    response.Should().NotBeNull();
-                    response.StatusCode.Should().Be(200);
-                }
-            }
-        }
-
-        private async Task PerformWithNewEntityAsync(Func<Product, Task> buildAssertions = null)
-        {
-            var product = new Product
-            {
-                Name = $"Sample Product {Guid.NewGuid()}"
-            };
-
-            Product newProduct = null;
-
-            try
-            {
-                var response = await _subject.CreateAsync(product);
-
-                response.Should().NotBeNull();
-                response.StatusCode.Should().Be(200);
-
-                newProduct = response.Payload;
-                newProduct.Should().NotBeNull();
-                newProduct.Name.Should().Be(product.Name);
-
-                if (buildAssertions != null)
-                    await buildAssertions(newProduct);
-            }
-            finally
-            {
-                if (newProduct != null)
-                {
-                    var response = await _subject.DeleteAsync(newProduct);
-
-                    response.Should().NotBeNull();
-                    response.StatusCode.Should().Be(200);
-                }
-            }
-        }
-
-        #endregion Utilities
     }
 }

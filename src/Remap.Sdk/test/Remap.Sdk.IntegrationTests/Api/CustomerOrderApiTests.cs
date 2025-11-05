@@ -1,21 +1,22 @@
-﻿using System.Threading.Tasks;
-using Confiti.MoySklad.Remap.Api;
-using FluentAssertions;
-using NUnit.Framework;
+﻿using Confiti.MoySklad.Remap.Api;
+using Confiti.MoySklad.Remap.Entities;
+using Confiti.MoySklad.Remap.Queries;
 
 namespace Confiti.MoySklad.Remap.IntegrationTests.Api
 {
-    public class CustomerOrderApiTests : ApiAccessorTests<CustomerOrderApi>
+    public class CustomerOrderApiTests : EntityApiAccessorTests<CustomerOrderApi, CustomerOrder, ApiParameterBuilder<CustomerOrderQuery>, ApiParameterBuilder<CustomerOrdersQuery>>
     {
-        #region Methods
+        #region Ctor
 
-        [Test]
-        public async Task GetAllAsync_should_return_status_code_200()
+        public CustomerOrderApiTests()
+            : base(Pipeline.Instance.Api.Entity.CustomerOrder, async sample =>
+            {
+                sample.Organization = await Pipeline.Instance.GetDefaultOrganizationAsync();
+                sample.Agent = await Pipeline.Instance.GetOrCreateSampleEntityAsync(Pipeline.Instance.Api.Entity.Counterparty);
+            })
         {
-            var response = await _subject.GetAllAsync();
-            response.StatusCode.Should().Be(200);
         }
 
-        #endregion Methods
+        #endregion Ctor
     }
 }
