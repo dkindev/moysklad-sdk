@@ -410,9 +410,9 @@ namespace Confiti.MoySklad.Remap.Api
         #region Properties
 
         /// <summary>
-        /// Gets the <see cref="ReportProfitApi"/>.
+        /// Gets the <see cref="ProfitReportApi"/>.
         /// </summary>
-        public ReportProfitApi Profit => GetApi<ReportProfitApi>();
+        public ProfitReportApi Profit => GetApi<ProfitReportApi>();
 
         /// <summary>
         /// Gets the <see cref="StockReportApi"/>.
