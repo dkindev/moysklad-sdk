@@ -8,7 +8,7 @@ namespace Confiti.MoySklad.Remap.Api
     /// <inheritdoc/>
     public class ProductApi :
         EntityApiAccessor<Product, ApiParameterBuilder<ProductQuery>, ApiParameterBuilder<ProductsQuery>>,
-        IHasMetadataApi<MetadataApi<ProductMetadata, ProductMetadataQuery>>,
+        IHasMetadataApi<MetadataWithAttributesApi<ProductMetadata, ProductMetadataQuery>>,
         IHasImageApi
     {
         #region Properties
@@ -17,7 +17,7 @@ namespace Confiti.MoySklad.Remap.Api
         public virtual ImageApi Images { get; }
 
         /// <inheritdoc/>
-        public virtual MetadataApi<ProductMetadata, ProductMetadataQuery> Metadata { get; }
+        public virtual MetadataWithAttributesApi<ProductMetadata, ProductMetadataQuery> Metadata { get; }
 
         #endregion Properties
 
@@ -32,7 +32,7 @@ namespace Confiti.MoySklad.Remap.Api
         public ProductApi(HttpClient httpClient, MoySkladCredentials credentials)
             : base("/api/remap/1.2/entity/product", httpClient, credentials)
         {
-            Metadata = new MetadataApi<ProductMetadata, ProductMetadataQuery>(Path, httpClient, credentials);
+            Metadata = new MetadataWithAttributesApi<ProductMetadata, ProductMetadataQuery>(Path, httpClient, credentials);
             Images = new ImageApi(Path, httpClient, credentials);
         }
 
