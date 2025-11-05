@@ -6,7 +6,7 @@ using Confiti.MoySklad.Remap.Entities;
 namespace Confiti.MoySklad.Remap.Queries
 {
     /// <summary>
-    /// Represents an helper class to build API parameters for <see cref="ReportProfit"/>.
+    /// Represents an helper class to build API parameters for <see cref="ReportProfit"/> query.
     /// </summary>
     public class ReportProfitApiParameterBuilder : ApiParameterBuilder
     {

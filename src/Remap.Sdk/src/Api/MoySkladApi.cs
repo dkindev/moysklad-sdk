@@ -164,7 +164,7 @@ namespace Confiti.MoySklad.Remap.Api
         /// <param name="apiAccessorType">The type of the specific <see cref="ApiAccessor"/>.</param>
         /// <returns>The instance of the specific <see cref="ApiAccessor"/> class.</returns>
         /// <exception cref="ObjectDisposedException">Throws if object was disposed.</exception>
-        protected ApiAccessor GetApi(Type apiAccessorType)
+        protected virtual ApiAccessor GetApi(Type apiAccessorType)
         {
             if (_isDisposed)
                 throw new ObjectDisposedException(nameof(MoySkladApi));
@@ -221,7 +221,7 @@ namespace Confiti.MoySklad.Remap.Api
         /// </summary>
         /// <typeparam name="TApi">The type of the <see cref="ApiAccessor"/>.</typeparam>
         /// <returns>The instance of <typeparamref name="TApi"/> class.</returns>
-        protected TApi GetApi<TApi>() where TApi : ApiAccessor
+        protected virtual TApi GetApi<TApi>() where TApi : ApiAccessor
         {
             return (TApi)_apiAccessorFactory(typeof(TApi));
         }
@@ -412,7 +412,12 @@ namespace Confiti.MoySklad.Remap.Api
         /// <summary>
         /// Gets the <see cref="ReportProfitApi"/>.
         /// </summary>
-        public ReportProfitApi ReportProfit => GetApi<ReportProfitApi>();
+        public ReportProfitApi Profit => GetApi<ReportProfitApi>();
+
+        /// <summary>
+        /// Gets the <see cref="StockReportApi"/>.
+        /// </summary>
+        public StockReportApi Stock => GetApi<StockReportApi>();
 
         #endregion Properties
 

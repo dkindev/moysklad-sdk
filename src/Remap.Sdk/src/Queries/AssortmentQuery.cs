@@ -320,7 +320,7 @@ namespace Confiti.MoySklad.Remap.Queries
         /// <summary>
         /// Gets or sets the supplier.
         /// <see cref="FilterAttribute"/>;
-        /// <see cref="AllowOrderAttribute"/>
+        /// <see cref="AllowExpandAttribute"/>
         /// allowed.
         /// </summary>
         [Filter]

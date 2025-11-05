@@ -4,9 +4,9 @@ using Confiti.MoySklad.Remap.Extensions;
 namespace Confiti.MoySklad.Remap.Queries
 {
     /// <summary>
-    /// Represents an helper class to build API parameters for <see cref="AssortmentQuery"/>.
+    /// Represents an helper class to build API parameters for <see cref="StoreStockReportQuery"/>.
     /// </summary>
-    public class AssortmentApiParameterBuilder : ApiParameterBuilder<AssortmentQuery>
+    public class StoreStockReportApiParameterBuilder : ApiParameterBuilder<StoreStockReportQuery>
     {
         #region Fields
 

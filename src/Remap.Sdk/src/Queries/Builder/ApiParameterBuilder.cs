@@ -360,7 +360,7 @@ namespace Confiti.MoySklad.Remap.Queries
         /// </summary>
         /// <param name="parameter">The meta entity parameter.</param>
         /// <returns>The parameter builder.</returns>
-        public ParameterBuilder<MetaEntityAssertions> Parameter(Expression<Func<T, MetaEntity>> parameter)
+        public ParameterBuilder<MetaEntityAssertions> Parameter(Expression<Func<T, object>> parameter)
         {
             var assertions = new MetaEntityAssertions(parameter, Filters);
             return Parameter(parameter, assertions);
