@@ -103,6 +103,11 @@ namespace Confiti.MoySklad.Remap.Api
         /// </summary>
         public ReportEndpoint Report { get; }
 
+        /// <summary>
+        /// Gets the API to interact with MoySklad '/report' endpoint.
+        /// </summary>
+        public SecurityEndpoint Security { get; }
+
         #endregion Properties
 
         #region Ctor
@@ -129,6 +134,7 @@ namespace Confiti.MoySklad.Remap.Api
 
             Entity = new EntityEndpoint(GetApi);
             Report = new ReportEndpoint(GetApi);
+            Security = new SecurityEndpoint(GetApi);
         }
 
         #endregion Ctor
@@ -287,11 +293,6 @@ namespace Confiti.MoySklad.Remap.Api
         public MoveApi Move => GetApi<MoveApi>();
 
         /// <summary>
-        /// Gets the <see cref="OAuthApi"/>.
-        /// </summary>
-        public OAuthApi OAuth => GetApi<OAuthApi>();
-
-        /// <summary>
         /// Gets the <see cref="OrganizationApi"/>.
         /// </summary>
         public OrganizationApi Organization => GetApi<OrganizationApi>();
@@ -428,6 +429,34 @@ namespace Confiti.MoySklad.Remap.Api
         /// </summary>
         /// <param name="apiAccessorFactory">The factory to create the instance of the specific <see cref="ApiAccessor"/> class.</param>
         internal ReportEndpoint(Func<Type, ApiAccessor> apiAccessorFactory)
+            : base(apiAccessorFactory)
+        {
+        }
+
+        #endregion Ctor
+    }
+
+    /// <summary>
+    /// Represents an API to interact with MoySklad '/security' endpoint.
+    /// </summary>
+    public class SecurityEndpoint : Endpoint
+    {
+        #region Properties
+
+        /// <summary>
+        /// Gets the <see cref="TokenApi"/>.
+        /// </summary>
+        public TokenApi Token => GetApi<TokenApi>();
+
+        #endregion Properties
+
+        #region Ctor
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="SecurityEndpoint" /> class with <see cref="ApiAccessor"/> factory.
+        /// </summary>
+        /// <param name="apiAccessorFactory">The factory to create the instance of the specific <see cref="ApiAccessor"/> class.</param>
+        internal SecurityEndpoint(Func<Type, ApiAccessor> apiAccessorFactory)
             : base(apiAccessorFactory)
         {
         }

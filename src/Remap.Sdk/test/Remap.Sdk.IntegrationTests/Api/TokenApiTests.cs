@@ -7,9 +7,9 @@ using NUnit.Framework;
 
 namespace Confiti.MoySklad.Remap.IntegrationTests.Api
 {
-    public class OAuthApiTests
+    public class TokenApiTests
     {
-        private static OAuthApi _subject = Pipeline.Instance.Api.Entity.OAuth;
+        private static TokenApi _subject = Pipeline.Instance.Api.Security.Token;
 
         #region Methods
 

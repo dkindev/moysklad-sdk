@@ -8,17 +8,17 @@ namespace Confiti.MoySklad.Remap.Api
     /// <summary>
     /// Represents the API to interact with the token endpoint.
     /// </summary>
-    public class OAuthApi : ApiAccessor
+    public class TokenApi : ApiAccessor
     {
         #region Ctor
 
         /// <summary>
-        /// Creates a new instance of the <see cref="OAuthApi" /> class
+        /// Creates a new instance of the <see cref="TokenApi" /> class
         /// with the HTTP client and the MoySklad credentials.
         /// </summary>
         /// <param name="httpClient">The HTTP client.</param>
         /// <param name="credentials">The MoySklad credentials.</param>
-        public OAuthApi(HttpClient httpClient, MoySkladCredentials credentials)
+        public TokenApi(HttpClient httpClient, MoySkladCredentials credentials)
             : base("/api/remap/1.2/security/token", httpClient, credentials)
         {
         }
