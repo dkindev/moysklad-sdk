@@ -114,7 +114,7 @@ api.Credentials = new MoySkladCredentials()
     Password = "new-password",
 };
 
-var response = await api.Entity.OAuth.GetAsync();
+var response = await api.Security.Token.GetAsync();
 var accessToken = response.Payload.AccessToken;
 ```
 
@@ -151,36 +151,36 @@ await api.Entity.Product.Metadata.GetAsync();
 var response = await api.Entity.Assortment.GetAllAsync(query => 
 {
     // фильтр '='
-    query.Parameter(p => p.Name).Should().Be("foo");
+    query.FilterBy(p => p.Name).Should().Be("foo");
+
+    // фильтр '=' по коду в виде строки
+    query.FilterBy("code").Should().Be("bar");
 
     // вложенный фильтр '='
-    query.Parameter(p => p.Alcoholic.Type).Should().Be(123);
+    query.FilterBy(p => p.Alcoholic.Type).Should().Be(123);
 
     // множественный фильтр '='
-    query.Parameter(p => p.Archived).Should().Be(true).Or.Be(false);
+    query.FilterBy(p => p.Archived).Should().Be(true).Or.Be(false);
 
     // фильтр '~'
-    query.Parameter(p => p.Article).Should().Contains("foo");
+    query.FilterBy(p => p.Article).Should().Contains("foo");
 
     // фильтр '~='
-    query.Parameter(p => p.Barcode).Should().StartsWith("foo");
+    query.FilterBy(p => p.Barcode).Should().StartsWith("foo");
 
     // фильтр '>=' и '<='
-    query.Parameter(p => p.Updated).Should()
+    query.FilterBy(p => p.Updated).Should()
         .BeGreaterOrEqualTo(DateTime.Parse("2020-07-10 12:00:00"))
         .And
         .BeLessOrEqualTo(DateTime.Parse("2020-07-12 12:00:00"));
 
     // фильтр по пользовательскому полю
-    query.Parameter("your-custom-attribute-href").Should().Be(123);
-
-    // фильтр по коду в виде строки
-    query.Parameter("code").Should().Be("foo").Or.Be("bar");
+    query.FilterBy("your-custom-attribute-href").Should().Be(123);
 
     // фильтр по складу по ссылке
-    query.Parameter(p => p.StockStore).Should().Be("https://api.moysklad.ru/api/remap/1.2/entity/store/59a894aa-0ea3-11ea-0a80-006c00081b5b");
+    query.FilterBy(p => p.StockStore).Should().Be("https://api.moysklad.ru/api/remap/1.2/entity/store/59a894aa-0ea3-11ea-0a80-006c00081b5b");
     // или с объектом Store
-    query.Parameter(p => p.StockStore).Should().Be(store);
+    query.FilterBy(p => p.StockStore).Should().Be(store);
 });
 ```
 
@@ -189,12 +189,12 @@ var response = await api.Entity.Assortment.GetAllAsync(query =>
 ```csharp
 var response = await api.Entity.Assortment.GetAllAsync(query => 
 {
-    query.Order().By(p => p.Name)
-        // пользовательское поле
-        .And.By("your-custom-property-name");
+    query.OrderBy(p => p.Name)
+        // или по любой строке
+        .ThenBy("your-custom-property-name");
 
     // по убыванию
-    query.Order().By(p => p.Name, OrderBy.Desc)
+    query.OrderBy(p => p.Name, OrderBy.Desc)
 });
 ```
 
@@ -231,15 +231,15 @@ var response = await api.Entity.Assortment.GetAllAsync(query =>
 ````csharp
 var response = await api.Entity.Assortment.GetAllAsync(query => 
 {
-    query.Expand().With(p => p.Images)
-        .And.With(p => p.Product)
+    query.ExpandBy(p => p.Images)
+        .ThenBy(p => p.Product)
         // вложенный
-        .And.With(p => p.SalePrices.Currency)
-        .And.With(p => p.BuyPrice.Currency)
-        .And.With(p => p.Product.SalePrices.Currency)
-        .And.With(p => p.Product.BuyPrice.Currency)
-        // или в виде строки
-        .And.With("salePrices.currency")
+        .ThenBy(p => p.SalePrices.Currency)
+        .ThenBy(p => p.BuyPrice.Currency)
+        .ThenBy(p => p.Product.SalePrices.Currency)
+        .ThenBy(p => p.Product.BuyPrice.Currency)
+        // или по любой строке
+        .ThenBy("salePrices.currency")
 });
 ````
 
