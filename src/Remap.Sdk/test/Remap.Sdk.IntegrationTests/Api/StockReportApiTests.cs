@@ -49,9 +49,7 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
                 query.FilterBy(x => x.QuantityMode).Should().Be(QuantityMode.PositiveOnly);
                 query.FilterBy(x => x.StockMode).Should().Be(StockMode.PositiveOnly);
                 query.FilterBy(x => x.Search).Should().Be("foo").Or.Be("bar");
-
-                query.Order().By(x => x.Name);
-
+                query.OrderBy(x => x.Name);
                 query.GroupBy(GroupBy.Consignment);
             });
             response.StatusCode.Should().Be(200);

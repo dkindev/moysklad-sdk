@@ -51,7 +51,7 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
                 query.FilterBy(p => p.QuantityMode).Should().Be(QuantityMode.All);
                 query.FilterBy(p => p.IsSerialTrackable).Should().Be(false);
                 query.Search("foo");
-                query.Order().By(p => p.Name);
+                query.OrderBy(p => p.Name);
                 query.Limit(100);
                 query.Offset(50);
                 query.GroupBy(GroupBy.Consignment);

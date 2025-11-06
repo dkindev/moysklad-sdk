@@ -15,7 +15,7 @@ namespace Confiti.MoySklad.Remap.UnitTests.Client
             var orders = new Dictionary<string, OrderBy>();
             var subject = new OrderParameterBuilder<TestMetaEntity>(orders);
 
-            subject.By(p => p.StringProperty);
+            subject.ThenBy(p => p.StringProperty);
 
             orders.Should().HaveCount(1);
             orders["stringproperty"].Should().Be(OrderBy.Asc);
@@ -27,7 +27,7 @@ namespace Confiti.MoySklad.Remap.UnitTests.Client
             var orders = new Dictionary<string, OrderBy>();
             var subject = new OrderParameterBuilder<TestMetaEntity>(orders);
 
-            Action action = () => subject.By(p => p.NestedEntity.StringProperty);
+            Action action = () => subject.ThenBy(p => p.NestedEntity.StringProperty);
 
             action.Should().Throw<ApiException>();
         }
@@ -38,7 +38,7 @@ namespace Confiti.MoySklad.Remap.UnitTests.Client
             var orders = new Dictionary<string, OrderBy>();
             var subject = new OrderParameterBuilder<TestMetaEntity>(orders);
 
-            subject.By(p => p.StringProperty).And.By(p => p.IntProperty, OrderBy.Desc);
+            subject.ThenBy(p => p.StringProperty).ThenBy(p => p.IntProperty, OrderBy.Desc);
 
             orders.Should().HaveCount(2);
             orders["stringproperty"].Should().Be(OrderBy.Asc);
@@ -51,7 +51,7 @@ namespace Confiti.MoySklad.Remap.UnitTests.Client
             var orders = new Dictionary<string, OrderBy>();
             var subject = new OrderParameterBuilder<TestMetaEntity>(orders);
 
-            Action action = () => subject.By(p => p.NotAllowedOrderMember);
+            Action action = () => subject.ThenBy(p => p.NotAllowedOrderMember);
 
             action.Should().Throw<ApiException>();
         }

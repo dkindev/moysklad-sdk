@@ -25,9 +25,9 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Client
             _subject.ExpandBy(p => p.NestedEntity.NestedEntity2)
                 .ThenBy("my_custom_property_name_to_expand.two_level_nesting");
 
-            _subject.Order().By(p => p.StringProperty)
-                .And.By(p => p.IntProperty, OrderBy.Desc)
-                .And.By("my_custom_property_name_to_order");
+            _subject.OrderBy(p => p.StringProperty)
+                .ThenBy(p => p.IntProperty, OrderBy.Desc)
+                .ThenBy("my_custom_property_name_to_order");
 
             _subject.Search("query");
 

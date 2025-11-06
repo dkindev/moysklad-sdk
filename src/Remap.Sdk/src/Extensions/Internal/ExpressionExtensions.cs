@@ -20,7 +20,7 @@ namespace Confiti.MoySklad.Remap.Extensions
             var members = parameter.GetMembers();
 
             var expanderBuilder = new StringBuilder(members.Count * 4);
-            for (int i = 0; i < members.Count; i++)
+            for (var i = 0; i < members.Count; i++)
             {
                 var member = members[i];
 
@@ -52,7 +52,7 @@ namespace Confiti.MoySklad.Remap.Extensions
             var members = parameter.GetMembers();
 
             var expanderBuilder = new StringBuilder(members.Count * 4);
-            for (int i = 0; i < members.Count; i++)
+            for (var i = 0; i < members.Count; i++)
             {
                 var member = members[i];
                 var filter = member.GetFilter();
@@ -79,7 +79,7 @@ namespace Confiti.MoySklad.Remap.Extensions
             var members = parameter.GetMembers();
 
             var expanderBuilder = new StringBuilder(members.Count * 4);
-            for (int i = 0; i < members.Count; i++)
+            for (var i = 0; i < members.Count; i++)
             {
                 if (expanderBuilder.Length > 1)
                     expanderBuilder.Append(".");
@@ -106,6 +106,19 @@ namespace Confiti.MoySklad.Remap.Extensions
             }
 
             return nestingLevel;
+        }
+
+        public static string GetOrderName<T, TProperty>(this Expression<Func<T, TProperty>> parameter)
+        {
+            var parameterName = parameter.GetParameterName();
+
+            if (!parameter.IsAllowOrder())
+                throw new ApiException(400, $"The order isn't allowed for the '{parameterName}' property.");
+
+            if (parameter.GetNestingLevel() > 1)
+                throw new ApiException(400, $"The nesting level of the '{parameterName}' property should be 1.");
+
+            return parameterName;
         }
 
         public static string GetParameterName(this LambdaExpression parameter)

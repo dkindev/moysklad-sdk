@@ -1,7 +1,7 @@
 ﻿namespace Confiti.MoySklad.Remap.Queries
 {
     /// <summary>
-    /// Represents an helper class to build filter parameter.
+    /// Represents an helper class to build the filter parameter.
     /// </summary>
     /// <typeparam name="T">The type of the filter assertions.</typeparam>
     public class FilterParameterBuilder<T> where T : FilterAssertions

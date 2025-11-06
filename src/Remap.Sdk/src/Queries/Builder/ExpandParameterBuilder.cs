@@ -37,7 +37,7 @@ namespace Confiti.MoySklad.Remap.Queries
         #region Methods
 
         /// <summary>
-        /// Adds the property name to expand the entity property.
+        /// Adds the expand by property name.
         /// </summary>
         /// <param name="propertyName">The property name.</param>
         /// <returns>The <see cref="ExpandParameterBuilder" /> to build the next expand parameter.</returns>
@@ -48,7 +48,7 @@ namespace Confiti.MoySklad.Remap.Queries
         }
 
         /// <summary>
-        /// Adds the property name to expand the entity property.
+        /// Adds the expand by property name.
         /// </summary>
         /// <param name="propertyName">The property name.</param>
         protected virtual void AddExpandParameter(string propertyName)
@@ -85,8 +85,9 @@ namespace Confiti.MoySklad.Remap.Queries
         #region Methods
 
         /// <summary>
-        /// Adds the property name to expand the entity property.
+        /// Adds the expand by selected property.
         /// </summary>
+        /// <typeparam name="TMember">The property type.</typeparam>
         /// <param name="parameter">The expression to get the property name.</param>
         /// <returns>The <see cref="ExpandParameterBuilder{T}" /> to build the next expand parameter.</returns>
         public ExpandParameterBuilder<T> ThenBy<TMember>(Expression<Func<T, TMember>> parameter)
@@ -99,7 +100,7 @@ namespace Confiti.MoySklad.Remap.Queries
         }
 
         /// <summary>
-        /// Adds the property name to expand the entity property.
+        /// Adds the expand by property name.
         /// </summary>
         /// <param name="propertyName">The property name.</param>
         /// <returns>The <see cref="ExpandParameterBuilder{T}" /> to build the next expand parameter.</returns>

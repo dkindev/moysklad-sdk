@@ -24,7 +24,7 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
         {
             var response = await _subject.GetAllAsync(query =>
             {
-                query.Order().By("moment", OrderBy.Desc);
+                query.OrderBy("moment", OrderBy.Desc);
                 query.Limit(100);
             });
 

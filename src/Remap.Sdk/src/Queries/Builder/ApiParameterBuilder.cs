@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Confiti.MoySklad.Remap.Client;
-using Confiti.MoySklad.Remap.Entities;
 using Confiti.MoySklad.Remap.Extensions;
 
 namespace Confiti.MoySklad.Remap.Queries
@@ -72,10 +71,11 @@ namespace Confiti.MoySklad.Remap.Queries
         }
 
         /// <summary>
-        /// Adds the property name to expand the entity property.
+        /// Adds the expand by property name.
         /// </summary>
         /// <param name="propertyName">The property name.</param>
         /// <returns>The <see cref="ExpandParameterBuilder" /> to build the next expand parameter.</returns>
+        /// <exception cref="ApiException">Throws if <paramref name="propertyName"/> is empty.</exception>
         public ExpandParameterBuilder ExpandBy(string propertyName)
         {
             if (string.IsNullOrWhiteSpace(propertyName))
@@ -86,16 +86,17 @@ namespace Confiti.MoySklad.Remap.Queries
         }
 
         /// <summary>
-        /// Returns the <see cref="FilterParameterBuilder{CustomAssertions}" /> to build the filter for the custom parameter.
+        /// Adds the filter by property name.
         /// </summary>
-        /// <param name="parameter">The custom parameter.</param>
-        /// <returns>The <see cref="FilterParameterBuilder{CustomAssertions}" />.</returns>
-        public FilterParameterBuilder<CustomFilterAssertions> FilterBy(string parameter)
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>The <see cref="FilterParameterBuilder{CustomAssertions}" /> to build the filter parameter.</returns>
+        /// <exception cref="ApiException">Throws if <paramref name="propertyName"/> is empty.</exception>
+        public FilterParameterBuilder<CustomFilterAssertions> FilterBy(string propertyName)
         {
-            if (parameter == null)
-                throw new ArgumentNullException(nameof(parameter));
+            if (string.IsNullOrWhiteSpace(propertyName))
+                throw new ApiException(400, $"The '{nameof(propertyName)}' should not be empty.");
 
-            var assertions = new CustomFilterAssertions(parameter, new FilterAttribute(), Filters);
+            var assertions = new CustomFilterAssertions(propertyName, new FilterAttribute(), Filters);
             return new FilterParameterBuilder<CustomFilterAssertions>(assertions);
         }
 
@@ -103,6 +104,7 @@ namespace Confiti.MoySklad.Remap.Queries
         /// Adds the limit parameter.
         /// </summary>
         /// <param name="value">The limit parameter.</param>
+        /// <exception cref="ApiException">Throws if the <paramref name="value"/> isn't in the range 1 - 1000.</exception>
         public void Limit(int value)
         {
             if (value < 1 || value > 1000)
@@ -115,6 +117,7 @@ namespace Confiti.MoySklad.Remap.Queries
         /// Adds the offset parameter.
         /// </summary>
         /// <param name="value">The offset parameter.</param>
+        /// <exception cref="ApiException">Throws if the <paramref name="value"/> less than 0.</exception>
         public void Offset(int value)
         {
             if (value < 0)
@@ -124,11 +127,18 @@ namespace Confiti.MoySklad.Remap.Queries
         }
 
         /// <summary>
-        /// Returns the <see cref="OrderParameterBuilder" /> to build the order parameter.
+        /// Adds the order by property name.
         /// </summary>
-        /// <returns>The <see cref="OrderParameterBuilder" />.</returns>
-        public OrderParameterBuilder Order()
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="orderBy">The order action.</param>
+        /// <returns>The <see cref="OrderParameterBuilder" /> to build the next order parameter.</returns>
+        /// <exception cref="ApiException">Throws if <paramref name="propertyName"/> is empty.</exception>
+        public OrderParameterBuilder OrderBy(string propertyName, OrderBy orderBy = Queries.OrderBy.Asc)
         {
+            if (string.IsNullOrWhiteSpace(propertyName))
+                throw new ApiException(400, $"The '{nameof(propertyName)}' should not be empty.");
+
+            Orders[propertyName] = orderBy;
             return new OrderParameterBuilder(Orders);
         }
 
@@ -136,6 +146,7 @@ namespace Confiti.MoySklad.Remap.Queries
         /// Adds a search keyword(s) to perform contextual search.
         /// </summary>
         /// <param name="value">The search keyword(s).</param>
+        /// <exception cref="ArgumentNullException">Throws if <paramref name="value"/> is null.</exception>
         public void Search(string value)
         {
             _search = value ?? throw new ArgumentNullException(nameof(value));
@@ -157,6 +168,7 @@ namespace Confiti.MoySklad.Remap.Queries
         /// </summary>
         /// <param name="propertyName">The property name.</param>
         /// <returns>The <see cref="ExpandParameterBuilder{T}" /> to build the next expand parameter.</returns>
+        /// <exception cref="ApiException">Throws if <paramref name="propertyName"/> is empty.</exception>
         public new ExpandParameterBuilder<T> ExpandBy(string propertyName)
         {
             if (string.IsNullOrWhiteSpace(propertyName))
@@ -169,254 +181,281 @@ namespace Confiti.MoySklad.Remap.Queries
         /// <summary>
         /// Adds the property name to expand the entity property.
         /// </summary>
-        /// <param name="parameter">The expression to get the property name.</param>
+        /// <typeparam name="TMember">The property type.</typeparam>
+        /// <param name="propertyExpression">The expression to get the property name.</param>
         /// <returns>The <see cref="ExpandParameterBuilder{T}" /> to build the next expand parameter.</returns>
-        public ExpandParameterBuilder<T> ExpandBy<TMember>(Expression<Func<T, TMember>> parameter)
+        /// <exception cref="ArgumentNullException">Throws if <paramref name="propertyExpression"/> is null.</exception>
+        public ExpandParameterBuilder<T> ExpandBy<TMember>(Expression<Func<T, TMember>> propertyExpression)
             where TMember : class
         {
-            if (parameter == null)
-                throw new ArgumentNullException(nameof(parameter));
+            if (propertyExpression == null)
+                throw new ArgumentNullException(nameof(propertyExpression));
 
-            return ExpandBy(parameter.GetExpandName());
+            return ExpandBy(propertyExpression.GetExpandName());
         }
 
         /// <summary>
-        /// Returns the <see cref="FilterParameterBuilder{StringAssertions}" /> to build the filter for the <see cref="string" /> parameter.
+        /// Adds the filter by selected property.
         /// </summary>
-        /// <param name="parameter">The string parameter.</param>
+        /// <param name="propertyExpression">The expression to get the property name.</param>
         /// <returns>The <see cref="FilterParameterBuilder{StringAssertions}" />.</returns>
-        public FilterParameterBuilder<StringFilterAssertions> FilterBy(Expression<Func<T, string>> parameter)
+        public FilterParameterBuilder<StringFilterAssertions> FilterBy(Expression<Func<T, string>> propertyExpression)
         {
-            var assertions = new StringFilterAssertions(parameter, Filters);
-            return FilterBy(parameter, assertions);
+            var assertions = new StringFilterAssertions(propertyExpression, Filters);
+            return FilterBy(propertyExpression, assertions);
         }
 
         /// <summary>
         /// Returns the <see cref="FilterParameterBuilder{NumericAssertions}" /> to build the filter for the <see cref="short" /> parameter.
         /// </summary>
-        /// <param name="parameter">The short parameter.</param>
+        /// <param name="propertyExpression">The expression to get the property name.</param>
         /// <returns>The <see cref="FilterParameterBuilder{NumericAssertions}" />.</returns>
-        public FilterParameterBuilder<NumericFilterAssertions<short>> FilterBy(Expression<Func<T, short>> parameter)
+        public FilterParameterBuilder<NumericFilterAssertions<short>> FilterBy(Expression<Func<T, short>> propertyExpression)
         {
-            var assertions = new NumericFilterAssertions<short>(parameter, Filters);
-            return FilterBy(parameter, assertions);
+            var assertions = new NumericFilterAssertions<short>(propertyExpression, Filters);
+            return FilterBy(propertyExpression, assertions);
         }
 
         /// <summary>
         /// Returns the <see cref="FilterParameterBuilder{NumericAssertions}" /> to build the filter for the <see cref="uint" /> parameter.
         /// </summary>
-        /// <param name="parameter">The uint parameter.</param>
+        /// <param name="propertyExpression">The expression to get the property name.</param>
         /// <returns>The <see cref="FilterParameterBuilder{NumericAssertions}" />.</returns>
-        public FilterParameterBuilder<NumericFilterAssertions<uint>> FilterBy(Expression<Func<T, uint>> parameter)
+        public FilterParameterBuilder<NumericFilterAssertions<uint>> FilterBy(Expression<Func<T, uint>> propertyExpression)
         {
-            var assertions = new NumericFilterAssertions<uint>(parameter, Filters);
-            return FilterBy(parameter, assertions);
+            var assertions = new NumericFilterAssertions<uint>(propertyExpression, Filters);
+            return FilterBy(propertyExpression, assertions);
         }
 
         /// <summary>
         /// Returns the <see cref="FilterParameterBuilder{NumericAssertions}" /> to build the filter for the <see cref="int" /> parameter.
         /// </summary>
-        /// <param name="parameter">The int parameter.</param>
+        /// <param name="propertyExpression">The expression to get the property name.</param>
         /// <returns>The <see cref="FilterParameterBuilder{NumericAssertions}" /> .</returns>
-        public FilterParameterBuilder<NumericFilterAssertions<int>> FilterBy(Expression<Func<T, int>> parameter)
+        public FilterParameterBuilder<NumericFilterAssertions<int>> FilterBy(Expression<Func<T, int>> propertyExpression)
         {
-            var assertions = new NumericFilterAssertions<int>(parameter, Filters);
-            return FilterBy(parameter, assertions);
+            var assertions = new NumericFilterAssertions<int>(propertyExpression, Filters);
+            return FilterBy(propertyExpression, assertions);
         }
 
         /// <summary>
         /// Returns the <see cref="FilterParameterBuilder{NumericAssertions}" /> to build the filter for the <see cref="float" /> parameter.
         /// </summary>
-        /// <param name="parameter">The float parameter.</param>
+        /// <param name="propertyExpression">The expression to get the property name.</param>
         /// <returns>The <see cref="FilterParameterBuilder{NumericAssertions}" />.</returns>
-        public FilterParameterBuilder<NumericFilterAssertions<float>> FilterBy(Expression<Func<T, float>> parameter)
+        public FilterParameterBuilder<NumericFilterAssertions<float>> FilterBy(Expression<Func<T, float>> propertyExpression)
         {
-            var assertions = new NumericFilterAssertions<float>(parameter, Filters);
-            return FilterBy(parameter, assertions);
+            var assertions = new NumericFilterAssertions<float>(propertyExpression, Filters);
+            return FilterBy(propertyExpression, assertions);
         }
 
         /// <summary>
         /// Returns the <see cref="FilterParameterBuilder{NumericAssertions}" /> to build the filter for the <see cref="double" /> parameter.
         /// </summary>
-        /// <param name="parameter">The double parameter.</param>
+        /// <param name="propertyExpression">The expression to get the property name.</param>
         /// <returns>The <see cref="FilterParameterBuilder{NumericAssertions}" />.</returns>
-        public FilterParameterBuilder<NumericFilterAssertions<double>> FilterBy(Expression<Func<T, double>> parameter)
+        public FilterParameterBuilder<NumericFilterAssertions<double>> FilterBy(Expression<Func<T, double>> propertyExpression)
         {
-            var assertions = new NumericFilterAssertions<double>(parameter, Filters);
-            return FilterBy(parameter, assertions);
+            var assertions = new NumericFilterAssertions<double>(propertyExpression, Filters);
+            return FilterBy(propertyExpression, assertions);
         }
 
         /// <summary>
         /// Returns the <see cref="FilterParameterBuilder{NumericAssertions}" /> to build the filter for the <see cref="decimal" /> parameter.
         /// </summary>
-        /// <param name="parameter">The decimal parameter.</param>
+        /// <param name="propertyExpression">The expression to get the property name.</param>
         /// <returns>The <see cref="FilterParameterBuilder{NumericAssertions}" />.</returns>
-        public FilterParameterBuilder<NumericFilterAssertions<decimal>> FilterBy(Expression<Func<T, decimal>> parameter)
+        public FilterParameterBuilder<NumericFilterAssertions<decimal>> FilterBy(Expression<Func<T, decimal>> propertyExpression)
         {
-            var assertions = new NumericFilterAssertions<decimal>(parameter, Filters);
-            return FilterBy(parameter, assertions);
+            var assertions = new NumericFilterAssertions<decimal>(propertyExpression, Filters);
+            return FilterBy(propertyExpression, assertions);
         }
 
         /// <summary>
-        /// Returns the <see cref="FilterParameterBuilder{NullableNumericAssertions}" /> to build the filter for the nullable <see cref="short" /> parameter.
+        /// Adds the filter by selected property.
         /// </summary>
-        /// <param name="parameter">The nullable short parameter.</param>
+        /// <param name="propertyExpression">The expression to get the property name.</param>
         /// <returns>The <see cref="FilterParameterBuilder{NullableNumericAssertions}" />.</returns>
-        public FilterParameterBuilder<NullableNumericFilterAssertions<short>> FilterBy(Expression<Func<T, short?>> parameter)
+        public FilterParameterBuilder<NullableNumericFilterAssertions<short>> FilterBy(Expression<Func<T, short?>> propertyExpression)
         {
-            var assertions = new NullableNumericFilterAssertions<short>(parameter, Filters);
-            return FilterBy(parameter, assertions);
+            var assertions = new NullableNumericFilterAssertions<short>(propertyExpression, Filters);
+            return FilterBy(propertyExpression, assertions);
         }
 
         /// <summary>
-        /// Returns the <see cref="FilterParameterBuilder{NullableNumericAssertions}" /> to build the filter for the nullable <see cref="uint" /> parameter.
+        /// Adds the filter by selected property.
         /// </summary>
-        /// <param name="parameter">The nullable uint parameter.</param>
+        /// <param name="propertyExpression">The expression to get the property name.</param>
         /// <returns>The <see cref="FilterParameterBuilder{NullableNumericAssertions}" />.</returns>
-        public FilterParameterBuilder<NullableNumericFilterAssertions<uint>> FilterBy(Expression<Func<T, uint?>> parameter)
+        public FilterParameterBuilder<NullableNumericFilterAssertions<uint>> FilterBy(Expression<Func<T, uint?>> propertyExpression)
         {
-            var assertions = new NullableNumericFilterAssertions<uint>(parameter, Filters);
-            return FilterBy(parameter, assertions);
+            var assertions = new NullableNumericFilterAssertions<uint>(propertyExpression, Filters);
+            return FilterBy(propertyExpression, assertions);
         }
 
         /// <summary>
-        /// Returns the <see cref="FilterParameterBuilder{NullableNumericAssertions}" /> to build the filter for the nullable <see cref="int" /> parameter.
+        /// Adds the filter by selected property.
         /// </summary>
-        /// <param name="parameter">The nullable int parameter.</param>
+        /// <param name="propertyExpression">The expression to get the property name.</param>
         /// <returns>The <see cref="FilterParameterBuilder{NullableNumericAssertions}" />.</returns>
-        public FilterParameterBuilder<NullableNumericFilterAssertions<int>> FilterBy(Expression<Func<T, int?>> parameter)
+        public FilterParameterBuilder<NullableNumericFilterAssertions<int>> FilterBy(Expression<Func<T, int?>> propertyExpression)
         {
-            var assertions = new NullableNumericFilterAssertions<int>(parameter, Filters);
-            return FilterBy(parameter, assertions);
+            var assertions = new NullableNumericFilterAssertions<int>(propertyExpression, Filters);
+            return FilterBy(propertyExpression, assertions);
         }
 
         /// <summary>
-        /// Returns the <see cref="FilterParameterBuilder{NullableNumericAssertions}" /> to build the filter for the nullable <see cref="float" /> parameter.
+        /// Adds the filter by selected property.
         /// </summary>
-        /// <param name="parameter">The nullable float parameter.</param>
+        /// <param name="propertyExpression">The expression to get the property name.</param>
         /// <returns>The <see cref="FilterParameterBuilder{NullableNumericAssertions}" />.</returns>
-        public FilterParameterBuilder<NullableNumericFilterAssertions<float>> FilterBy(Expression<Func<T, float?>> parameter)
+        public FilterParameterBuilder<NullableNumericFilterAssertions<float>> FilterBy(Expression<Func<T, float?>> propertyExpression)
         {
-            var assertions = new NullableNumericFilterAssertions<float>(parameter, Filters);
-            return FilterBy(parameter, assertions);
+            var assertions = new NullableNumericFilterAssertions<float>(propertyExpression, Filters);
+            return FilterBy(propertyExpression, assertions);
         }
 
         /// <summary>
-        /// Returns the <see cref="FilterParameterBuilder{NullableNumericAssertions}" /> to build the filter for the nullable <see cref="double" /> parameter.
+        /// Adds the filter by selected property.
         /// </summary>
-        /// <param name="parameter">The nullable double parameter.</param>
+        /// <param name="propertyExpression">The expression to get the property name.</param>
         /// <returns>The <see cref="FilterParameterBuilder{NullableNumericAssertions}" />.</returns>
-        public FilterParameterBuilder<NullableNumericFilterAssertions<double>> FilterBy(Expression<Func<T, double?>> parameter)
+        public FilterParameterBuilder<NullableNumericFilterAssertions<double>> FilterBy(Expression<Func<T, double?>> propertyExpression)
         {
-            var assertions = new NullableNumericFilterAssertions<double>(parameter, Filters);
-            return FilterBy(parameter, assertions);
+            var assertions = new NullableNumericFilterAssertions<double>(propertyExpression, Filters);
+            return FilterBy(propertyExpression, assertions);
         }
 
         /// <summary>
-        /// Returns the <see cref="FilterParameterBuilder{NullableNumericAssertions}" /> to build the filter for the nullable <see cref="decimal" /> parameter.
+        /// Adds the filter by selected property.
         /// </summary>
-        /// <param name="parameter">The nullable decimal parameter.</param>
+        /// <param name="propertyExpression">The expression to get the property name.</param>
         /// <returns>The <see cref="FilterParameterBuilder{NullableNumericAssertions}" />.</returns>
-        public FilterParameterBuilder<NullableNumericFilterAssertions<decimal>> FilterBy(Expression<Func<T, decimal?>> parameter)
+        public FilterParameterBuilder<NullableNumericFilterAssertions<decimal>> FilterBy(Expression<Func<T, decimal?>> propertyExpression)
         {
-            var assertions = new NullableNumericFilterAssertions<decimal>(parameter, Filters);
-            return FilterBy(parameter, assertions);
+            var assertions = new NullableNumericFilterAssertions<decimal>(propertyExpression, Filters);
+            return FilterBy(propertyExpression, assertions);
         }
 
         /// <summary>
-        /// Returns the <see cref="FilterParameterBuilder{DateTimeAssertions}" /> to build the filter for the <see cref="DateTime" /> parameter.
+        /// Adds the filter by selected property.
         /// </summary>
-        /// <param name="parameter">The date time parameter.</param>
+        /// <param name="propertyExpression">The expression to get the property name.</param>
         /// <returns>The <see cref="FilterParameterBuilder{DateTimeAssertions}" />.</returns>
-        public FilterParameterBuilder<DateTimeFilterAssertions> FilterBy(Expression<Func<T, DateTime>> parameter)
+        public FilterParameterBuilder<DateTimeFilterAssertions> FilterBy(Expression<Func<T, DateTime>> propertyExpression)
         {
-            var assertions = new DateTimeFilterAssertions(parameter, Filters);
-            return FilterBy(parameter, assertions);
+            var assertions = new DateTimeFilterAssertions(propertyExpression, Filters);
+            return FilterBy(propertyExpression, assertions);
         }
 
         /// <summary>
-        /// Returns the <see cref="FilterParameterBuilder{NullableDateTimeAssertions}" /> to build the filter for the nullable <see cref="DateTime" /> parameter.
+        /// Adds the filter by selected property.
         /// </summary>
-        /// <param name="parameter">The nullable date time parameter.</param>
+        /// <param name="propertyExpression">The expression to get the property name.</param>
         /// <returns>The <see cref="FilterParameterBuilder{NullableDateTimeAssertions}" />.</returns>
-        public FilterParameterBuilder<NullableDateTimeFilterAssertions> FilterBy(Expression<Func<T, DateTime?>> parameter)
+        public FilterParameterBuilder<NullableDateTimeFilterAssertions> FilterBy(Expression<Func<T, DateTime?>> propertyExpression)
         {
-            var assertions = new NullableDateTimeFilterAssertions(parameter, Filters);
-            return FilterBy(parameter, assertions);
+            var assertions = new NullableDateTimeFilterAssertions(propertyExpression, Filters);
+            return FilterBy(propertyExpression, assertions);
         }
 
         /// <summary>
-        /// Returns the <see cref="FilterParameterBuilder{BooleanAssertions}" /> to build the filter for the <see cref="bool" /> parameter.
+        /// Adds the filter by selected property.
         /// </summary>
-        /// <param name="parameter">The boolean parameter.</param>
+        /// <param name="propertyExpression">The expression to get the property name.</param>
         /// <returns>The <see cref="FilterParameterBuilder{BooleanAssertions}" />.</returns>
-        public FilterParameterBuilder<BooleanFilterAssertions> FilterBy(Expression<Func<T, bool>> parameter)
+        public FilterParameterBuilder<BooleanFilterAssertions> FilterBy(Expression<Func<T, bool>> propertyExpression)
         {
-            var assertions = new BooleanFilterAssertions(parameter, Filters);
-            return FilterBy(parameter, assertions);
+            var assertions = new BooleanFilterAssertions(propertyExpression, Filters);
+            return FilterBy(propertyExpression, assertions);
         }
 
         /// <summary>
-        /// Returns the <see cref="FilterParameterBuilder{NullableBooleanAssertions}" /> to build the filter for the nullable <see cref="bool" /> parameter.
+        /// Adds the filter by selected property.
         /// </summary>
-        /// <param name="parameter">The nullable boolean parameter.</param>
+        /// <param name="propertyExpression">The expression to get the property name.</param>
         /// <returns>The <see cref="FilterParameterBuilder{NullableBooleanAssertions}" />.</returns>
-        public FilterParameterBuilder<NullableBooleanFilterAssertions> FilterBy(Expression<Func<T, bool?>> parameter)
+        public FilterParameterBuilder<NullableBooleanFilterAssertions> FilterBy(Expression<Func<T, bool?>> propertyExpression)
         {
-            var assertions = new NullableBooleanFilterAssertions(parameter, Filters);
-            return FilterBy(parameter, assertions);
+            var assertions = new NullableBooleanFilterAssertions(propertyExpression, Filters);
+            return FilterBy(propertyExpression, assertions);
         }
 
         /// <summary>
-        /// Returns the <see cref="FilterParameterBuilder{MetaEntityAssertions}" /> to build the filter for the <see cref="MetaEntity" /> parameter.
+        /// Adds the filter by selected property.
         /// </summary>
-        /// <param name="parameter">The meta entity parameter.</param>
+        /// <param name="propertyExpression">The expression to get the property name.</param>
         /// <returns>The <see cref="FilterParameterBuilder{MetaEntityAssertions}" />.</returns>
-        public FilterParameterBuilder<MetaEntityFilterAssertions> FilterBy(Expression<Func<T, object>> parameter)
+        public FilterParameterBuilder<MetaEntityFilterAssertions> FilterBy(Expression<Func<T, object>> propertyExpression)
         {
-            var assertions = new MetaEntityFilterAssertions(parameter, Filters);
-            return FilterBy(parameter, assertions);
+            var assertions = new MetaEntityFilterAssertions(propertyExpression, Filters);
+            return FilterBy(propertyExpression, assertions);
         }
 
         /// <summary>
-        /// Returns the <see cref="FilterParameterBuilder{GuidAssertions}" /> to build the filter for the <see cref="Guid" /> parameter.
+        /// Adds the filter by selected property.
         /// </summary>
-        /// <param name="parameter">The guid parameter.</param>
+        /// <param name="propertyExpression">The expression to get the property name.</param>
         /// <returns>The <see cref="FilterParameterBuilder{GuidAssertions}" />.</returns>
-        public FilterParameterBuilder<GuidFilterAssertions> FilterBy(Expression<Func<T, Guid>> parameter)
+        public FilterParameterBuilder<GuidFilterAssertions> FilterBy(Expression<Func<T, Guid>> propertyExpression)
         {
-            var assertions = new GuidFilterAssertions(parameter, Filters);
-            return FilterBy(parameter, assertions);
+            var assertions = new GuidFilterAssertions(propertyExpression, Filters);
+            return FilterBy(propertyExpression, assertions);
         }
 
         /// <summary>
-        /// Returns the <see cref="FilterParameterBuilder{NullableGuidAssertions}" /> to build the filter for the nullable <see cref="Guid" /> parameter.
+        /// Adds the filter by selected property.
         /// </summary>
-        /// <param name="parameter">The nullable guid parameter.</param>
+        /// <param name="propertyExpression">The expression to get the property name.</param>
         /// <returns>The <see cref="FilterParameterBuilder{NullableGuidAssertions}" />.</returns>
-        public FilterParameterBuilder<NullableGuidFilterAssertions> FilterBy(Expression<Func<T, Guid?>> parameter)
+        public FilterParameterBuilder<NullableGuidFilterAssertions> FilterBy(Expression<Func<T, Guid?>> propertyExpression)
         {
-            var assertions = new NullableGuidFilterAssertions(parameter, Filters);
-            return FilterBy(parameter, assertions);
+            var assertions = new NullableGuidFilterAssertions(propertyExpression, Filters);
+            return FilterBy(propertyExpression, assertions);
         }
 
         /// <summary>
-        /// Returns the <see cref="FilterParameterBuilder{EnumAssertions}" /> to build the filter for the <see cref="Enum" /> parameter.
+        /// Adds the filter by selected property.
         /// </summary>
-        /// <param name="parameter">The enum parameter.</param>
+        /// <typeparam name="TEnum">The enum type.</typeparam>
+        /// <param name="propertyExpression">The expression to get the property name.</param>
         /// <returns>The <see cref="FilterParameterBuilder{EnumAssertions}" />.</returns>
-        public FilterParameterBuilder<EnumFilterAssertions<TEnum>> FilterBy<TEnum>(Expression<Func<T, TEnum>> parameter) where TEnum : Enum
+        public FilterParameterBuilder<EnumFilterAssertions<TEnum>> FilterBy<TEnum>(Expression<Func<T, TEnum>> propertyExpression)
+            where TEnum : Enum
         {
-            var assertions = new EnumFilterAssertions<TEnum>(parameter, Filters);
-            return FilterBy(parameter, assertions);
+            var assertions = new EnumFilterAssertions<TEnum>(propertyExpression, Filters);
+            return FilterBy(propertyExpression, assertions);
         }
 
         /// <summary>
-        /// Returns the <see cref="OrderParameterBuilder{T}" /> to build the order parameter.
+        /// Adds the order by selected property.
         /// </summary>
-        /// <returns>The <see cref="OrderParameterBuilder{T}" />.</returns>
-        public new OrderParameterBuilder<T> Order()
+        /// <typeparam name="TMember">The property type.</typeparam>
+        /// <param name="propertyExpression">The expression to get the property name.</param>
+        /// <param name="orderBy">The order action.</param>
+        /// <returns>The <see cref="OrderParameterBuilder{T}" /> to build the next order parameter.</returns>
+        /// <exception cref="ArgumentNullException">Throws if <paramref name="propertyExpression"/> is null.</exception>
+        public OrderParameterBuilder<T> OrderBy<TMember>(Expression<Func<T, TMember>> propertyExpression, OrderBy orderBy = Queries.OrderBy.Asc)
         {
+            if (propertyExpression == null)
+                throw new ArgumentNullException(nameof(propertyExpression));
+
+            return OrderBy(propertyExpression.GetOrderName(), orderBy);
+        }
+
+        /// <summary>
+        /// Adds the order by property name.
+        /// </summary>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="orderBy">The order action.</param>
+        /// <returns>The <see cref="OrderParameterBuilder{T}" /> to build the next order parameter.</returns>
+        /// <exception cref="ApiException">Throws if <paramref name="propertyName"/> is empty.</exception>
+        public new OrderParameterBuilder<T> OrderBy(string propertyName, OrderBy orderBy = Queries.OrderBy.Asc)
+        {
+            if (string.IsNullOrWhiteSpace(propertyName))
+                throw new ApiException(400, $"The '{nameof(propertyName)}' should not be empty.");
+
+            Orders[propertyName] = orderBy;
             return new OrderParameterBuilder<T>(Orders);
         }
 
@@ -425,18 +464,18 @@ namespace Confiti.MoySklad.Remap.Queries
         #region Utilities
 
         /// <summary>
-        /// Returns the <see cref="FilterParameterBuilder{TAssertions}" /> to build filter for the <paramref name="parameter"/>.
+        /// Adds the filter by selected property.
         /// </summary>
-        /// <param name="parameter">The API parameter.</param>
-        /// <param name="assertions">The assertions.</param>
-        /// <typeparam name="TProperty">The type of the API parameter.</typeparam>
+        /// <typeparam name="TProperty">The property type.</typeparam>
         /// <typeparam name="TAssertions">The type of the assertions.</typeparam>
+        /// <param name="propertyExpression">The expression to get the property name.</param>
+        /// <param name="assertions">The assertions.</param>
         /// <returns>The <see cref="FilterParameterBuilder{TAssertions}" />.</returns>
-        protected FilterParameterBuilder<TAssertions> FilterBy<TProperty, TAssertions>(Expression<Func<T, TProperty>> parameter, TAssertions assertions)
+        protected FilterParameterBuilder<TAssertions> FilterBy<TProperty, TAssertions>(Expression<Func<T, TProperty>> propertyExpression, TAssertions assertions)
             where TAssertions : FilterAssertions
         {
-            if (parameter == null)
-                throw new ArgumentNullException(nameof(parameter));
+            if (propertyExpression == null)
+                throw new ArgumentNullException(nameof(propertyExpression));
 
             return new FilterParameterBuilder<TAssertions>(assertions);
         }

@@ -42,7 +42,7 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
                     .And
                     .BeLessOrEqualTo(DateTime.Parse("2019-07-12 12:00:00"));
                 query.Search("foo");
-                query.Order().By(p => p.Name);
+                query.OrderBy(p => p.Name);
                 query.ExpandBy(p => p.Packs.Uom)
                     .ThenBy(p => p.Images);
                 query.Limit(100);

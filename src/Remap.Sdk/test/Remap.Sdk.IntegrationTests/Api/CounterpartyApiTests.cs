@@ -47,7 +47,7 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
                 query.FilterBy(p => p.Created).Should().BeGreaterOrEqualTo(DateTime.Parse("2019-07-10 12:00:00")).And.BeLessOrEqualTo(DateTime.Parse("2019-07-12 12:00:00"));
                 query.FilterBy(p => p.Updated).Should().BeGreaterOrEqualTo(DateTime.Parse("2019-07-10 12:00:00")).And.BeLessOrEqualTo(DateTime.Parse("2019-07-12 12:00:00"));
                 query.Search("foo");
-                query.Order().By(p => p.Name);
+                query.OrderBy(p => p.Name);
                 query.ExpandBy(p => p.Notes).ThenBy(p => p.ContactPersons);
                 query.Limit(100);
                 query.Offset(50);
