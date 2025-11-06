@@ -48,7 +48,7 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
                 query.FilterBy(p => p.Updated).Should().BeGreaterOrEqualTo(DateTime.Parse("2019-07-10 12:00:00")).And.BeLessOrEqualTo(DateTime.Parse("2019-07-12 12:00:00"));
                 query.Search("foo");
                 query.Order().By(p => p.Name);
-                query.Expand().With(p => p.Notes).And.With(p => p.ContactPersons);
+                query.ExpandBy(p => p.Notes).ThenBy(p => p.ContactPersons);
                 query.Limit(100);
                 query.Offset(50);
             });
@@ -63,15 +63,14 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
             var sample = await Pipeline.Instance.GetOrCreateSampleEntityAsync(_subject);
             var response = await _subject.GetAsync(sample.Id.Value, query =>
             {
-                query.Expand()
-                    .With(p => p.Accounts).And
-                    .With(p => p.ContactPersons).And
-                    .With(p => p.Files).And
-                    .With(p => p.Group).And
-                    .With(p => p.Notes).And
-                    .With(p => p.Owner).And
-                    .With(p => p.PriceType).And
-                    .With(p => p.State);
+                query.ExpandBy(p => p.Accounts)
+                    .ThenBy(p => p.ContactPersons)
+                    .ThenBy(p => p.Files)
+                    .ThenBy(p => p.Group)
+                    .ThenBy(p => p.Notes)
+                    .ThenBy(p => p.Owner)
+                    .ThenBy(p => p.PriceType)
+                    .ThenBy(p => p.State);
             });
 
             response.Should().NotBeNull();

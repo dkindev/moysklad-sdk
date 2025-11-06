@@ -7,7 +7,7 @@ using Confiti.MoySklad.Remap.Extensions;
 namespace Confiti.MoySklad.Remap.Queries
 {
     /// <summary>
-    /// Represents the builder to prepare the expand API parameter.
+    /// Represents the builder to prepare the expand parameter.
     /// </summary>
     public class ExpandParameterBuilder
     {
@@ -16,14 +16,14 @@ namespace Confiti.MoySklad.Remap.Queries
         /// <summary>
         /// Gets the orders.
         /// </summary>
-        protected readonly List<string> Expanders;
+        protected List<string> Expanders { get; }
 
         #endregion Fields
 
         #region Ctor
 
         /// <summary>
-        /// Creates a new instance of the <see cref="ExpandParameterBuilder{T}" /> class
+        /// Creates a new instance of the <see cref="ExpandParameterBuilder" /> class
         /// with the expanders.
         /// </summary>
         /// <param name="expanders">The expanders.</param>
@@ -37,24 +37,24 @@ namespace Confiti.MoySklad.Remap.Queries
         #region Methods
 
         /// <summary>
-        /// Expands the property by name.
+        /// Adds the property name to expand the entity property.
         /// </summary>
-        /// <param name="customPropertyName">The custom property name.</param>
-        /// <returns>The and constraint.</returns>
-        public AndConstraint<ExpandParameterBuilder> With(string customPropertyName)
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>The <see cref="ExpandParameterBuilder" /> to build the next expand parameter.</returns>
+        public ExpandParameterBuilder ThenBy(string propertyName)
         {
-            AddExpandParameter(customPropertyName);
-            return new AndConstraint<ExpandParameterBuilder>(this);
+            AddExpandParameter(propertyName);
+            return this;
         }
 
         /// <summary>
-        /// Add the Expand parameter with the specified name.
+        /// Adds the property name to expand the entity property.
         /// </summary>
-        /// <param name="propertyName">The parameter name.</param>
+        /// <param name="propertyName">The property name.</param>
         protected virtual void AddExpandParameter(string propertyName)
         {
             if (string.IsNullOrWhiteSpace(propertyName))
-                throw new ApiException(400, "Property name should not be empty.");
+                throw new ApiException(400, $"The '{nameof(propertyName)}' should not be empty.");
 
             Expanders.Add(propertyName);
         }
@@ -63,7 +63,7 @@ namespace Confiti.MoySklad.Remap.Queries
     }
 
     /// <summary>
-    /// Represents the builder to prepare the expand API parameter for <typeparamref name="T"/>.
+    /// Represents the builder to prepare the expand parameter for <typeparamref name="T"/>.
     /// </summary>
     /// <typeparam name="T">The concrete type of the meta entity.</typeparam>
     public class ExpandParameterBuilder<T> : ExpandParameterBuilder where T : class
@@ -85,28 +85,28 @@ namespace Confiti.MoySklad.Remap.Queries
         #region Methods
 
         /// <summary>
-        /// Expands the property of the meta entity.
+        /// Adds the property name to expand the entity property.
         /// </summary>
-        /// <param name="parameter">The meta entity parameter.</param>
-        /// <returns>The and constraint.</returns>
-        public AndConstraint<ExpandParameterBuilder<T>> With<TMember>(Expression<Func<T, TMember>> parameter) where TMember : class
+        /// <param name="parameter">The expression to get the property name.</param>
+        /// <returns>The <see cref="ExpandParameterBuilder{T}" /> to build the next expand parameter.</returns>
+        public ExpandParameterBuilder<T> ThenBy<TMember>(Expression<Func<T, TMember>> parameter)
+            where TMember : class
         {
             if (parameter == null)
                 throw new ArgumentNullException(nameof(parameter));
 
-            AddExpandParameter(parameter.GetExpandName());
-            return new AndConstraint<ExpandParameterBuilder<T>>(this);
+            return ThenBy(parameter.GetExpandName());
         }
 
         /// <summary>
-        /// Expands the property by name.
+        /// Adds the property name to expand the entity property.
         /// </summary>
-        /// <param name="customPropertyName">The custom property name.</param>
-        /// <returns>The and constraint.</returns>
-        public new AndConstraint<ExpandParameterBuilder<T>> With(string customPropertyName)
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>The <see cref="ExpandParameterBuilder{T}" /> to build the next expand parameter.</returns>
+        public new ExpandParameterBuilder<T> ThenBy(string propertyName)
         {
-            AddExpandParameter(customPropertyName);
-            return new AndConstraint<ExpandParameterBuilder<T>>(this);
+            AddExpandParameter(propertyName);
+            return this;
         }
 
         #endregion Methods

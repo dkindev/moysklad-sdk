@@ -72,11 +72,16 @@ namespace Confiti.MoySklad.Remap.Queries
         }
 
         /// <summary>
-        /// Returns the <see cref="ExpandParameterBuilder" /> to build the expand parameter.
+        /// Adds the property name to expand the entity property.
         /// </summary>
-        /// <returns>The <see cref="ExpandParameterBuilder" />.</returns>
-        public ExpandParameterBuilder Expand()
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>The <see cref="ExpandParameterBuilder" /> to build the next expand parameter.</returns>
+        public ExpandParameterBuilder ExpandBy(string propertyName)
         {
+            if (string.IsNullOrWhiteSpace(propertyName))
+                throw new ApiException(400, $"The '{nameof(propertyName)}' should not be empty.");
+
+            Expanders.Add(propertyName);
             return new ExpandParameterBuilder(Expanders);
         }
 
@@ -95,9 +100,9 @@ namespace Confiti.MoySklad.Remap.Queries
         }
 
         /// <summary>
-        /// Builds the limit parameter.
+        /// Adds the limit parameter.
         /// </summary>
-        /// <param name="value">The query limit.</param>
+        /// <param name="value">The limit parameter.</param>
         public void Limit(int value)
         {
             if (value < 1 || value > 1000)
@@ -107,9 +112,9 @@ namespace Confiti.MoySklad.Remap.Queries
         }
 
         /// <summary>
-        /// Builds the offset parameter.
+        /// Adds the offset parameter.
         /// </summary>
-        /// <param name="value">The offset in query.</param>
+        /// <param name="value">The offset parameter.</param>
         public void Offset(int value)
         {
             if (value < 0)
@@ -148,12 +153,31 @@ namespace Confiti.MoySklad.Remap.Queries
         #region Methods
 
         /// <summary>
-        /// Returns the <see cref="ExpandParameterBuilder{T}" /> to build the expand parameter.
+        /// Adds the property name to expand the entity property.
         /// </summary>
-        /// <returns>The <see cref="ExpandParameterBuilder{T}" />.</returns>
-        public new ExpandParameterBuilder<T> Expand()
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>The <see cref="ExpandParameterBuilder{T}" /> to build the next expand parameter.</returns>
+        public new ExpandParameterBuilder<T> ExpandBy(string propertyName)
         {
+            if (string.IsNullOrWhiteSpace(propertyName))
+                throw new ApiException(400, $"The '{nameof(propertyName)}' should not be empty.");
+
+            Expanders.Add(propertyName);
             return new ExpandParameterBuilder<T>(Expanders);
+        }
+
+        /// <summary>
+        /// Adds the property name to expand the entity property.
+        /// </summary>
+        /// <param name="parameter">The expression to get the property name.</param>
+        /// <returns>The <see cref="ExpandParameterBuilder{T}" /> to build the next expand parameter.</returns>
+        public ExpandParameterBuilder<T> ExpandBy<TMember>(Expression<Func<T, TMember>> parameter)
+            where TMember : class
+        {
+            if (parameter == null)
+                throw new ArgumentNullException(nameof(parameter));
+
+            return ExpandBy(parameter.GetExpandName());
         }
 
         /// <summary>

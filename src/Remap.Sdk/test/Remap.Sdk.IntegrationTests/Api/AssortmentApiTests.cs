@@ -55,7 +55,7 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
                 query.Limit(100);
                 query.Offset(50);
                 query.GroupBy(GroupBy.Consignment);
-                query.Expand().With(m => m.Components).And.With(m => m.Components.Assortment);
+                query.ExpandBy(m => m.Components).ThenBy(m => m.Components.Assortment);
             });
 
             response.Should().NotBeNull();

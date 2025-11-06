@@ -43,9 +43,8 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
                     .BeLessOrEqualTo(DateTime.Parse("2019-07-12 12:00:00"));
                 query.Search("foo");
                 query.Order().By(p => p.Name);
-                query.Expand()
-                    .With(p => p.Packs.Uom).And
-                    .With(p => p.Images);
+                query.ExpandBy(p => p.Packs.Uom)
+                    .ThenBy(p => p.Images);
                 query.Limit(100);
                 query.Offset(50);
             });
@@ -60,16 +59,15 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
             var sample = await Pipeline.Instance.GetOrCreateSampleEntityAsync(_subject);
             var response = await _subject.GetAsync(sample.Id.Value, query =>
             {
-                query.Expand()
-                    .With(p => p.Packs.Uom).And
-                    .With(p => p.Country).And
-                    .With(p => p.Files).And
-                    .With(p => p.ProductFolder).And
-                    .With(p => p.Group).And
-                    .With(p => p.Owner).And
-                    .With(p => p.Supplier).And
-                    .With(p => p.Uom).And
-                    .With(p => p.Images);
+                query.ExpandBy(p => p.Packs.Uom)
+                    .ThenBy(p => p.Country)
+                    .ThenBy(p => p.Files)
+                    .ThenBy(p => p.ProductFolder)
+                    .ThenBy(p => p.Group)
+                    .ThenBy(p => p.Owner)
+                    .ThenBy(p => p.Supplier)
+                    .ThenBy(p => p.Uom)
+                    .ThenBy(p => p.Images);
             });
 
             response.Should().NotBeNull();
@@ -92,7 +90,7 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
         {
             var response = await _subject.Metadata.GetAsync(query =>
             {
-                query.Expand().With(p => p.Attributes);
+                query.ExpandBy(p => p.Attributes);
             });
 
             response.Should().NotBeNull();

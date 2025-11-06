@@ -113,7 +113,7 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
 
         private Task<Supply> GetOrCreateSupplyAsync()
         {
-            return Pipeline.Instance.CreateSampleEntityAsync(
+            return Pipeline.Instance.GetOrCreateSampleEntityAsync(
                 Pipeline.Instance.Api.Entity.Supply,
                 async entity =>
                 {

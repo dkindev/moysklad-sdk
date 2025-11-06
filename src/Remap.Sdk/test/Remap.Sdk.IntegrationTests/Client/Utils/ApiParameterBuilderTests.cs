@@ -22,8 +22,8 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Client
             _subject.FilterBy(p => p.NullableIntPropertyParameterName).Should().BeNull();
             _subject.FilterBy("customParameter").Should().BeGreaterThan("5");
 
-            _subject.Expand().With(p => p.NestedEntity.NestedEntity2)
-                .And.With("my_custom_property_name_to_expand.two_level_nesting");
+            _subject.ExpandBy(p => p.NestedEntity.NestedEntity2)
+                .ThenBy("my_custom_property_name_to_expand.two_level_nesting");
 
             _subject.Order().By(p => p.StringProperty)
                 .And.By(p => p.IntProperty, OrderBy.Desc)

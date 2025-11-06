@@ -15,7 +15,7 @@ namespace Confiti.MoySklad.Remap.UnitTests.Client
             var expanders = new List<string>();
             var subject = new ExpandParameterBuilder<TestExpandMetaEntity>(expanders);
 
-            subject.With(p => p.L1Entity).And.With(p => p.L1Entity.L2Entity);
+            subject.ThenBy(p => p.L1Entity).ThenBy(p => p.L1Entity.L2Entity);
 
             expanders.Should().HaveCount(2);
             expanders[0].Should().Be("entity_one_level");
@@ -28,7 +28,7 @@ namespace Confiti.MoySklad.Remap.UnitTests.Client
             var expanders = new List<string>();
             var subject = new ExpandParameterBuilder<TestExpandMetaEntity>(expanders);
 
-            Action action = () => subject.With(p => p.NotAllowedExpandMember);
+            Action action = () => subject.ThenBy(p => p.NotAllowedExpandMember);
 
             action.Should().Throw<ApiException>();
         }
@@ -39,7 +39,7 @@ namespace Confiti.MoySklad.Remap.UnitTests.Client
             var expanders = new List<string>();
             var subject = new ExpandParameterBuilder<TestExpandMetaEntity>(expanders);
 
-            subject.With(p => p.L1Entity.L2Entity);
+            subject.ThenBy(p => p.L1Entity.L2Entity);
 
             expanders.Should().HaveCount(1);
             expanders[0].Should().Be("entity_one_level.entity_two_level");
