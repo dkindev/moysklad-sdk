@@ -26,18 +26,18 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
         {
             var response = await _subject.GetAllAsync(query =>
             {
-                query.Parameter(p => p.Code).Should().Be("foo").Or.Be("bar");
-                query.Parameter(p => p.Name).Should().Be("foo");
-                query.Parameter(p => p.Description).Should().Be("foo");
-                query.Parameter(p => p.Id).Should().Be(Guid.NewGuid());
-                query.Parameter(p => p.PathName).Should().Be("foo");
-                query.Parameter(p => p.Volume).Should().BeLessOrEqualTo(0);
-                query.Parameter(p => p.Weight).Should().BeGreaterOrEqualTo(0);
-                query.Parameter(p => p.IsSerialTrackable).Should().Be(false);
-                query.Parameter(p => p.Owner).Should().Be("https://api.moysklad.ru/api/remap/1.2/entity/employee/59a894aa-0ea3-11ea-0a80-006c00081b5b");
-                query.Parameter(p => p.Group).Should().Be("https://api.moysklad.ru/api/remap/1.2/entity/group/59a894aa-0ea3-11ea-0a80-006c00081b5b");
-                query.Parameter(p => p.Archived).Should().Be(true).Or.Be(false);
-                query.Parameter(p => p.Updated).Should()
+                query.FilterBy(p => p.Code).Should().Be("foo").Or.Be("bar");
+                query.FilterBy(p => p.Name).Should().Be("foo");
+                query.FilterBy(p => p.Description).Should().Be("foo");
+                query.FilterBy(p => p.Id).Should().Be(Guid.NewGuid());
+                query.FilterBy(p => p.PathName).Should().Be("foo");
+                query.FilterBy(p => p.Volume).Should().BeLessOrEqualTo(0);
+                query.FilterBy(p => p.Weight).Should().BeGreaterOrEqualTo(0);
+                query.FilterBy(p => p.IsSerialTrackable).Should().Be(false);
+                query.FilterBy(p => p.Owner).Should().Be("https://api.moysklad.ru/api/remap/1.2/entity/employee/59a894aa-0ea3-11ea-0a80-006c00081b5b");
+                query.FilterBy(p => p.Group).Should().Be("https://api.moysklad.ru/api/remap/1.2/entity/group/59a894aa-0ea3-11ea-0a80-006c00081b5b");
+                query.FilterBy(p => p.Archived).Should().Be(true).Or.Be(false);
+                query.FilterBy(p => p.Updated).Should()
                     .BeGreaterOrEqualTo(DateTime.Parse("2019-07-10 12:00:00"))
                     .And
                     .BeLessOrEqualTo(DateTime.Parse("2019-07-12 12:00:00"));

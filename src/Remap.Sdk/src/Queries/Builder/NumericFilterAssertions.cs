@@ -1,23 +1,23 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace Confiti.MoySklad.Remap.Queries
 {
     /// <summary>
-    /// Represents the assertions to build the numeric API parameter.
+    /// Represents the assertions to build the filter for numeric parameter.
     /// </summary>
-    /// <typeparam name="T">The type of the API parameter.</typeparam>
-    public class NumericAssertions<T> : AbstractAssertions where T : struct
+    /// <typeparam name="T">The type of the parameter.</typeparam>
+    public class NumericFilterAssertions<T> : FilterAssertions where T : struct
     {
         #region Ctor
 
         /// <summary>
-        /// Creates a new instance of the <see cref="NumericAssertions{T}" /> class
+        /// Creates a new instance of the <see cref="NumericFilterAssertions{T}" /> class
         /// with the parameter expression and the filters.
         /// </summary>
         /// <param name="parameter">The parameter expression.</param>
         /// <param name="filters">The filters.</param>
-        internal NumericAssertions(LambdaExpression parameter, List<FilterItem> filters)
+        internal NumericFilterAssertions(LambdaExpression parameter, List<FilterItem> filters)
             : base(parameter, filters)
         {
         }
@@ -31,10 +31,10 @@ namespace Confiti.MoySklad.Remap.Queries
         /// </summary>
         /// <param name="value">The value to assert.</param>
         /// <returns>The or constraint.</returns>
-        public OrConstraint<NumericAssertions<T>> Be(T value)
+        public OrConstraint<NumericFilterAssertions<T>> Be(T value)
         {
             AddFilter(value.ToString(), "=", new[] { "=" });
-            return new OrConstraint<NumericAssertions<T>>(this);
+            return new OrConstraint<NumericFilterAssertions<T>>(this);
         }
 
         /// <summary>
@@ -42,10 +42,10 @@ namespace Confiti.MoySklad.Remap.Queries
         /// </summary>
         /// <param name="value">The value to assert.</param>
         /// <returns>The and constraint.</returns>
-        public AndConstraint<NumericAssertions<T>> BeGreaterOrEqualTo(T value)
+        public AndConstraint<NumericFilterAssertions<T>> BeGreaterOrEqualTo(T value)
         {
             AddFilter(value.ToString(), ">=", new[] { "<=", "<", ">" });
-            return new AndConstraint<NumericAssertions<T>>(this);
+            return new AndConstraint<NumericFilterAssertions<T>>(this);
         }
 
         /// <summary>
@@ -53,10 +53,10 @@ namespace Confiti.MoySklad.Remap.Queries
         /// </summary>
         /// <param name="value">The value to assert.</param>
         /// <returns>The and constraint.</returns>
-        public AndConstraint<NumericAssertions<T>> BeGreaterThan(T value)
+        public AndConstraint<NumericFilterAssertions<T>> BeGreaterThan(T value)
         {
             AddFilter(value.ToString(), ">", new[] { "<", "<=", ">=" });
-            return new AndConstraint<NumericAssertions<T>>(this);
+            return new AndConstraint<NumericFilterAssertions<T>>(this);
         }
 
         /// <summary>
@@ -64,10 +64,10 @@ namespace Confiti.MoySklad.Remap.Queries
         /// </summary>
         /// <param name="value">The value to assert.</param>
         /// <returns>The and constraint.</returns>
-        public AndConstraint<NumericAssertions<T>> BeLessOrEqualTo(T value)
+        public AndConstraint<NumericFilterAssertions<T>> BeLessOrEqualTo(T value)
         {
             AddFilter(value.ToString(), "<=", new[] { ">=", "<", ">" });
-            return new AndConstraint<NumericAssertions<T>>(this);
+            return new AndConstraint<NumericFilterAssertions<T>>(this);
         }
 
         /// <summary>
@@ -75,10 +75,10 @@ namespace Confiti.MoySklad.Remap.Queries
         /// </summary>
         /// <param name="value">The value to assert.</param>
         /// <returns>The and constraint.</returns>
-        public AndConstraint<NumericAssertions<T>> BeLessThan(T value)
+        public AndConstraint<NumericFilterAssertions<T>> BeLessThan(T value)
         {
             AddFilter(value.ToString(), "<", new[] { ">", "<=", ">=" });
-            return new AndConstraint<NumericAssertions<T>>(this);
+            return new AndConstraint<NumericFilterAssertions<T>>(this);
         }
 
         /// <summary>
@@ -86,10 +86,10 @@ namespace Confiti.MoySklad.Remap.Queries
         /// </summary>
         /// <param name="value">The value to assert.</param>
         /// <returns>The and constraint.</returns>
-        public AndConstraint<NumericAssertions<T>> NotBe(T value)
+        public AndConstraint<NumericFilterAssertions<T>> NotBe(T value)
         {
             AddFilter(value.ToString(), "!=", new[] { "!=" });
-            return new AndConstraint<NumericAssertions<T>>(this);
+            return new AndConstraint<NumericFilterAssertions<T>>(this);
         }
 
         #endregion Methods

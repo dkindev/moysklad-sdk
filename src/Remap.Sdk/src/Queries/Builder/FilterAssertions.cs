@@ -8,28 +8,25 @@ using Confiti.MoySklad.Remap.Extensions;
 namespace Confiti.MoySklad.Remap.Queries
 {
     /// <summary>
-    /// Represents the abstract assertions to build the API parameter.
+    /// Represents the assertions to build the filter parameter.
     /// </summary>
-    public abstract class AbstractAssertions
+    public abstract class FilterAssertions
     {
         #region Properties
 
         /// <summary>
         /// Gets the filters.
         /// </summary>
-        /// <value>The filters.</value>
         protected List<FilterItem> Filters { get; }
 
         /// <summary>
         /// Gets the parameter filter.
         /// </summary>
-        /// <value>The parameter filter.</value>
         protected FilterAttribute ParameterFilter { get; }
 
         /// <summary>
         /// Gets the parameter name.
         /// </summary>
-        /// <value>The parameter name.</value>
         protected string ParameterName { get; }
 
         #endregion Properties
@@ -37,24 +34,24 @@ namespace Confiti.MoySklad.Remap.Queries
         #region Ctor
 
         /// <summary>
-        /// Creates a new instance of the <see cref="AbstractAssertions" /> class
+        /// Creates a new instance of the <see cref="FilterAssertions" /> class
         /// with the parameter expression and the filters.
         /// </summary>
         /// <param name="parameter">The parameter expression.</param>
         /// <param name="filters">The filters.</param>
-        internal AbstractAssertions(LambdaExpression parameter, List<FilterItem> filters)
+        internal FilterAssertions(LambdaExpression parameter, List<FilterItem> filters)
             : this(parameter.GetFilterName(), parameter.GetFilter(), filters)
         {
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="AbstractAssertions" /> class
+        /// Creates a new instance of the <see cref="FilterAssertions" /> class
         /// with the parameter expression, filter attribute and the filters.
         /// </summary>
         /// <param name="parameterName">The parameter name.</param>
         /// <param name="filterAttribute">The filter attribute.</param>
         /// <param name="filters">The filters.</param>
-        internal AbstractAssertions(string parameterName, FilterAttribute filterAttribute, List<FilterItem> filters)
+        internal FilterAssertions(string parameterName, FilterAttribute filterAttribute, List<FilterItem> filters)
         {
             if (parameterName == null)
                 throw new ArgumentNullException(nameof(parameterName));

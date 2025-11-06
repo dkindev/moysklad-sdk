@@ -6,31 +6,31 @@ using Confiti.MoySklad.Remap.Entities;
 namespace Confiti.MoySklad.Remap.Queries
 {
     /// <summary>
-    /// Represents the assertions to build the API parameter for the meta entity.
+    /// Represents the assertions to build the filter for <see cref="MetaEntity"/> parameter.
     /// </summary>
-    public class MetaEntityAssertions : AbstractAssertions
+    public class MetaEntityFilterAssertions : FilterAssertions
     {
         #region Ctor
 
         /// <summary>
-        /// Creates a new instance of the <see cref="MetaEntityAssertions" /> class
+        /// Creates a new instance of the <see cref="MetaEntityFilterAssertions" /> class
         /// with the parameter expression and the filters.
         /// </summary>
         /// <param name="parameter">The parameter expression.</param>
         /// <param name="filters">The filters.</param>
-        internal MetaEntityAssertions(LambdaExpression parameter, List<FilterItem> filters)
+        internal MetaEntityFilterAssertions(LambdaExpression parameter, List<FilterItem> filters)
             : base(parameter, filters)
         {
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="MetaEntityAssertions" /> class
+        /// Creates a new instance of the <see cref="MetaEntityFilterAssertions" /> class
         /// with the parameter expression, filter attribute and the filters.
         /// </summary>
         /// <param name="parameterName">The parameter name.</param>
         /// <param name="filterAttribute">The filter attribute.</param>
         /// <param name="filters">The filters.</param>
-        internal MetaEntityAssertions(string parameterName, FilterAttribute filterAttribute, List<FilterItem> filters)
+        internal MetaEntityFilterAssertions(string parameterName, FilterAttribute filterAttribute, List<FilterItem> filters)
             : base(parameterName, filterAttribute, filters)
         {
         }
@@ -44,10 +44,10 @@ namespace Confiti.MoySklad.Remap.Queries
         /// </summary>
         /// <param name="href">The value to assert.</param>
         /// <returns>The or constraint.</returns>
-        public OrConstraint<MetaEntityAssertions> Be(string href)
+        public OrConstraint<MetaEntityFilterAssertions> Be(string href)
         {
             AddFilter(href, "=", new[] { "=" });
-            return new OrConstraint<MetaEntityAssertions>(this);
+            return new OrConstraint<MetaEntityFilterAssertions>(this);
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Confiti.MoySklad.Remap.Queries
         /// </summary>
         /// <param name="meta">The meta to assert.</param>
         /// <returns>The or constraint.</returns>
-        public OrConstraint<MetaEntityAssertions> Be(Meta meta)
+        public OrConstraint<MetaEntityFilterAssertions> Be(Meta meta)
         {
             if (meta == null)
                 throw new ArgumentNullException(nameof(meta));
@@ -68,7 +68,7 @@ namespace Confiti.MoySklad.Remap.Queries
         /// </summary>
         /// <param name="metaEntity">The meta entity to assert.</param>
         /// <returns>The or constraint.</returns>
-        public OrConstraint<MetaEntityAssertions> Be(MetaEntity metaEntity)
+        public OrConstraint<MetaEntityFilterAssertions> Be(MetaEntity metaEntity)
         {
             if (metaEntity == null)
                 throw new ArgumentNullException(nameof(metaEntity));
@@ -81,10 +81,10 @@ namespace Confiti.MoySklad.Remap.Queries
         /// </summary>
         /// <param name="href">The value to assert.</param>
         /// <returns>The and constraint.</returns>
-        public AndConstraint<MetaEntityAssertions> NotBe(string href)
+        public AndConstraint<MetaEntityFilterAssertions> NotBe(string href)
         {
             AddFilter(href, "!=", new[] { "!=" });
-            return new AndConstraint<MetaEntityAssertions>(this);
+            return new AndConstraint<MetaEntityFilterAssertions>(this);
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace Confiti.MoySklad.Remap.Queries
         /// </summary>
         /// <param name="meta">The meta to assert.</param>
         /// <returns>The and constraint.</returns>
-        public AndConstraint<MetaEntityAssertions> NotBe(Meta meta)
+        public AndConstraint<MetaEntityFilterAssertions> NotBe(Meta meta)
         {
             if (meta == null)
                 throw new ArgumentNullException(nameof(meta));
@@ -105,7 +105,7 @@ namespace Confiti.MoySklad.Remap.Queries
         /// </summary>
         /// <param name="metaEntity">The meta entity to assert.</param>
         /// <returns>The and constraint.</returns>
-        public AndConstraint<MetaEntityAssertions> NotBe(MetaEntity metaEntity)
+        public AndConstraint<MetaEntityFilterAssertions> NotBe(MetaEntity metaEntity)
         {
             if (metaEntity == null)
                 throw new ArgumentNullException(nameof(metaEntity));

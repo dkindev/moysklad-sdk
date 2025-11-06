@@ -9,7 +9,7 @@ using NUnit.Framework;
 
 namespace Confiti.MoySklad.Remap.UnitTests.Client
 {
-    public class AssertionsTests
+    public class FilterAssertionsTests
     {
         [Test]
         [TestCase("=")]
@@ -19,7 +19,7 @@ namespace Confiti.MoySklad.Remap.UnitTests.Client
             var guid = Guid.NewGuid();
             var filters = new List<FilterItem>();
             Expression<Func<GuidAssertionsTestEntity, Guid>> expression = p => p.GuidMember;
-            var subject = new GuidAssertions(expression, filters);
+            var subject = new GuidFilterAssertions(expression, filters);
 
             if (@operator == "=")
                 subject.Be(guid);
@@ -36,7 +36,7 @@ namespace Confiti.MoySklad.Remap.UnitTests.Client
         public void Assertion_with_not_allowed_filter_member_should_throw_api_exception()
         {
             Expression<Func<GuidAssertionsTestEntity, Guid>> expression = p => p.NotFilteredMember;
-            Action assertion = () => new GuidAssertions(expression, new List<FilterItem>());
+            Action assertion = () => new GuidFilterAssertions(expression, new List<FilterItem>());
 
             assertion.Should().Throw<ApiException>();
         }
@@ -45,7 +45,7 @@ namespace Confiti.MoySklad.Remap.UnitTests.Client
         public void Assertion_with_not_allowed_nesting_filter_member_should_throw_api_exception()
         {
             Expression<Func<GuidAssertionsTestEntity, Guid>> expression = p => p.AllowedNestingFilterMember.NestingNotFilteredMember;
-            Action assertion = () => new GuidAssertions(expression, new List<FilterItem>());
+            Action assertion = () => new GuidFilterAssertions(expression, new List<FilterItem>());
 
             assertion.Should().Throw<ApiException>();
         }
@@ -58,7 +58,7 @@ namespace Confiti.MoySklad.Remap.UnitTests.Client
             var guid = Guid.NewGuid();
             var filters = new List<FilterItem>();
             Expression<Func<GuidAssertionsTestEntity, Guid?>> expression = p => p.NullableMember;
-            var subject = new NullableGuidAssertions(expression, filters);
+            var subject = new NullableGuidFilterAssertions(expression, filters);
 
             if (@operator == "=")
                 subject.BeNull();
@@ -81,7 +81,7 @@ namespace Confiti.MoySklad.Remap.UnitTests.Client
                 var guid = Guid.NewGuid();
                 var filters = new List<FilterItem>(new[] { new FilterItem("notAllowedContinueConstraintMember", @operator, "foo") });
                 Expression<Func<GuidAssertionsTestEntity, Guid>> expression = p => p.NotAllowedContinueConstraintMember;
-                var subject = new GuidAssertions(expression, filters);
+                var subject = new GuidFilterAssertions(expression, filters);
 
                 Action assertion = null;
 
@@ -98,7 +98,7 @@ namespace Confiti.MoySklad.Remap.UnitTests.Client
         public void If_filter_by_root_nesting_member_is_not_allowed_then_assertion_should_throw_api_exception()
         {
             Expression<Func<GuidAssertionsTestEntity, Guid>> expression = p => p.NotAllowedRootNestingFilterMember;
-            Action assertion = () => new GuidAssertions(expression, new List<FilterItem>());
+            Action assertion = () => new GuidFilterAssertions(expression, new List<FilterItem>());
 
             assertion.Should().Throw<ApiException>();
         }
@@ -111,7 +111,7 @@ namespace Confiti.MoySklad.Remap.UnitTests.Client
             var guid = Guid.NewGuid();
             var filters = new List<FilterItem>();
             Expression<Func<GuidAssertionsTestEntity, Guid>> expression = p => p.AllowedNestingFilterMember.NestedGuidMember;
-            var subject = new GuidAssertions(expression, filters);
+            var subject = new GuidFilterAssertions(expression, filters);
 
             if (@operator == "=")
                 subject.Be(guid);
@@ -128,7 +128,7 @@ namespace Confiti.MoySklad.Remap.UnitTests.Client
         public void If_nesting_is_not_allowed_then_assertion_should_throw_api_exception()
         {
             Expression<Func<GuidAssertionsTestEntity, Guid>> expression = p => p.NotAllowedNestingFilterMember.NestedGuidMember;
-            Action assertion = () => new GuidAssertions(expression, new List<FilterItem>());
+            Action assertion = () => new GuidFilterAssertions(expression, new List<FilterItem>());
 
             assertion.Should().Throw<ApiException>();
         }
@@ -141,7 +141,7 @@ namespace Confiti.MoySklad.Remap.UnitTests.Client
             var guid = Guid.NewGuid();
             var filters = new List<FilterItem>();
             Expression<Func<GuidAssertionsTestEntity, Guid?>> expression = p => p.NullableNotAllowedMember;
-            var subject = new NullableGuidAssertions(expression, filters);
+            var subject = new NullableGuidFilterAssertions(expression, filters);
 
             Action assertion = null;
 
@@ -161,7 +161,7 @@ namespace Confiti.MoySklad.Remap.UnitTests.Client
             var guid = Guid.NewGuid();
             var filters = new List<FilterItem>();
             Expression<Func<GuidAssertionsTestEntity, Guid>> expression = p => p.OverriddenOperatorsMember;
-            var subject = new GuidAssertions(expression, filters);
+            var subject = new GuidFilterAssertions(expression, filters);
 
             Action assertion = null;
 
@@ -178,7 +178,7 @@ namespace Confiti.MoySklad.Remap.UnitTests.Client
         [TestCase("!=")]
         public void Using_Assertion_with_other_Assertions_on_other_member_should_not_be_throw_api_exception(string @operator)
         {
-            GuidAssertions subject = null;
+            GuidFilterAssertions subject = null;
 
             var assertions = new Action[]
             {
@@ -190,7 +190,7 @@ namespace Confiti.MoySklad.Remap.UnitTests.Client
             {
                 var filters = new List<FilterItem>(new[] { new FilterItem("guidMember1", @operator, "foo") });
                 Expression<Func<GuidAssertionsTestEntity, Guid>> expression = p => p.GuidMember;
-                subject = new GuidAssertions(expression, filters);
+                subject = new GuidFilterAssertions(expression, filters);
 
                 assertion.Should().NotThrow<ApiException>();
             }
@@ -206,7 +206,7 @@ namespace Confiti.MoySklad.Remap.UnitTests.Client
                 var guid = Guid.NewGuid();
                 var filters = new List<FilterItem>(new[] { new FilterItem("guidMember", @operator, "foo") });
                 Expression<Func<GuidAssertionsTestEntity, Guid>> expression = p => p.GuidMember;
-                var subject = new GuidAssertions(expression, filters);
+                var subject = new GuidFilterAssertions(expression, filters);
 
                 if (allowedOperator == "=")
                     subject.Be(guid);
@@ -231,7 +231,7 @@ namespace Confiti.MoySklad.Remap.UnitTests.Client
             var guid = Guid.NewGuid();
             var filters = new List<FilterItem>(new[] { new FilterItem("guidMember", @operator, "foo") });
             Expression<Func<GuidAssertionsTestEntity, Guid>> expression = p => p.GuidMember;
-            var subject = new GuidAssertions(expression, filters);
+            var subject = new GuidFilterAssertions(expression, filters);
 
             Action assertion = null;
 

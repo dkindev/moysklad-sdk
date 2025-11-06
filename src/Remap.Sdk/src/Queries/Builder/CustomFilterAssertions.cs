@@ -1,22 +1,22 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Confiti.MoySklad.Remap.Queries
 {
     /// <summary>
-    /// Represents the assertions to build the custom API parameter.
+    /// Represents the assertions to build the filter for custom parameter.
     /// </summary>
-    public class CustomAssertions : AbstractAssertions
+    public class CustomFilterAssertions : FilterAssertions
     {
         #region Ctor
 
         /// <summary>
-        /// Creates a new instance of the <see cref="CustomAssertions" /> class
+        /// Creates a new instance of the <see cref="CustomFilterAssertions" /> class
         /// with the parameter expression, filter attribute and the filters.
         /// </summary>
         /// <param name="parameterName">The parameter name.</param>
         /// <param name="filterAttribute">The filter attribute.</param>
         /// <param name="filters">The filters.</param>
-        internal CustomAssertions(string parameterName, FilterAttribute filterAttribute, List<FilterItem> filters)
+        internal CustomFilterAssertions(string parameterName, FilterAttribute filterAttribute, List<FilterItem> filters)
             : base(parameterName, filterAttribute, filters)
         {
         }
@@ -30,10 +30,10 @@ namespace Confiti.MoySklad.Remap.Queries
         /// </summary>
         /// <param name="value">The value to assert.</param>
         /// <returns>The or constraint.</returns>
-        public OrConstraint<CustomAssertions> Be(string value)
+        public OrConstraint<CustomFilterAssertions> Be(string value)
         {
             AddFilter(value, "=", new[] { "=" });
-            return new OrConstraint<CustomAssertions>(this);
+            return new OrConstraint<CustomFilterAssertions>(this);
         }
 
         /// <summary>
@@ -41,10 +41,10 @@ namespace Confiti.MoySklad.Remap.Queries
         /// </summary>
         /// <param name="value">The value to assert.</param>
         /// <returns>The and constraint.</returns>
-        public AndConstraint<CustomAssertions> BeGreaterOrEqualTo(string value)
+        public AndConstraint<CustomFilterAssertions> BeGreaterOrEqualTo(string value)
         {
             AddFilter(value, ">=", new[] { "<=", "<", ">" });
-            return new AndConstraint<CustomAssertions>(this);
+            return new AndConstraint<CustomFilterAssertions>(this);
         }
 
         /// <summary>
@@ -52,10 +52,10 @@ namespace Confiti.MoySklad.Remap.Queries
         /// </summary>
         /// <param name="value">The value to assert.</param>
         /// <returns>The and constraint.</returns>
-        public AndConstraint<CustomAssertions> BeGreaterThan(string value)
+        public AndConstraint<CustomFilterAssertions> BeGreaterThan(string value)
         {
             AddFilter(value, ">", new[] { "<", "<=", ">=" });
-            return new AndConstraint<CustomAssertions>(this);
+            return new AndConstraint<CustomFilterAssertions>(this);
         }
 
         /// <summary>
@@ -63,10 +63,10 @@ namespace Confiti.MoySklad.Remap.Queries
         /// </summary>
         /// <param name="value">The value to assert.</param>
         /// <returns>The and constraint.</returns>
-        public AndConstraint<CustomAssertions> BeLessOrEqualTo(string value)
+        public AndConstraint<CustomFilterAssertions> BeLessOrEqualTo(string value)
         {
             AddFilter(value, "<=", new[] { ">=", "<", ">" });
-            return new AndConstraint<CustomAssertions>(this);
+            return new AndConstraint<CustomFilterAssertions>(this);
         }
 
         /// <summary>
@@ -74,10 +74,10 @@ namespace Confiti.MoySklad.Remap.Queries
         /// </summary>
         /// <param name="value">The value to assert.</param>
         /// <returns>The and constraint.</returns>
-        public AndConstraint<CustomAssertions> BeLessThan(string value)
+        public AndConstraint<CustomFilterAssertions> BeLessThan(string value)
         {
             AddFilter(value, "<", new[] { ">", "<=", ">=" });
-            return new AndConstraint<CustomAssertions>(this);
+            return new AndConstraint<CustomFilterAssertions>(this);
         }
 
         /// <summary>
@@ -103,10 +103,10 @@ namespace Confiti.MoySklad.Remap.Queries
         /// </summary>
         /// <param name="value">The value to assert.</param>
         /// <returns>The and constraint.</returns>
-        public AndConstraint<CustomAssertions> NotBe(string value)
+        public AndConstraint<CustomFilterAssertions> NotBe(string value)
         {
             AddFilter(value, "!=", new[] { "!=" });
-            return new AndConstraint<CustomAssertions>(this);
+            return new AndConstraint<CustomFilterAssertions>(this);
         }
 
         /// <summary>

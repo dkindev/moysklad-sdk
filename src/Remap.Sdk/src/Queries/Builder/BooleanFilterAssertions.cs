@@ -1,24 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq.Expressions;
-using Confiti.MoySklad.Remap.Extensions;
 
 namespace Confiti.MoySklad.Remap.Queries
 {
     /// <summary>
-    /// Represents the assertions to build the enum API parameter.
+    /// Represents the assertions to build the filter for <see cref="bool"/> parameter.
     /// </summary>
-    public class EnumAssertions<T> : AbstractAssertions where T : Enum
+    public class BooleanFilterAssertions : FilterAssertions
     {
         #region Ctor
 
         /// <summary>
-        /// Creates a new instance of the <see cref="EnumAssertions{T}" /> class
+        /// Creates a new instance of the <see cref="BooleanFilterAssertions" /> class
         /// with the parameter expression and the filters.
         /// </summary>
         /// <param name="parameter">The parameter expression.</param>
         /// <param name="filters">The filters.</param>
-        internal EnumAssertions(LambdaExpression parameter, List<FilterItem> filters)
+        protected internal BooleanFilterAssertions(LambdaExpression parameter, List<FilterItem> filters)
             : base(parameter, filters)
         {
         }
@@ -32,10 +30,10 @@ namespace Confiti.MoySklad.Remap.Queries
         /// </summary>
         /// <param name="value">The value to assert.</param>
         /// <returns>The or constraint.</returns>
-        public OrConstraint<EnumAssertions<T>> Be(T value)
+        public OrConstraint<BooleanFilterAssertions> Be(bool value)
         {
-            AddFilter(value.GetParameterName(), "=", new[] { "=" });
-            return new OrConstraint<EnumAssertions<T>>(this);
+            AddFilter(value.ToString().ToLower(), "=", new[] { "=" });
+            return new OrConstraint<BooleanFilterAssertions>(this);
         }
 
         /// <summary>
@@ -43,10 +41,10 @@ namespace Confiti.MoySklad.Remap.Queries
         /// </summary>
         /// <param name="value">The value to assert.</param>
         /// <returns>The and constraint.</returns>
-        public AndConstraint<EnumAssertions<T>> NotBe(T value)
+        public AndConstraint<BooleanFilterAssertions> NotBe(bool value)
         {
-            AddFilter(value.GetParameterName(), "!=", new[] { "!=" });
-            return new AndConstraint<EnumAssertions<T>>(this);
+            AddFilter(value.ToString().ToLower(), "!=", new[] { "!=" });
+            return new AndConstraint<BooleanFilterAssertions>(this);
         }
 
         #endregion Methods

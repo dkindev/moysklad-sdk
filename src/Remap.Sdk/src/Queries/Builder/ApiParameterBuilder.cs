@@ -26,19 +26,16 @@ namespace Confiti.MoySklad.Remap.Queries
         /// <summary>
         /// Gets the expanders.
         /// </summary>
-        /// <returns>The expanders.</returns>
         protected List<string> Expanders { get; } = new List<string>();
 
         /// <summary>
         /// Gets the filters.
         /// </summary>
-        /// <returns>The filters.</returns>
         protected List<FilterItem> Filters { get; } = new List<FilterItem>();
 
         /// <summary>
         /// Gets the orders.
         /// </summary>
-        /// <returns>The orders.</returns>
         protected Dictionary<string, OrderBy> Orders { get; } = new Dictionary<string, OrderBy>();
 
         #endregion Properties
@@ -75,16 +72,30 @@ namespace Confiti.MoySklad.Remap.Queries
         }
 
         /// <summary>
-        /// Returns <see cref="ExpandParameterBuilder" /> to build the expand API parameter.
+        /// Returns the <see cref="ExpandParameterBuilder" /> to build the expand parameter.
         /// </summary>
-        /// <returns>The expand parameter builder.</returns>
+        /// <returns>The <see cref="ExpandParameterBuilder" />.</returns>
         public ExpandParameterBuilder Expand()
         {
             return new ExpandParameterBuilder(Expanders);
         }
 
         /// <summary>
-        /// Builds the limit API parameter.
+        /// Returns the <see cref="FilterParameterBuilder{CustomAssertions}" /> to build the filter for the custom parameter.
+        /// </summary>
+        /// <param name="parameter">The custom parameter.</param>
+        /// <returns>The <see cref="FilterParameterBuilder{CustomAssertions}" />.</returns>
+        public FilterParameterBuilder<CustomFilterAssertions> FilterBy(string parameter)
+        {
+            if (parameter == null)
+                throw new ArgumentNullException(nameof(parameter));
+
+            var assertions = new CustomFilterAssertions(parameter, new FilterAttribute(), Filters);
+            return new FilterParameterBuilder<CustomFilterAssertions>(assertions);
+        }
+
+        /// <summary>
+        /// Builds the limit parameter.
         /// </summary>
         /// <param name="value">The query limit.</param>
         public void Limit(int value)
@@ -96,7 +107,7 @@ namespace Confiti.MoySklad.Remap.Queries
         }
 
         /// <summary>
-        /// Builds the offset API parameter.
+        /// Builds the offset parameter.
         /// </summary>
         /// <param name="value">The offset in query.</param>
         public void Offset(int value)
@@ -108,30 +119,16 @@ namespace Confiti.MoySklad.Remap.Queries
         }
 
         /// <summary>
-        /// Returns <see cref="OrderParameterBuilder" /> to build the order API parameter.
+        /// Returns the <see cref="OrderParameterBuilder" /> to build the order parameter.
         /// </summary>
-        /// <returns>The order parameter builder.</returns>
+        /// <returns>The <see cref="OrderParameterBuilder" />.</returns>
         public OrderParameterBuilder Order()
         {
             return new OrderParameterBuilder(Orders);
         }
 
         /// <summary>
-        /// Returns <see cref="ParameterBuilder{CustomAssertions}" /> to build assertions for the custom parameter.
-        /// </summary>
-        /// <param name="parameter">The custom parameter.</param>
-        /// <returns>The parameter builder.</returns>
-        public ParameterBuilder<CustomAssertions> Parameter(string parameter)
-        {
-            if (parameter == null)
-                throw new ArgumentNullException(nameof(parameter));
-
-            var assertions = new CustomAssertions(parameter, new FilterAttribute(), Filters);
-            return new ParameterBuilder<CustomAssertions>(assertions);
-        }
-
-        /// <summary>
-        /// Builds the search API parameter.
+        /// Adds a search keyword(s) to perform contextual search.
         /// </summary>
         /// <param name="value">The search keyword(s).</param>
         public void Search(string value)
@@ -151,252 +148,252 @@ namespace Confiti.MoySklad.Remap.Queries
         #region Methods
 
         /// <summary>
-        /// Returns <see cref="ExpandParameterBuilder{T}" /> to build the expand API parameter.
+        /// Returns the <see cref="ExpandParameterBuilder{T}" /> to build the expand parameter.
         /// </summary>
-        /// <returns>The expand parameter builder.</returns>
+        /// <returns>The <see cref="ExpandParameterBuilder{T}" />.</returns>
         public new ExpandParameterBuilder<T> Expand()
         {
             return new ExpandParameterBuilder<T>(Expanders);
         }
 
         /// <summary>
-        /// Returns <see cref="OrderParameterBuilder{T}" /> to build the order API parameter.
+        /// Returns the <see cref="FilterParameterBuilder{StringAssertions}" /> to build the filter for the <see cref="string" /> parameter.
         /// </summary>
-        /// <returns>The order parameter builder.</returns>
+        /// <param name="parameter">The string parameter.</param>
+        /// <returns>The <see cref="FilterParameterBuilder{StringAssertions}" />.</returns>
+        public FilterParameterBuilder<StringFilterAssertions> FilterBy(Expression<Func<T, string>> parameter)
+        {
+            var assertions = new StringFilterAssertions(parameter, Filters);
+            return FilterBy(parameter, assertions);
+        }
+
+        /// <summary>
+        /// Returns the <see cref="FilterParameterBuilder{NumericAssertions}" /> to build the filter for the <see cref="short" /> parameter.
+        /// </summary>
+        /// <param name="parameter">The short parameter.</param>
+        /// <returns>The <see cref="FilterParameterBuilder{NumericAssertions}" />.</returns>
+        public FilterParameterBuilder<NumericFilterAssertions<short>> FilterBy(Expression<Func<T, short>> parameter)
+        {
+            var assertions = new NumericFilterAssertions<short>(parameter, Filters);
+            return FilterBy(parameter, assertions);
+        }
+
+        /// <summary>
+        /// Returns the <see cref="FilterParameterBuilder{NumericAssertions}" /> to build the filter for the <see cref="uint" /> parameter.
+        /// </summary>
+        /// <param name="parameter">The uint parameter.</param>
+        /// <returns>The <see cref="FilterParameterBuilder{NumericAssertions}" />.</returns>
+        public FilterParameterBuilder<NumericFilterAssertions<uint>> FilterBy(Expression<Func<T, uint>> parameter)
+        {
+            var assertions = new NumericFilterAssertions<uint>(parameter, Filters);
+            return FilterBy(parameter, assertions);
+        }
+
+        /// <summary>
+        /// Returns the <see cref="FilterParameterBuilder{NumericAssertions}" /> to build the filter for the <see cref="int" /> parameter.
+        /// </summary>
+        /// <param name="parameter">The int parameter.</param>
+        /// <returns>The <see cref="FilterParameterBuilder{NumericAssertions}" /> .</returns>
+        public FilterParameterBuilder<NumericFilterAssertions<int>> FilterBy(Expression<Func<T, int>> parameter)
+        {
+            var assertions = new NumericFilterAssertions<int>(parameter, Filters);
+            return FilterBy(parameter, assertions);
+        }
+
+        /// <summary>
+        /// Returns the <see cref="FilterParameterBuilder{NumericAssertions}" /> to build the filter for the <see cref="float" /> parameter.
+        /// </summary>
+        /// <param name="parameter">The float parameter.</param>
+        /// <returns>The <see cref="FilterParameterBuilder{NumericAssertions}" />.</returns>
+        public FilterParameterBuilder<NumericFilterAssertions<float>> FilterBy(Expression<Func<T, float>> parameter)
+        {
+            var assertions = new NumericFilterAssertions<float>(parameter, Filters);
+            return FilterBy(parameter, assertions);
+        }
+
+        /// <summary>
+        /// Returns the <see cref="FilterParameterBuilder{NumericAssertions}" /> to build the filter for the <see cref="double" /> parameter.
+        /// </summary>
+        /// <param name="parameter">The double parameter.</param>
+        /// <returns>The <see cref="FilterParameterBuilder{NumericAssertions}" />.</returns>
+        public FilterParameterBuilder<NumericFilterAssertions<double>> FilterBy(Expression<Func<T, double>> parameter)
+        {
+            var assertions = new NumericFilterAssertions<double>(parameter, Filters);
+            return FilterBy(parameter, assertions);
+        }
+
+        /// <summary>
+        /// Returns the <see cref="FilterParameterBuilder{NumericAssertions}" /> to build the filter for the <see cref="decimal" /> parameter.
+        /// </summary>
+        /// <param name="parameter">The decimal parameter.</param>
+        /// <returns>The <see cref="FilterParameterBuilder{NumericAssertions}" />.</returns>
+        public FilterParameterBuilder<NumericFilterAssertions<decimal>> FilterBy(Expression<Func<T, decimal>> parameter)
+        {
+            var assertions = new NumericFilterAssertions<decimal>(parameter, Filters);
+            return FilterBy(parameter, assertions);
+        }
+
+        /// <summary>
+        /// Returns the <see cref="FilterParameterBuilder{NullableNumericAssertions}" /> to build the filter for the nullable <see cref="short" /> parameter.
+        /// </summary>
+        /// <param name="parameter">The nullable short parameter.</param>
+        /// <returns>The <see cref="FilterParameterBuilder{NullableNumericAssertions}" />.</returns>
+        public FilterParameterBuilder<NullableNumericFilterAssertions<short>> FilterBy(Expression<Func<T, short?>> parameter)
+        {
+            var assertions = new NullableNumericFilterAssertions<short>(parameter, Filters);
+            return FilterBy(parameter, assertions);
+        }
+
+        /// <summary>
+        /// Returns the <see cref="FilterParameterBuilder{NullableNumericAssertions}" /> to build the filter for the nullable <see cref="uint" /> parameter.
+        /// </summary>
+        /// <param name="parameter">The nullable uint parameter.</param>
+        /// <returns>The <see cref="FilterParameterBuilder{NullableNumericAssertions}" />.</returns>
+        public FilterParameterBuilder<NullableNumericFilterAssertions<uint>> FilterBy(Expression<Func<T, uint?>> parameter)
+        {
+            var assertions = new NullableNumericFilterAssertions<uint>(parameter, Filters);
+            return FilterBy(parameter, assertions);
+        }
+
+        /// <summary>
+        /// Returns the <see cref="FilterParameterBuilder{NullableNumericAssertions}" /> to build the filter for the nullable <see cref="int" /> parameter.
+        /// </summary>
+        /// <param name="parameter">The nullable int parameter.</param>
+        /// <returns>The <see cref="FilterParameterBuilder{NullableNumericAssertions}" />.</returns>
+        public FilterParameterBuilder<NullableNumericFilterAssertions<int>> FilterBy(Expression<Func<T, int?>> parameter)
+        {
+            var assertions = new NullableNumericFilterAssertions<int>(parameter, Filters);
+            return FilterBy(parameter, assertions);
+        }
+
+        /// <summary>
+        /// Returns the <see cref="FilterParameterBuilder{NullableNumericAssertions}" /> to build the filter for the nullable <see cref="float" /> parameter.
+        /// </summary>
+        /// <param name="parameter">The nullable float parameter.</param>
+        /// <returns>The <see cref="FilterParameterBuilder{NullableNumericAssertions}" />.</returns>
+        public FilterParameterBuilder<NullableNumericFilterAssertions<float>> FilterBy(Expression<Func<T, float?>> parameter)
+        {
+            var assertions = new NullableNumericFilterAssertions<float>(parameter, Filters);
+            return FilterBy(parameter, assertions);
+        }
+
+        /// <summary>
+        /// Returns the <see cref="FilterParameterBuilder{NullableNumericAssertions}" /> to build the filter for the nullable <see cref="double" /> parameter.
+        /// </summary>
+        /// <param name="parameter">The nullable double parameter.</param>
+        /// <returns>The <see cref="FilterParameterBuilder{NullableNumericAssertions}" />.</returns>
+        public FilterParameterBuilder<NullableNumericFilterAssertions<double>> FilterBy(Expression<Func<T, double?>> parameter)
+        {
+            var assertions = new NullableNumericFilterAssertions<double>(parameter, Filters);
+            return FilterBy(parameter, assertions);
+        }
+
+        /// <summary>
+        /// Returns the <see cref="FilterParameterBuilder{NullableNumericAssertions}" /> to build the filter for the nullable <see cref="decimal" /> parameter.
+        /// </summary>
+        /// <param name="parameter">The nullable decimal parameter.</param>
+        /// <returns>The <see cref="FilterParameterBuilder{NullableNumericAssertions}" />.</returns>
+        public FilterParameterBuilder<NullableNumericFilterAssertions<decimal>> FilterBy(Expression<Func<T, decimal?>> parameter)
+        {
+            var assertions = new NullableNumericFilterAssertions<decimal>(parameter, Filters);
+            return FilterBy(parameter, assertions);
+        }
+
+        /// <summary>
+        /// Returns the <see cref="FilterParameterBuilder{DateTimeAssertions}" /> to build the filter for the <see cref="DateTime" /> parameter.
+        /// </summary>
+        /// <param name="parameter">The date time parameter.</param>
+        /// <returns>The <see cref="FilterParameterBuilder{DateTimeAssertions}" />.</returns>
+        public FilterParameterBuilder<DateTimeFilterAssertions> FilterBy(Expression<Func<T, DateTime>> parameter)
+        {
+            var assertions = new DateTimeFilterAssertions(parameter, Filters);
+            return FilterBy(parameter, assertions);
+        }
+
+        /// <summary>
+        /// Returns the <see cref="FilterParameterBuilder{NullableDateTimeAssertions}" /> to build the filter for the nullable <see cref="DateTime" /> parameter.
+        /// </summary>
+        /// <param name="parameter">The nullable date time parameter.</param>
+        /// <returns>The <see cref="FilterParameterBuilder{NullableDateTimeAssertions}" />.</returns>
+        public FilterParameterBuilder<NullableDateTimeFilterAssertions> FilterBy(Expression<Func<T, DateTime?>> parameter)
+        {
+            var assertions = new NullableDateTimeFilterAssertions(parameter, Filters);
+            return FilterBy(parameter, assertions);
+        }
+
+        /// <summary>
+        /// Returns the <see cref="FilterParameterBuilder{BooleanAssertions}" /> to build the filter for the <see cref="bool" /> parameter.
+        /// </summary>
+        /// <param name="parameter">The boolean parameter.</param>
+        /// <returns>The <see cref="FilterParameterBuilder{BooleanAssertions}" />.</returns>
+        public FilterParameterBuilder<BooleanFilterAssertions> FilterBy(Expression<Func<T, bool>> parameter)
+        {
+            var assertions = new BooleanFilterAssertions(parameter, Filters);
+            return FilterBy(parameter, assertions);
+        }
+
+        /// <summary>
+        /// Returns the <see cref="FilterParameterBuilder{NullableBooleanAssertions}" /> to build the filter for the nullable <see cref="bool" /> parameter.
+        /// </summary>
+        /// <param name="parameter">The nullable boolean parameter.</param>
+        /// <returns>The <see cref="FilterParameterBuilder{NullableBooleanAssertions}" />.</returns>
+        public FilterParameterBuilder<NullableBooleanFilterAssertions> FilterBy(Expression<Func<T, bool?>> parameter)
+        {
+            var assertions = new NullableBooleanFilterAssertions(parameter, Filters);
+            return FilterBy(parameter, assertions);
+        }
+
+        /// <summary>
+        /// Returns the <see cref="FilterParameterBuilder{MetaEntityAssertions}" /> to build the filter for the <see cref="MetaEntity" /> parameter.
+        /// </summary>
+        /// <param name="parameter">The meta entity parameter.</param>
+        /// <returns>The <see cref="FilterParameterBuilder{MetaEntityAssertions}" />.</returns>
+        public FilterParameterBuilder<MetaEntityFilterAssertions> FilterBy(Expression<Func<T, object>> parameter)
+        {
+            var assertions = new MetaEntityFilterAssertions(parameter, Filters);
+            return FilterBy(parameter, assertions);
+        }
+
+        /// <summary>
+        /// Returns the <see cref="FilterParameterBuilder{GuidAssertions}" /> to build the filter for the <see cref="Guid" /> parameter.
+        /// </summary>
+        /// <param name="parameter">The guid parameter.</param>
+        /// <returns>The <see cref="FilterParameterBuilder{GuidAssertions}" />.</returns>
+        public FilterParameterBuilder<GuidFilterAssertions> FilterBy(Expression<Func<T, Guid>> parameter)
+        {
+            var assertions = new GuidFilterAssertions(parameter, Filters);
+            return FilterBy(parameter, assertions);
+        }
+
+        /// <summary>
+        /// Returns the <see cref="FilterParameterBuilder{NullableGuidAssertions}" /> to build the filter for the nullable <see cref="Guid" /> parameter.
+        /// </summary>
+        /// <param name="parameter">The nullable guid parameter.</param>
+        /// <returns>The <see cref="FilterParameterBuilder{NullableGuidAssertions}" />.</returns>
+        public FilterParameterBuilder<NullableGuidFilterAssertions> FilterBy(Expression<Func<T, Guid?>> parameter)
+        {
+            var assertions = new NullableGuidFilterAssertions(parameter, Filters);
+            return FilterBy(parameter, assertions);
+        }
+
+        /// <summary>
+        /// Returns the <see cref="FilterParameterBuilder{EnumAssertions}" /> to build the filter for the <see cref="Enum" /> parameter.
+        /// </summary>
+        /// <param name="parameter">The enum parameter.</param>
+        /// <returns>The <see cref="FilterParameterBuilder{EnumAssertions}" />.</returns>
+        public FilterParameterBuilder<EnumFilterAssertions<TEnum>> FilterBy<TEnum>(Expression<Func<T, TEnum>> parameter) where TEnum : Enum
+        {
+            var assertions = new EnumFilterAssertions<TEnum>(parameter, Filters);
+            return FilterBy(parameter, assertions);
+        }
+
+        /// <summary>
+        /// Returns the <see cref="OrderParameterBuilder{T}" /> to build the order parameter.
+        /// </summary>
+        /// <returns>The <see cref="OrderParameterBuilder{T}" />.</returns>
         public new OrderParameterBuilder<T> Order()
         {
             return new OrderParameterBuilder<T>(Orders);
-        }
-
-        /// <summary>
-        /// Returns <see cref="ParameterBuilder{StringAssertions}" /> to build assertions for the current <see cref="string" /> parameter.
-        /// </summary>
-        /// <param name="parameter">The string parameter.</param>
-        /// <returns>The parameter builder.</returns>
-        public ParameterBuilder<StringAssertions> Parameter(Expression<Func<T, string>> parameter)
-        {
-            var assertions = new StringAssertions(parameter, Filters);
-            return Parameter(parameter, assertions);
-        }
-
-        /// <summary>
-        /// Returns <see cref="ParameterBuilder{NumericAssertions}" /> to build assertions for the current <see cref="short" /> parameter.
-        /// </summary>
-        /// <param name="parameter">The short parameter.</param>
-        /// <returns>The parameter builder.</returns>
-        public ParameterBuilder<NumericAssertions<short>> Parameter(Expression<Func<T, short>> parameter)
-        {
-            var assertions = new NumericAssertions<short>(parameter, Filters);
-            return Parameter(parameter, assertions);
-        }
-
-        /// <summary>
-        /// Returns <see cref="ParameterBuilder{NumericAssertions}" /> to build assertions for the current <see cref="uint" /> parameter.
-        /// </summary>
-        /// <param name="parameter">The uint parameter.</param>
-        /// <returns>The parameter builder.</returns>
-        public ParameterBuilder<NumericAssertions<uint>> Parameter(Expression<Func<T, uint>> parameter)
-        {
-            var assertions = new NumericAssertions<uint>(parameter, Filters);
-            return Parameter(parameter, assertions);
-        }
-
-        /// <summary>
-        /// Returns <see cref="ParameterBuilder{NumericAssertions}" /> to build assertions for the current <see cref="int" /> parameter.
-        /// </summary>
-        /// <param name="parameter">The int parameter.</param>
-        /// <returns>The parameter builder.</returns>
-        public ParameterBuilder<NumericAssertions<int>> Parameter(Expression<Func<T, int>> parameter)
-        {
-            var assertions = new NumericAssertions<int>(parameter, Filters);
-            return Parameter(parameter, assertions);
-        }
-
-        /// <summary>
-        /// Returns <see cref="ParameterBuilder{NumericAssertions}" /> to build assertions for the current <see cref="float" /> parameter.
-        /// </summary>
-        /// <param name="parameter">The float parameter.</param>
-        /// <returns>The parameter builder.</returns>
-        public ParameterBuilder<NumericAssertions<float>> Parameter(Expression<Func<T, float>> parameter)
-        {
-            var assertions = new NumericAssertions<float>(parameter, Filters);
-            return Parameter(parameter, assertions);
-        }
-
-        /// <summary>
-        /// Returns <see cref="ParameterBuilder{NumericAssertions}" /> to build assertions for the current <see cref="double" /> parameter.
-        /// </summary>
-        /// <param name="parameter">The double parameter.</param>
-        /// <returns>The parameter builder.</returns>
-        public ParameterBuilder<NumericAssertions<double>> Parameter(Expression<Func<T, double>> parameter)
-        {
-            var assertions = new NumericAssertions<double>(parameter, Filters);
-            return Parameter(parameter, assertions);
-        }
-
-        /// <summary>
-        /// Returns <see cref="ParameterBuilder{NumericAssertions}" /> to build assertions for the current <see cref="decimal" /> parameter.
-        /// </summary>
-        /// <param name="parameter">The decimal parameter.</param>
-        /// <returns>The parameter builder.</returns>
-        public ParameterBuilder<NumericAssertions<decimal>> Parameter(Expression<Func<T, decimal>> parameter)
-        {
-            var assertions = new NumericAssertions<decimal>(parameter, Filters);
-            return Parameter(parameter, assertions);
-        }
-
-        /// <summary>
-        /// Returns <see cref="ParameterBuilder{NullableNumericAssertions}" /> to build assertions for the current nullable <see cref="short" /> parameter.
-        /// </summary>
-        /// <param name="parameter">The nullable short parameter.</param>
-        /// <returns>The parameter builder.</returns>
-        public ParameterBuilder<NullableNumericAssertions<short>> Parameter(Expression<Func<T, short?>> parameter)
-        {
-            var assertions = new NullableNumericAssertions<short>(parameter, Filters);
-            return Parameter(parameter, assertions);
-        }
-
-        /// <summary>
-        /// Returns <see cref="ParameterBuilder{NullableNumericAssertions}" /> to build assertions for the current nullable <see cref="uint" /> parameter.
-        /// </summary>
-        /// <param name="parameter">The nullable uint parameter.</param>
-        /// <returns>The parameter builder.</returns>
-        public ParameterBuilder<NullableNumericAssertions<uint>> Parameter(Expression<Func<T, uint?>> parameter)
-        {
-            var assertions = new NullableNumericAssertions<uint>(parameter, Filters);
-            return Parameter(parameter, assertions);
-        }
-
-        /// <summary>
-        /// Returns <see cref="ParameterBuilder{NullableNumericAssertions}" /> to build assertions for the current nullable <see cref="int" /> parameter.
-        /// </summary>
-        /// <param name="parameter">The nullable int parameter.</param>
-        /// <returns>The parameter builder.</returns>
-        public ParameterBuilder<NullableNumericAssertions<int>> Parameter(Expression<Func<T, int?>> parameter)
-        {
-            var assertions = new NullableNumericAssertions<int>(parameter, Filters);
-            return Parameter(parameter, assertions);
-        }
-
-        /// <summary>
-        /// Returns <see cref="ParameterBuilder{NullableNumericAssertions}" /> to build assertions for the current nullable <see cref="float" /> parameter.
-        /// </summary>
-        /// <param name="parameter">The nullable float parameter.</param>
-        /// <returns>The parameter builder.</returns>
-        public ParameterBuilder<NullableNumericAssertions<float>> Parameter(Expression<Func<T, float?>> parameter)
-        {
-            var assertions = new NullableNumericAssertions<float>(parameter, Filters);
-            return Parameter(parameter, assertions);
-        }
-
-        /// <summary>
-        /// Returns <see cref="ParameterBuilder{NullableNumericAssertions}" /> to build assertions for the current nullable <see cref="double" /> parameter.
-        /// </summary>
-        /// <param name="parameter">The nullable double parameter.</param>
-        /// <returns>The parameter builder.</returns>
-        public ParameterBuilder<NullableNumericAssertions<double>> Parameter(Expression<Func<T, double?>> parameter)
-        {
-            var assertions = new NullableNumericAssertions<double>(parameter, Filters);
-            return Parameter(parameter, assertions);
-        }
-
-        /// <summary>
-        /// Returns <see cref="ParameterBuilder{NullableNumericAssertions}" /> to build assertions for the current nullable <see cref="decimal" /> parameter.
-        /// </summary>
-        /// <param name="parameter">The nullable decimal parameter.</param>
-        /// <returns>The parameter builder.</returns>
-        public ParameterBuilder<NullableNumericAssertions<decimal>> Parameter(Expression<Func<T, decimal?>> parameter)
-        {
-            var assertions = new NullableNumericAssertions<decimal>(parameter, Filters);
-            return Parameter(parameter, assertions);
-        }
-
-        /// <summary>
-        /// Returns <see cref="ParameterBuilder{DateTimeAssertions}" /> to build assertions for the current <see cref="DateTime" /> parameter.
-        /// </summary>
-        /// <param name="parameter">The date time parameter.</param>
-        /// <returns>The parameter builder.</returns>
-        public ParameterBuilder<DateTimeAssertions> Parameter(Expression<Func<T, DateTime>> parameter)
-        {
-            var assertions = new DateTimeAssertions(parameter, Filters);
-            return Parameter(parameter, assertions);
-        }
-
-        /// <summary>
-        /// Returns <see cref="ParameterBuilder{NullableDateTimeAssertions}" /> to build assertions for the current nullable <see cref="DateTime" /> parameter.
-        /// </summary>
-        /// <param name="parameter">The nullable date time parameter.</param>
-        /// <returns>The parameter builder.</returns>
-        public ParameterBuilder<NullableDateTimeAssertions> Parameter(Expression<Func<T, DateTime?>> parameter)
-        {
-            var assertions = new NullableDateTimeAssertions(parameter, Filters);
-            return Parameter(parameter, assertions);
-        }
-
-        /// <summary>
-        /// Returns <see cref="ParameterBuilder{BooleanAssertions}" /> to build assertions for the current <see cref="bool" /> parameter.
-        /// </summary>
-        /// <param name="parameter">The boolean parameter.</param>
-        /// <returns>The parameter builder.</returns>
-        public ParameterBuilder<BooleanAssertions> Parameter(Expression<Func<T, bool>> parameter)
-        {
-            var assertions = new BooleanAssertions(parameter, Filters);
-            return Parameter(parameter, assertions);
-        }
-
-        /// <summary>
-        /// Returns <see cref="ParameterBuilder{NullableBooleanAssertions}" /> to build assertions for the current nullable <see cref="bool" /> parameter.
-        /// </summary>
-        /// <param name="parameter">The nullable boolean parameter.</param>
-        /// <returns>The parameter builder.</returns>
-        public ParameterBuilder<NullableBooleanAssertions> Parameter(Expression<Func<T, bool?>> parameter)
-        {
-            var assertions = new NullableBooleanAssertions(parameter, Filters);
-            return Parameter(parameter, assertions);
-        }
-
-        /// <summary>
-        /// Returns <see cref="ParameterBuilder{MetaEntityAssertions}" /> to build assertions for the current <see cref="MetaEntity" /> parameter.
-        /// </summary>
-        /// <param name="parameter">The meta entity parameter.</param>
-        /// <returns>The parameter builder.</returns>
-        public ParameterBuilder<MetaEntityAssertions> Parameter(Expression<Func<T, object>> parameter)
-        {
-            var assertions = new MetaEntityAssertions(parameter, Filters);
-            return Parameter(parameter, assertions);
-        }
-
-        /// <summary>
-        /// Returns <see cref="ParameterBuilder{GuidAssertions}" /> to build assertions for the current <see cref="Guid" /> parameter.
-        /// </summary>
-        /// <param name="parameter">The guid parameter.</param>
-        /// <returns>The parameter builder.</returns>
-        public ParameterBuilder<GuidAssertions> Parameter(Expression<Func<T, Guid>> parameter)
-        {
-            var assertions = new GuidAssertions(parameter, Filters);
-            return Parameter(parameter, assertions);
-        }
-
-        /// <summary>
-        /// Returns <see cref="ParameterBuilder{NullableGuidAssertions}" /> to build assertions for the current nullable <see cref="Guid" /> parameter.
-        /// </summary>
-        /// <param name="parameter">The nullable guid parameter.</param>
-        /// <returns>The parameter builder.</returns>
-        public ParameterBuilder<NullableGuidAssertions> Parameter(Expression<Func<T, Guid?>> parameter)
-        {
-            var assertions = new NullableGuidAssertions(parameter, Filters);
-            return Parameter(parameter, assertions);
-        }
-
-        /// <summary>
-        /// Returns <see cref="ParameterBuilder{EnumAssertions}" /> to build assertions for the current <see cref="Enum" /> parameter.
-        /// </summary>
-        /// <param name="parameter">The enum parameter.</param>
-        /// <returns>The parameter builder.</returns>
-        public ParameterBuilder<EnumAssertions<TEnum>> Parameter<TEnum>(Expression<Func<T, TEnum>> parameter) where TEnum : Enum
-        {
-            var assertions = new EnumAssertions<TEnum>(parameter, Filters);
-            return Parameter(parameter, assertions);
         }
 
         #endregion Methods
@@ -404,19 +401,20 @@ namespace Confiti.MoySklad.Remap.Queries
         #region Utilities
 
         /// <summary>
-        /// Returns <see cref="ParameterBuilder{TAssertions}" /> to build assertions for the API parameter.
+        /// Returns the <see cref="FilterParameterBuilder{TAssertions}" /> to build filter for the <paramref name="parameter"/>.
         /// </summary>
         /// <param name="parameter">The API parameter.</param>
         /// <param name="assertions">The assertions.</param>
         /// <typeparam name="TProperty">The type of the API parameter.</typeparam>
         /// <typeparam name="TAssertions">The type of the assertions.</typeparam>
-        /// <returns>The parameter builder containing the assertions.</returns>
-        protected ParameterBuilder<TAssertions> Parameter<TProperty, TAssertions>(Expression<Func<T, TProperty>> parameter, TAssertions assertions)
+        /// <returns>The <see cref="FilterParameterBuilder{TAssertions}" />.</returns>
+        protected FilterParameterBuilder<TAssertions> FilterBy<TProperty, TAssertions>(Expression<Func<T, TProperty>> parameter, TAssertions assertions)
+            where TAssertions : FilterAssertions
         {
             if (parameter == null)
                 throw new ArgumentNullException(nameof(parameter));
 
-            return new ParameterBuilder<TAssertions>(assertions);
+            return new FilterParameterBuilder<TAssertions>(assertions);
         }
 
         #endregion Utilities

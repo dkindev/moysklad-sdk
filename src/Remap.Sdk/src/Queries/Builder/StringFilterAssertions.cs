@@ -1,22 +1,22 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace Confiti.MoySklad.Remap.Queries
 {
     /// <summary>
-    /// Represents the assertions to build <see cref="string" /> API parameter.
+    /// Represents the assertions to build the filter for <see cref="string"/> parameter.
     /// </summary>
-    public class StringAssertions : AbstractAssertions
+    public class StringFilterAssertions : FilterAssertions
     {
         #region Ctor
 
         /// <summary>
-        /// Creates a new instance of the <see cref="StringAssertions" /> class
+        /// Creates a new instance of the <see cref="StringFilterAssertions" /> class
         /// with the parameter expression and the filters.
         /// </summary>
         /// <param name="parameter">The parameter expression.</param>
         /// <param name="filters">The filters.</param>
-        internal StringAssertions(LambdaExpression parameter, List<FilterItem> filters)
+        internal StringFilterAssertions(LambdaExpression parameter, List<FilterItem> filters)
             : base(parameter, filters)
         {
         }
@@ -30,10 +30,10 @@ namespace Confiti.MoySklad.Remap.Queries
         /// </summary>
         /// <param name="value">The value to assert.</param>
         /// <returns>The or constraint.</returns>
-        public OrConstraint<StringAssertions> Be(string value)
+        public OrConstraint<StringFilterAssertions> Be(string value)
         {
             AddFilter(value, "=", new[] { "=" });
-            return new OrConstraint<StringAssertions>(this);
+            return new OrConstraint<StringFilterAssertions>(this);
         }
 
         /// <summary>
@@ -59,10 +59,10 @@ namespace Confiti.MoySklad.Remap.Queries
         /// </summary>
         /// <param name="value">The value to assert.</param>
         /// <returns>The and constraint.</returns>
-        public AndConstraint<StringAssertions> NotBe(string value)
+        public AndConstraint<StringFilterAssertions> NotBe(string value)
         {
             AddFilter(value, "!=", new[] { "!=" });
-            return new AndConstraint<StringAssertions>(this);
+            return new AndConstraint<StringFilterAssertions>(this);
         }
 
         /// <summary>

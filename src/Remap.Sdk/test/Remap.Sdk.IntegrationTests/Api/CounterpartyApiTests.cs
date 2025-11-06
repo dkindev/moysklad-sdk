@@ -25,27 +25,27 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
         {
             var response = await _subject.GetAllAsync(query =>
             {
-                query.Parameter(p => p.Code).Should().Be("foo").Or.Be("bar");
-                query.Parameter(p => p.Name).Should().Be("foo");
-                query.Parameter(p => p.AccountId).Should().Be(Guid.NewGuid());
-                query.Parameter(p => p.ActualAddress).Should().Be("foo");
-                query.Parameter(p => p.Description).Should().Be("foo");
-                query.Parameter(p => p.DetailsKZ.Oked).Should().Be("foo");
-                query.Parameter(p => p.DetailsKZ.Bin).Should().Be("foo");
-                query.Parameter(p => p.DetailsKZ.Iin).Should().Be("foo");
-                query.Parameter(p => p.DetailsKZ.Kbe).Should().Be("foo");
-                query.Parameter(p => p.DetailsKZ.VatCertificateNumber).Should().Be("foo");
-                query.Parameter(p => p.DetailsKZ.VatCertificateDate).Should().BeGreaterOrEqualTo(DateTime.Parse("2019-07-10 12:00:00"));
-                query.Parameter(p => p.DetailsUZ.CertificateDate).Should().BeGreaterOrEqualTo(DateTime.Parse("2019-07-10 12:00:00"));
-                query.Parameter(p => p.DetailsUZ.CertificateNumber).Should().Be("foo");
-                query.Parameter(p => p.DetailsUZ.Inn).Should().Be("foo");
-                query.Parameter(p => p.DetailsUZ.Oked).Should().Be("foo");
-                query.Parameter(p => p.DetailsUZ.Pinfl).Should().Be("foo");
-                query.Parameter(p => p.DetailsUZ.VatPayerRegCode).Should().Be("foo");
-                query.Parameter(p => p.CompanyType).Should().Be(CompanyType.Legal);
-                query.Parameter(p => p.Archived).Should().Be(true).Or.Be(false);
-                query.Parameter(p => p.Created).Should().BeGreaterOrEqualTo(DateTime.Parse("2019-07-10 12:00:00")).And.BeLessOrEqualTo(DateTime.Parse("2019-07-12 12:00:00"));
-                query.Parameter(p => p.Updated).Should().BeGreaterOrEqualTo(DateTime.Parse("2019-07-10 12:00:00")).And.BeLessOrEqualTo(DateTime.Parse("2019-07-12 12:00:00"));
+                query.FilterBy(p => p.Code).Should().Be("foo").Or.Be("bar");
+                query.FilterBy(p => p.Name).Should().Be("foo");
+                query.FilterBy(p => p.AccountId).Should().Be(Guid.NewGuid());
+                query.FilterBy(p => p.ActualAddress).Should().Be("foo");
+                query.FilterBy(p => p.Description).Should().Be("foo");
+                query.FilterBy(p => p.DetailsKZ.Oked).Should().Be("foo");
+                query.FilterBy(p => p.DetailsKZ.Bin).Should().Be("foo");
+                query.FilterBy(p => p.DetailsKZ.Iin).Should().Be("foo");
+                query.FilterBy(p => p.DetailsKZ.Kbe).Should().Be("foo");
+                query.FilterBy(p => p.DetailsKZ.VatCertificateNumber).Should().Be("foo");
+                query.FilterBy(p => p.DetailsKZ.VatCertificateDate).Should().BeGreaterOrEqualTo(DateTime.Parse("2019-07-10 12:00:00"));
+                query.FilterBy(p => p.DetailsUZ.CertificateDate).Should().BeGreaterOrEqualTo(DateTime.Parse("2019-07-10 12:00:00"));
+                query.FilterBy(p => p.DetailsUZ.CertificateNumber).Should().Be("foo");
+                query.FilterBy(p => p.DetailsUZ.Inn).Should().Be("foo");
+                query.FilterBy(p => p.DetailsUZ.Oked).Should().Be("foo");
+                query.FilterBy(p => p.DetailsUZ.Pinfl).Should().Be("foo");
+                query.FilterBy(p => p.DetailsUZ.VatPayerRegCode).Should().Be("foo");
+                query.FilterBy(p => p.CompanyType).Should().Be(CompanyType.Legal);
+                query.FilterBy(p => p.Archived).Should().Be(true).Or.Be(false);
+                query.FilterBy(p => p.Created).Should().BeGreaterOrEqualTo(DateTime.Parse("2019-07-10 12:00:00")).And.BeLessOrEqualTo(DateTime.Parse("2019-07-12 12:00:00"));
+                query.FilterBy(p => p.Updated).Should().BeGreaterOrEqualTo(DateTime.Parse("2019-07-10 12:00:00")).And.BeLessOrEqualTo(DateTime.Parse("2019-07-12 12:00:00"));
                 query.Search("foo");
                 query.Order().By(p => p.Name);
                 query.Expand().With(p => p.Notes).And.With(p => p.ContactPersons);

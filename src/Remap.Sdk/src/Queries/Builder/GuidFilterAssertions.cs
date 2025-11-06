@@ -1,22 +1,23 @@
+﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace Confiti.MoySklad.Remap.Queries
 {
     /// <summary>
-    /// Represents the assertions to build the boolean API parameter.
+    /// Represents the assertions to build the filter for <see cref="Guid"/> parameter.
     /// </summary>
-    public class BooleanAssertions : AbstractAssertions
+    public class GuidFilterAssertions : FilterAssertions
     {
         #region Ctor
 
         /// <summary>
-        /// Creates a new instance of the <see cref="BooleanAssertions" /> class
+        /// Creates a new instance of the <see cref="GuidFilterAssertions" /> class
         /// with the parameter expression and the filters.
         /// </summary>
         /// <param name="parameter">The parameter expression.</param>
         /// <param name="filters">The filters.</param>
-        protected internal BooleanAssertions(LambdaExpression parameter, List<FilterItem> filters)
+        protected internal GuidFilterAssertions(LambdaExpression parameter, List<FilterItem> filters)
             : base(parameter, filters)
         {
         }
@@ -30,10 +31,10 @@ namespace Confiti.MoySklad.Remap.Queries
         /// </summary>
         /// <param name="value">The value to assert.</param>
         /// <returns>The or constraint.</returns>
-        public OrConstraint<BooleanAssertions> Be(bool value)
+        public OrConstraint<GuidFilterAssertions> Be(Guid value)
         {
-            AddFilter(value.ToString().ToLower(), "=", new[] { "=" });
-            return new OrConstraint<BooleanAssertions>(this);
+            AddFilter(value.ToString(), "=", new[] { "=" });
+            return new OrConstraint<GuidFilterAssertions>(this);
         }
 
         /// <summary>
@@ -41,10 +42,10 @@ namespace Confiti.MoySklad.Remap.Queries
         /// </summary>
         /// <param name="value">The value to assert.</param>
         /// <returns>The and constraint.</returns>
-        public AndConstraint<BooleanAssertions> NotBe(bool value)
+        public AndConstraint<GuidFilterAssertions> NotBe(Guid value)
         {
-            AddFilter(value.ToString().ToLower(), "!=", new[] { "!=" });
-            return new AndConstraint<BooleanAssertions>(this);
+            AddFilter(value.ToString(), "!=", new[] { "!=" });
+            return new AndConstraint<GuidFilterAssertions>(this);
         }
 
         #endregion Methods

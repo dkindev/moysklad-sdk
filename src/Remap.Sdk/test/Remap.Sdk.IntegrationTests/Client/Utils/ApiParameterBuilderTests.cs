@@ -15,12 +15,12 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Client
         {
             var d1 = DateTime.Now;
             var d2 = DateTime.Now.AddHours(1);
-            _subject.Parameter(p => p.StringProperty).Should().Be("test");
-            _subject.Parameter(p => p.DateTimeProperty).Should().BeLessThan(d1, "yyyy-MM-dd_HH:mm:ss").And.BeGreaterOrEqualTo(d2, "yyyy-MM-dd_HH:mm:ss");
-            _subject.Parameter(p => p.BooleanProperty).Should().Be(true);
-            _subject.Parameter(p => p.IntProperty).Should().Be(5).Or.Be(10);
-            _subject.Parameter(p => p.NullableIntPropertyParameterName).Should().BeNull();
-            _subject.Parameter("customParameter").Should().BeGreaterThan("5");
+            _subject.FilterBy(p => p.StringProperty).Should().Be("test");
+            _subject.FilterBy(p => p.DateTimeProperty).Should().BeLessThan(d1, "yyyy-MM-dd_HH:mm:ss").And.BeGreaterOrEqualTo(d2, "yyyy-MM-dd_HH:mm:ss");
+            _subject.FilterBy(p => p.BooleanProperty).Should().Be(true);
+            _subject.FilterBy(p => p.IntProperty).Should().Be(5).Or.Be(10);
+            _subject.FilterBy(p => p.NullableIntPropertyParameterName).Should().BeNull();
+            _subject.FilterBy("customParameter").Should().BeGreaterThan("5");
 
             _subject.Expand().With(p => p.NestedEntity.NestedEntity2)
                 .And.With("my_custom_property_name_to_expand.two_level_nesting");
@@ -91,7 +91,7 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Client
         [Test]
         public void Parameter_should_throw_api_exception_if_nesting_property_level_is_more_than_one()
         {
-            Action action = () => _subject.Parameter(p => p.NestedEntity.StringProperty);
+            Action action = () => _subject.FilterBy(p => p.NestedEntity.StringProperty);
             action.Should().Throw<ApiException>();
         }
     }

@@ -26,29 +26,29 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
         {
             var response = await _subject.GetAllAsync(query =>
             {
-                query.Parameter(x => x.Variant).Should()
+                query.FilterBy(x => x.Variant).Should()
                     .Be("https://api.moysklad.ru/api/remap/1.2/entity/variant/14553caa-2cb2-11e6-8a84-bae500000026")
                     .Or
                     .Be("https://api.moysklad.ru/api/remap/1.2/entity/variant/14553caa-2cb2-11e6-8a84-bae500000030");
-                query.Parameter(x => x.Store).Should()
+                query.FilterBy(x => x.Store).Should()
                     .Be("https://api.moysklad.ru/api/remap/1.2/entity/store/14553caa-2cb2-11e6-8a84-bae500000026")
                     .Or
                     .Be("https://api.moysklad.ru/api/remap/1.2/entity/store/14553caa-2cb2-11e6-8a84-bae500000030");
-                query.Parameter(x => x.Supplier).Should()
+                query.FilterBy(x => x.Supplier).Should()
                     .Be("https://api.moysklad.ru/api/remap/1.2/entity/counterparty/14553caa-2cb2-11e6-8a84-bae500000026")
                     .Or
                     .Be("https://api.moysklad.ru/api/remap/1.2/entity/counterparty/14553caa-2cb2-11e6-8a84-bae500000030");
-                query.Parameter(x => x.Archived).Should().Be(true).Or.Be(false);
-                query.Parameter(x => x.WithSubFolders).Should().Be(true).Or.Be(false);
-                query.Parameter(x => x.ReserveOnly).Should().Be(true);
-                query.Parameter(x => x.InTransitOnly).Should().Be(false);
-                query.Parameter(x => x.SoldByWeight).Should().Be(false);
-                query.Parameter(x => x.StockDaysFrom).Should().Be(1);
-                query.Parameter(x => x.StockDaysTo).Should().Be(5);
-                query.Parameter(x => x.Moment).Should().Be(DateTime.Now);
-                query.Parameter(x => x.QuantityMode).Should().Be(QuantityMode.PositiveOnly);
-                query.Parameter(x => x.StockMode).Should().Be(StockMode.PositiveOnly);
-                query.Parameter(x => x.Search).Should().Be("foo").Or.Be("bar");
+                query.FilterBy(x => x.Archived).Should().Be(true).Or.Be(false);
+                query.FilterBy(x => x.WithSubFolders).Should().Be(true).Or.Be(false);
+                query.FilterBy(x => x.ReserveOnly).Should().Be(true);
+                query.FilterBy(x => x.InTransitOnly).Should().Be(false);
+                query.FilterBy(x => x.SoldByWeight).Should().Be(false);
+                query.FilterBy(x => x.StockDaysFrom).Should().Be(1);
+                query.FilterBy(x => x.StockDaysTo).Should().Be(5);
+                query.FilterBy(x => x.Moment).Should().Be(DateTime.Now);
+                query.FilterBy(x => x.QuantityMode).Should().Be(QuantityMode.PositiveOnly);
+                query.FilterBy(x => x.StockMode).Should().Be(StockMode.PositiveOnly);
+                query.FilterBy(x => x.Search).Should().Be("foo").Or.Be("bar");
 
                 query.Order().By(x => x.Name);
 
@@ -88,7 +88,7 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
             var supply = await GetOrCreateSupplyAsync();
             var response = await _subject.GetCurrentBySlotAsync(query =>
             {
-                query.Parameter(p => p.StoreId).Should().Be(supply.Store.GetId().Value);
+                query.FilterBy(p => p.StoreId).Should().Be(supply.Store.GetId().Value);
             });
             response.StatusCode.Should().Be(200);
         }

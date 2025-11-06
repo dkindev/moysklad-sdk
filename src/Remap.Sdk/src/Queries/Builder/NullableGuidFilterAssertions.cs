@@ -1,23 +1,23 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace Confiti.MoySklad.Remap.Queries
 {
     /// <summary>
-    /// Represents the assertions to build the nullable enum API parameter.
+    /// Represents the assertions to build the filter for nullable <see cref="Guid"/> parameter.
     /// </summary>
-    public class NullableEnumAssertions<T> : EnumAssertions<T> where T : Enum
+    public class NullableGuidFilterAssertions : GuidFilterAssertions
     {
         #region Ctor
 
         /// <summary>
-        /// Creates a new instance of the <see cref="NullableEnumAssertions{T}" /> class
+        /// Creates a new instance of the <see cref="NullableGuidFilterAssertions" /> class
         /// with the parameter expression and the filters.
         /// </summary>
         /// <param name="parameter">The parameter expression.</param>
         /// <param name="filters">The filters.</param>
-        internal NullableEnumAssertions(LambdaExpression parameter, List<FilterItem> filters)
+        protected internal NullableGuidFilterAssertions(LambdaExpression parameter, List<FilterItem> filters)
             : base(parameter, filters)
         {
         }
@@ -30,20 +30,20 @@ namespace Confiti.MoySklad.Remap.Queries
         /// Asserts that a parameter should has the null value.
         /// </summary>
         /// <returns>The or constraint.</returns>
-        public OrConstraint<NullableEnumAssertions<T>> BeNull()
+        public OrConstraint<NullableGuidFilterAssertions> BeNull()
         {
             AddFilter(null, "=", new[] { "=" });
-            return new OrConstraint<NullableEnumAssertions<T>>(this);
+            return new OrConstraint<NullableGuidFilterAssertions>(this);
         }
 
         /// <summary>
         /// Asserts that a parameter should not has the null value.
         /// </summary>
         /// <returns>The and constraint.</returns>
-        public AndConstraint<NullableEnumAssertions<T>> NotBeNull()
+        public AndConstraint<NullableGuidFilterAssertions> NotBeNull()
         {
             AddFilter(null, "!=", new[] { "!=" });
-            return new AndConstraint<NullableEnumAssertions<T>>(this);
+            return new AndConstraint<NullableGuidFilterAssertions>(this);
         }
 
         #endregion Methods
