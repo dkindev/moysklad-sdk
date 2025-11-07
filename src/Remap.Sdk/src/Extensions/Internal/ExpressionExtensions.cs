@@ -25,7 +25,7 @@ namespace Confiti.MoySklad.Remap.Extensions
                 var member = members[i];
 
                 if (!member.IsAllowExpand())
-                    throw new ApiException(400, $"Expand by member '{member.Name}' isn't available.'");
+                    throw new MoySkladException(400, $"Expand by member '{member.Name}' isn't available.'");
 
                 if (expanderBuilder.Length > 1)
                     expanderBuilder.Append(".");
@@ -57,13 +57,13 @@ namespace Confiti.MoySklad.Remap.Extensions
                 var member = members[i];
                 var filter = member.GetFilter();
                 if (filter == null)
-                    throw new ApiException(400, $"Filter by member '{member.Name}' isn't available.");
+                    throw new MoySkladException(400, $"Filter by member '{member.Name}' isn't available.");
 
                 if (!filter.AllowNesting && members.Count - 1 > i)
-                    throw new ApiException(400, $"Filter by member '{member.Name}' is invalid. Filter nesting level should be {i + 1}.");
+                    throw new MoySkladException(400, $"Filter by member '{member.Name}' is invalid. Filter nesting level should be {i + 1}.");
 
                 if (filter.AllowNesting && !filter.AllowFilterByRootNestingMember && members.Count - 1 == i)
-                    throw new ApiException(400, $"Filter by member '{member.Name}' isn't available. Filter is available only for nesting member(s).");
+                    throw new MoySkladException(400, $"Filter by member '{member.Name}' isn't available. Filter is available only for nesting member(s).");
 
                 if (expanderBuilder.Length > 1)
                     expanderBuilder.Append(".");
@@ -113,10 +113,10 @@ namespace Confiti.MoySklad.Remap.Extensions
             var parameterName = parameter.GetParameterName();
 
             if (!parameter.IsAllowOrder())
-                throw new ApiException(400, $"The order isn't allowed for the '{parameterName}' property.");
+                throw new MoySkladException(400, $"The order isn't allowed for the '{parameterName}' property.");
 
             if (parameter.GetNestingLevel() > 1)
-                throw new ApiException(400, $"The nesting level of the '{parameterName}' property should be 1.");
+                throw new MoySkladException(400, $"The nesting level of the '{parameterName}' property should be 1.");
 
             return parameterName;
         }

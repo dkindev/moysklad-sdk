@@ -29,7 +29,7 @@ namespace Confiti.MoySklad.Remap.UnitTests.Client
 
             Action action = () => subject.ThenBy(p => p.NestedEntity.StringProperty);
 
-            action.Should().Throw<ApiException>();
+            action.Should().Throw<MoySkladException>();
         }
 
         [Test]
@@ -53,7 +53,7 @@ namespace Confiti.MoySklad.Remap.UnitTests.Client
 
             Action action = () => subject.ThenBy(p => p.NotAllowedOrderMember);
 
-            action.Should().Throw<ApiException>();
+            action.Should().Throw<MoySkladException>();
         }
     }
 

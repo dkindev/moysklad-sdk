@@ -84,7 +84,7 @@ try
 {
     await api.Entity.Counterparty.GetAllAsync();
 }
-catch (ApiException ex)
+catch (MoySkladException ex)
 {
     // обработать код ошибки
     if (ex.ErrorCode == 404) { ... }

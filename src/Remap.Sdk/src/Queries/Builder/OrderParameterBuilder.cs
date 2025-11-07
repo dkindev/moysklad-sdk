@@ -56,7 +56,7 @@ namespace Confiti.MoySklad.Remap.Queries
         protected virtual void AddOrderParameter(string propertyName, OrderBy orderBy)
         {
             if (string.IsNullOrWhiteSpace(propertyName))
-                throw new ApiException(400, "Property name should not be empty.");
+                throw new MoySkladException(400, "Property name should not be empty.");
 
             Orders[propertyName] = orderBy;
         }

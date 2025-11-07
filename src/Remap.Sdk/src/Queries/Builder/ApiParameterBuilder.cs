@@ -75,11 +75,11 @@ namespace Confiti.MoySklad.Remap.Queries
         /// </summary>
         /// <param name="propertyName">The property name.</param>
         /// <returns>The <see cref="ExpandParameterBuilder" /> to build the next expand parameter.</returns>
-        /// <exception cref="ApiException">Throws if <paramref name="propertyName"/> is empty.</exception>
+        /// <exception cref="MoySkladException">Throws if <paramref name="propertyName"/> is empty.</exception>
         public ExpandParameterBuilder ExpandBy(string propertyName)
         {
             if (string.IsNullOrWhiteSpace(propertyName))
-                throw new ApiException(400, $"The '{nameof(propertyName)}' should not be empty.");
+                throw new MoySkladException(400, $"The '{nameof(propertyName)}' should not be empty.");
 
             Expanders.Add(propertyName);
             return new ExpandParameterBuilder(Expanders);
@@ -90,11 +90,11 @@ namespace Confiti.MoySklad.Remap.Queries
         /// </summary>
         /// <param name="propertyName">The property name.</param>
         /// <returns>The <see cref="FilterParameterBuilder{CustomAssertions}" /> to build the filter parameter.</returns>
-        /// <exception cref="ApiException">Throws if <paramref name="propertyName"/> is empty.</exception>
+        /// <exception cref="MoySkladException">Throws if <paramref name="propertyName"/> is empty.</exception>
         public FilterParameterBuilder<CustomFilterAssertions> FilterBy(string propertyName)
         {
             if (string.IsNullOrWhiteSpace(propertyName))
-                throw new ApiException(400, $"The '{nameof(propertyName)}' should not be empty.");
+                throw new MoySkladException(400, $"The '{nameof(propertyName)}' should not be empty.");
 
             var assertions = new CustomFilterAssertions(propertyName, new FilterAttribute(), Filters);
             return new FilterParameterBuilder<CustomFilterAssertions>(assertions);
@@ -104,11 +104,11 @@ namespace Confiti.MoySklad.Remap.Queries
         /// Adds the limit parameter.
         /// </summary>
         /// <param name="value">The limit parameter.</param>
-        /// <exception cref="ApiException">Throws if the <paramref name="value"/> isn't in the range 1 - 1000.</exception>
+        /// <exception cref="MoySkladException">Throws if the <paramref name="value"/> isn't in the range 1 - 1000.</exception>
         public void Limit(int value)
         {
             if (value < 1 || value > 1000)
-                throw new ApiException(400, "Parameter 'limit' should be in range: 1-1000.");
+                throw new MoySkladException(400, "Parameter 'limit' should be in range: 1-1000.");
 
             _limit = value;
         }
@@ -117,11 +117,11 @@ namespace Confiti.MoySklad.Remap.Queries
         /// Adds the offset parameter.
         /// </summary>
         /// <param name="value">The offset parameter.</param>
-        /// <exception cref="ApiException">Throws if the <paramref name="value"/> less than 0.</exception>
+        /// <exception cref="MoySkladException">Throws if the <paramref name="value"/> less than 0.</exception>
         public void Offset(int value)
         {
             if (value < 0)
-                throw new ApiException(400, "Parameter 'offset' should be greater or equal to 0.");
+                throw new MoySkladException(400, "Parameter 'offset' should be greater or equal to 0.");
 
             _offset = value;
         }
@@ -132,11 +132,11 @@ namespace Confiti.MoySklad.Remap.Queries
         /// <param name="propertyName">The property name.</param>
         /// <param name="orderBy">The order action.</param>
         /// <returns>The <see cref="OrderParameterBuilder" /> to build the next order parameter.</returns>
-        /// <exception cref="ApiException">Throws if <paramref name="propertyName"/> is empty.</exception>
+        /// <exception cref="MoySkladException">Throws if <paramref name="propertyName"/> is empty.</exception>
         public OrderParameterBuilder OrderBy(string propertyName, OrderBy orderBy = Queries.OrderBy.Asc)
         {
             if (string.IsNullOrWhiteSpace(propertyName))
-                throw new ApiException(400, $"The '{nameof(propertyName)}' should not be empty.");
+                throw new MoySkladException(400, $"The '{nameof(propertyName)}' should not be empty.");
 
             Orders[propertyName] = orderBy;
             return new OrderParameterBuilder(Orders);
@@ -168,11 +168,11 @@ namespace Confiti.MoySklad.Remap.Queries
         /// </summary>
         /// <param name="propertyName">The property name.</param>
         /// <returns>The <see cref="ExpandParameterBuilder{T}" /> to build the next expand parameter.</returns>
-        /// <exception cref="ApiException">Throws if <paramref name="propertyName"/> is empty.</exception>
+        /// <exception cref="MoySkladException">Throws if <paramref name="propertyName"/> is empty.</exception>
         public new ExpandParameterBuilder<T> ExpandBy(string propertyName)
         {
             if (string.IsNullOrWhiteSpace(propertyName))
-                throw new ApiException(400, $"The '{nameof(propertyName)}' should not be empty.");
+                throw new MoySkladException(400, $"The '{nameof(propertyName)}' should not be empty.");
 
             Expanders.Add(propertyName);
             return new ExpandParameterBuilder<T>(Expanders);
@@ -449,11 +449,11 @@ namespace Confiti.MoySklad.Remap.Queries
         /// <param name="propertyName">The property name.</param>
         /// <param name="orderBy">The order action.</param>
         /// <returns>The <see cref="OrderParameterBuilder{T}" /> to build the next order parameter.</returns>
-        /// <exception cref="ApiException">Throws if <paramref name="propertyName"/> is empty.</exception>
+        /// <exception cref="MoySkladException">Throws if <paramref name="propertyName"/> is empty.</exception>
         public new OrderParameterBuilder<T> OrderBy(string propertyName, OrderBy orderBy = Queries.OrderBy.Asc)
         {
             if (string.IsNullOrWhiteSpace(propertyName))
-                throw new ApiException(400, $"The '{nameof(propertyName)}' should not be empty.");
+                throw new MoySkladException(400, $"The '{nameof(propertyName)}' should not be empty.");
 
             Orders[propertyName] = orderBy;
             return new OrderParameterBuilder<T>(Orders);

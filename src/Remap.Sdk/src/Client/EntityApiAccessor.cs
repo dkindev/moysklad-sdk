@@ -85,7 +85,7 @@ namespace Confiti.MoySklad.Remap.Client
 
             var id = entity.GetId();
             if (!id.HasValue)
-                throw new ApiException(400, "The entity ID cannot be null.");
+                throw new MoySkladException(400, "The entity ID cannot be null.");
 
             return await DeleteAsync(id.Value).ConfigureAwait(false);
         }
@@ -153,7 +153,7 @@ namespace Confiti.MoySklad.Remap.Client
 
             var id = entity.GetId();
             if (!id.HasValue)
-                throw new ApiException(400, "The entity ID cannot be null.");
+                throw new MoySkladException(400, "The entity ID cannot be null.");
 
             var requestContext = new RequestContext($"{Path}/{id}", HttpMethod.Put)
                 .WithBody(entity)

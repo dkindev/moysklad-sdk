@@ -1,4 +1,4 @@
-using Confiti.MoySklad.Remap.Client;
+﻿using Confiti.MoySklad.Remap.Client;
 using Confiti.MoySklad.Remap.Entities;
 
 namespace Confiti.MoySklad.Remap.Extensions
@@ -27,7 +27,7 @@ namespace Confiti.MoySklad.Remap.Extensions
                 case ImageType.Miniature:
                     {
                         if (image.Miniature == null)
-                            throw new ApiException(400, $"Parameter '{nameof(image.Miniature)}' is missed.");
+                            throw new MoySkladException(400, $"Parameter '{nameof(image.Miniature)}' is missed.");
 
                         downloadHref = image.Miniature.DownloadHref;
                         break;
@@ -36,7 +36,7 @@ namespace Confiti.MoySklad.Remap.Extensions
                 case ImageType.Tiny:
                     {
                         if (image.Tiny == null)
-                            throw new ApiException(400, $"Parameter '{nameof(image.Tiny)}' is missed.");
+                            throw new MoySkladException(400, $"Parameter '{nameof(image.Tiny)}' is missed.");
 
                         downloadHref = image.Tiny.DownloadHref;
                         break;
@@ -45,7 +45,7 @@ namespace Confiti.MoySklad.Remap.Extensions
                 default:
                     {
                         if (image.Meta == null)
-                            throw new ApiException(400, $"Parameter '{nameof(image.Meta)}' is missed.");
+                            throw new MoySkladException(400, $"Parameter '{nameof(image.Meta)}' is missed.");
 
                         downloadHref = image.Meta.DownloadHref;
                         break;
@@ -53,7 +53,7 @@ namespace Confiti.MoySklad.Remap.Extensions
             }
 
             if (string.IsNullOrWhiteSpace(downloadHref))
-                throw new ApiException(400, $"Parameter '{nameof(downloadHref)}' is missed.");
+                throw new MoySkladException(400, $"Parameter '{nameof(downloadHref)}' is missed.");
 
             return downloadHref;
         }

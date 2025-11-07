@@ -13,9 +13,9 @@ namespace Confiti.MoySklad.Remap.Client
         #region Properties
 
         /// <summary>
-        /// Gets or sets the factory to create <see cref="ApiException"/>.
+        /// Gets or sets the factory to create <see cref="MoySkladException"/>.
         /// </summary>
-        public Func<string, HttpResponseMessage, HttpRequestException, Task<ApiException>> ApiExceptionFactory { get; set; }
+        public Func<string, HttpResponseMessage, HttpRequestException, Task<MoySkladException>> ApiExceptionFactory { get; set; }
 
         /// <summary>
         /// Gets or sets the HTTP post body.

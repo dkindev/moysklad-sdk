@@ -107,7 +107,7 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
                 response.Should().NotBeNull();
                 response.Payload.Should().NotBeNull();
             }
-            catch (ApiException ex)
+            catch (MoySkladException ex)
             {
                 // skip if not available on this tariff
                 if (ex.ErrorCode != 403)

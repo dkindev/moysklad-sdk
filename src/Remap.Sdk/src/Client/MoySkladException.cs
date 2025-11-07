@@ -6,10 +6,10 @@ using System.Security.Permissions;
 namespace Confiti.MoySklad.Remap.Client
 {
     /// <summary>
-    /// Represents a MoySklad API Exception.
+    /// Represents a MoySklad exception.
     /// </summary>
     [Serializable]
-    public sealed class ApiException : Exception, ISerializable
+    public sealed class MoySkladException : Exception, ISerializable
     {
         private const string C_ERROR_CODE = "ErrorCode";
         private const string C_ERRORS = "Errors";
@@ -28,19 +28,16 @@ namespace Confiti.MoySklad.Remap.Client
         /// <summary>
         /// Gets the error code (HTTP status code).
         /// </summary>
-        /// <value>The error code (HTTP status code).</value>
         public int ErrorCode => _errorCode;
 
         /// <summary>
         /// Gets the errors.
         /// </summary>
-        /// <value>The errors.</value>
         public ApiError[] Errors => _errors;
 
         /// <summary>
         /// Gets the HTTP headers.
         /// </summary>
-        /// <value>The HTTP headers</value>
         public Dictionary<string, string> Headers => _headers;
 
         #endregion Properties
@@ -48,23 +45,23 @@ namespace Confiti.MoySklad.Remap.Client
         #region Ctor
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ApiException"/> class.
+        /// Initializes a new instance of the <see cref="MoySkladException"/> class.
         /// </summary>
         /// <param name="message">The error message.</param>
         /// <param name="innerException">The inner exception.</param>
-        public ApiException(string message, Exception innerException = null)
+        public MoySkladException(string message, Exception innerException = null)
             : base(message, innerException)
         { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ApiException"/> class.
+        /// Initializes a new instance of the <see cref="MoySkladException"/> class.
         /// </summary>
         /// <param name="errorCode">The HTTP status code.</param>
         /// <param name="message">The error message.</param>
         /// <param name="headers">The HTTP headers.</param>
         /// <param name="errors">The errors.</param>
         /// <param name="innerException">The inner exception.</param>
-        public ApiException(int errorCode, string message, Dictionary<string, string> headers, ApiError[] errors, Exception innerException = null)
+        public MoySkladException(int errorCode, string message, Dictionary<string, string> headers, ApiError[] errors, Exception innerException = null)
             : base(message, innerException)
         {
             _errorCode = errorCode;
@@ -73,18 +70,18 @@ namespace Confiti.MoySklad.Remap.Client
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ApiException"/> class.
+        /// Initializes a new instance of the <see cref="MoySkladException"/> class.
         /// </summary>
         /// <param name="errorCode">The HTTP status code.</param>
         /// <param name="message">The error message.</param>
-        public ApiException(int errorCode, string message)
+        public MoySkladException(int errorCode, string message)
             : base(message)
         {
             _errorCode = errorCode;
         }
 
         [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.SerializationFormatter)]
-        private ApiException(SerializationInfo info, StreamingContext context)
+        private MoySkladException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
             _errorCode = (int)info.GetValue(C_ERROR_CODE, typeof(int));

@@ -35,13 +35,13 @@ namespace Confiti.MoySklad.Remap.Client
         }
 
         /// <summary>
-        /// Adds the factory to create <see cref="ApiException"/> to the request context.
+        /// Adds the factory to create <see cref="MoySkladException"/> to the request context.
         /// </summary>
         /// <param name="context">The request context.</param>
-        /// <param name="factory">The factory to create <see cref="ApiException"/>.</param>
+        /// <param name="factory">The factory to create <see cref="MoySkladException"/>.</param>
         /// <returns>The request context.</returns>
         /// <exception cref="ArgumentNullException">Throws if <paramref name="context"/> is null.</exception>
-        public static RequestContext WithApiExceptionFactory(this RequestContext context, Func<string, HttpResponseMessage, HttpRequestException, Task<ApiException>> factory)
+        public static RequestContext WithApiExceptionFactory(this RequestContext context, Func<string, HttpResponseMessage, HttpRequestException, Task<MoySkladException>> factory)
         {
             if (context == null)
                 throw new ArgumentNullException(nameof(context));
@@ -67,7 +67,7 @@ namespace Confiti.MoySklad.Remap.Client
         }
 
         /// <summary>
-        /// Adds the factory to create the <see cref="ApiException"/> with bulk of <see cref="ApiErrorsResponse"/> to the request context.
+        /// Adds the factory to create the <see cref="MoySkladException"/> with bulk of <see cref="ApiErrorsResponse"/> to the request context.
         /// </summary>
         /// <param name="context">The request context.</param>
         /// <returns>The request context.</returns>

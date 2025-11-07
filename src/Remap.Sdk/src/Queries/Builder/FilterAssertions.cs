@@ -60,7 +60,7 @@ namespace Confiti.MoySklad.Remap.Queries
                 throw new ArgumentNullException(nameof(filterAttribute));
 
             if (string.IsNullOrWhiteSpace(parameterName))
-                throw new ApiException(400, "Parameter name should not be empty.");
+                throw new MoySkladException(400, "Parameter name should not be empty.");
 
             ParameterName = parameterName;
             ParameterFilter = filterAttribute;
@@ -80,16 +80,16 @@ namespace Confiti.MoySklad.Remap.Queries
         protected virtual void AddFilter(string value, string @operator, string[] allowedOperators = null)
         {
             if (ParameterFilter.OverriddenOperators?.Contains(@operator) == false)
-                throw new ApiException(400, $"Parameter '{ParameterName}' with operator '{@operator}' isn't supported.");
+                throw new MoySkladException(400, $"Parameter '{ParameterName}' with operator '{@operator}' isn't supported.");
 
             if (!ParameterFilter.AllowNull && string.IsNullOrEmpty(value))
-                throw new ApiException(400, $"Parameter '{ParameterName}' should have a value.");
+                throw new MoySkladException(400, $"Parameter '{ParameterName}' should have a value.");
 
             if (!ParameterFilter.AllowContinueConstraint && Filters.Any(f => f.Name == ParameterName))
-                throw new ApiException(400, $"Parameter '{ParameterName}' should be specify only onсe.");
+                throw new MoySkladException(400, $"Parameter '{ParameterName}' should be specify only onсe.");
 
             if (Filters.Any(f => f.Name == ParameterName) && (allowedOperators == null || Filters.Where(f => f.Name == ParameterName).Select(f => f.Operator).Except(allowedOperators).Any()))
-                throw new ApiException(400, $"Parameter '{ParameterName}' with operator '{@operator}' doesn't support multiple operators {(allowedOperators == null ? "" : $"except: {string.Join(", ", allowedOperators)}")}.");
+                throw new MoySkladException(400, $"Parameter '{ParameterName}' with operator '{@operator}' doesn't support multiple operators {(allowedOperators == null ? "" : $"except: {string.Join(", ", allowedOperators)}")}.");
 
             Filters.Add(new FilterItem(ParameterName, @operator, value));
         }

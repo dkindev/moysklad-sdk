@@ -97,7 +97,7 @@ namespace Confiti.MoySklad.Remap.Client
         /// </summary>
         /// <param name="context">The request context to prepare HTTP request.</param>
         /// <returns>The <see cref="Task"/> containing <see cref="HttpRequestMessage"/>.</returns>
-        /// <exception cref="ApiException">Throws if <paramref name="context"/> is null.</exception>
+        /// <exception cref="MoySkladException">Throws if <paramref name="context"/> is null.</exception>
         private async Task<HttpRequestMessage> CreateHttpRequestAsync(RequestContext context)
         {
             var relativeUri = string.IsNullOrEmpty(context.Path) ? Path : context.Path;
@@ -112,7 +112,7 @@ namespace Confiti.MoySklad.Remap.Client
 
             var baseAddress = Client.BaseAddress ?? new Uri(ApiDefaults.DEFAULT_BASE_PATH);
             if (!Uri.TryCreate(baseAddress, relativeUri, out var uri))
-                throw new ApiException("Cannot create the HTTP request URI.");
+                throw new MoySkladException("Cannot create the HTTP request URI.");
 
             var request = new HttpRequestMessage(context.Method, uri);
 
@@ -176,7 +176,7 @@ namespace Confiti.MoySklad.Remap.Client
 
                     using (response)
                     {
-                        ApiException apiException = null;
+                        MoySkladException apiException = null;
 
                         if (context.ApiExceptionFactory != null)
                         {
@@ -190,7 +190,7 @@ namespace Confiti.MoySklad.Remap.Client
                                 ? await response
                                     .ToApiExceptionAsync(errorMessage, e)
                                     .ConfigureAwait(false)
-                                : new ApiException(errorMessage, e);
+                                : new MoySkladException(errorMessage, e);
                         }
 
                         if (apiException != null)

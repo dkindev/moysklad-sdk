@@ -68,7 +68,7 @@ namespace Confiti.MoySklad.Remap.Client.Json
                 }
                 catch (JsonException e)
                 {
-                    throw new ApiException($"Error when deserializing HTTP response content. {e.Message}", e);
+                    throw new MoySkladException($"Error when deserializing HTTP response content. {e.Message}", e);
                 }
             }
         }
@@ -88,7 +88,7 @@ namespace Confiti.MoySklad.Remap.Client.Json
                 }
                 catch (JsonException e)
                 {
-                    throw new ApiException($"Error when serializing HTTP request content. {e.Message}", e);
+                    throw new MoySkladException($"Error when serializing HTTP request content. {e.Message}", e);
                 }
 
                 await jsonTextWriter.FlushAsync().ConfigureAwait(false);

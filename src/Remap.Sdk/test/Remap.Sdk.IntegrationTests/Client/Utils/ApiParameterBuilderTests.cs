@@ -78,21 +78,21 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Client
             };
 
             foreach (var limit in limits)
-                limit.Should().Throw<ApiException>();
+                limit.Should().Throw<MoySkladException>();
         }
 
         [Test]
         public void Offset_with_invalid_value_should_throw_api_exception()
         {
             Action offset = () => _subject.Offset(-1);
-            offset.Should().Throw<ApiException>();
+            offset.Should().Throw<MoySkladException>();
         }
 
         [Test]
         public void Parameter_should_throw_api_exception_if_nesting_property_level_is_more_than_one()
         {
             Action action = () => _subject.FilterBy(p => p.NestedEntity.StringProperty);
-            action.Should().Throw<ApiException>();
+            action.Should().Throw<MoySkladException>();
         }
     }
 

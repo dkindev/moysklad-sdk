@@ -65,7 +65,7 @@ namespace Confiti.MoySklad.Remap.Api
 
             var taskNoteId = taskNote.GetId();
             if (!taskNoteId.HasValue)
-                throw new ApiException(400, "The entity id cannot be null.");
+                throw new MoySkladException(400, "The entity id cannot be null.");
 
             return await DeleteNoteAsync(taskId, taskNoteId.Value).ConfigureAwait(false);
         }
@@ -106,7 +106,7 @@ namespace Confiti.MoySklad.Remap.Api
 
             var taskNoteId = taskNote.GetId();
             if (!taskNoteId.HasValue)
-                throw new ApiException(400, "The entity id cannot be null.");
+                throw new MoySkladException(400, "The entity id cannot be null.");
 
             var requestContext = new RequestContext($"{Path}/{taskId}/notes/{taskNoteId}", HttpMethod.Put)
                 .WithBody(taskNote);

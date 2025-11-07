@@ -22,7 +22,7 @@ namespace System.Net.Http
         /// <param name="type">The destination type.</param>
         /// <returns>The <see cref="Task"/> containing the object or null.</returns>
         /// <exception cref="ArgumentNullException">Throws if <paramref name="response"/> or <paramref name="type"/> is null.</exception>
-        /// <exception cref="ApiException">Throws if deserialization failed with an error.</exception>
+        /// <exception cref="MoySkladException">Throws if deserialization failed with an error.</exception>
         public static async Task<object> DeserializeAsync(this HttpResponseMessage response, Type type)
         {
             if (response == null)
@@ -53,14 +53,14 @@ namespace System.Net.Http
         }
 
         /// <summary>
-        /// Creates the <see cref="ApiException"/> from <see cref="HttpResponseMessage"/> object.
+        /// Creates the <see cref="MoySkladException"/> from <see cref="HttpResponseMessage"/> object.
         /// </summary>
         /// <param name="response">The <see cref="HttpResponseMessage"/>.</param>
         /// <param name="message">The exception message.</param>
         /// <param name="innerException">The inner exception.</param>
-        /// <returns>The <see cref="Task"/> containing the instance of <see cref="ApiException"/> type.</returns>
+        /// <returns>The <see cref="Task"/> containing the instance of <see cref="MoySkladException"/> type.</returns>
         /// <exception cref="ArgumentNullException">Throws if <paramref name="response"/> is null.</exception>
-        public static async Task<ApiException> ToApiExceptionAsync(this HttpResponseMessage response, string message, Exception innerException = null)
+        public static async Task<MoySkladException> ToApiExceptionAsync(this HttpResponseMessage response, string message, Exception innerException = null)
         {
             if (response == null)
                 throw new ArgumentNullException(nameof(response));
@@ -69,7 +69,7 @@ namespace System.Net.Http
                 .DeserializeAsync(typeof(ApiErrorsResponse))
                 .ConfigureAwait(false) as ApiErrorsResponse;
 
-            return new ApiException(
+            return new MoySkladException(
                 (int)response.StatusCode,
                 CommonHelpers.SerializeErrors(message, errorsResponse?.Errors),
                 response.Headers.ToDictionary(),

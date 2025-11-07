@@ -37,7 +37,7 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
             _subject.Credentials.Password = null;
 
             Func<Task> getAccessToken = () => _subject.GetAsync();
-            var apiException = await getAccessToken.Should().ThrowAsync<ApiException>();
+            var apiException = await getAccessToken.Should().ThrowAsync<MoySkladException>();
 
             try
             {

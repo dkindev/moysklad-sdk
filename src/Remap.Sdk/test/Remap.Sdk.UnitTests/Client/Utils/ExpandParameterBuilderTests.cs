@@ -30,7 +30,7 @@ namespace Confiti.MoySklad.Remap.UnitTests.Client
 
             Action action = () => subject.ThenBy(p => p.NotAllowedExpandMember);
 
-            action.Should().Throw<ApiException>();
+            action.Should().Throw<MoySkladException>();
         }
 
         [Test]

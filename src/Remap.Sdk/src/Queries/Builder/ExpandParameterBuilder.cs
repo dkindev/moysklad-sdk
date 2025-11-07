@@ -54,7 +54,7 @@ namespace Confiti.MoySklad.Remap.Queries
         protected virtual void AddExpandParameter(string propertyName)
         {
             if (string.IsNullOrWhiteSpace(propertyName))
-                throw new ApiException(400, $"The '{nameof(propertyName)}' should not be empty.");
+                throw new MoySkladException(400, $"The '{nameof(propertyName)}' should not be empty.");
 
             Expanders.Add(propertyName);
         }

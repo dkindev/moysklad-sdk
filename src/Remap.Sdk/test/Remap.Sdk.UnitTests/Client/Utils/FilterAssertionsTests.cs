@@ -38,7 +38,7 @@ namespace Confiti.MoySklad.Remap.UnitTests.Client
             Expression<Func<GuidAssertionsTestEntity, Guid>> expression = p => p.NotFilteredMember;
             Action assertion = () => new GuidFilterAssertions(expression, new List<FilterItem>());
 
-            assertion.Should().Throw<ApiException>();
+            assertion.Should().Throw<MoySkladException>();
         }
 
         [Test]
@@ -47,7 +47,7 @@ namespace Confiti.MoySklad.Remap.UnitTests.Client
             Expression<Func<GuidAssertionsTestEntity, Guid>> expression = p => p.AllowedNestingFilterMember.NestingNotFilteredMember;
             Action assertion = () => new GuidFilterAssertions(expression, new List<FilterItem>());
 
-            assertion.Should().Throw<ApiException>();
+            assertion.Should().Throw<MoySkladException>();
         }
 
         [Test]
@@ -90,7 +90,7 @@ namespace Confiti.MoySklad.Remap.UnitTests.Client
                 if (allowedOperator == "!=")
                     assertion = () => subject.NotBe(guid);
 
-                assertion.Should().Throw<ApiException>();
+                assertion.Should().Throw<MoySkladException>();
             }
         }
 
@@ -100,7 +100,7 @@ namespace Confiti.MoySklad.Remap.UnitTests.Client
             Expression<Func<GuidAssertionsTestEntity, Guid>> expression = p => p.NotAllowedRootNestingFilterMember;
             Action assertion = () => new GuidFilterAssertions(expression, new List<FilterItem>());
 
-            assertion.Should().Throw<ApiException>();
+            assertion.Should().Throw<MoySkladException>();
         }
 
         [Test]
@@ -130,7 +130,7 @@ namespace Confiti.MoySklad.Remap.UnitTests.Client
             Expression<Func<GuidAssertionsTestEntity, Guid>> expression = p => p.NotAllowedNestingFilterMember.NestedGuidMember;
             Action assertion = () => new GuidFilterAssertions(expression, new List<FilterItem>());
 
-            assertion.Should().Throw<ApiException>();
+            assertion.Should().Throw<MoySkladException>();
         }
 
         [Test]
@@ -150,7 +150,7 @@ namespace Confiti.MoySklad.Remap.UnitTests.Client
             if (@operator != "!=")
                 assertion = () => subject.NotBeNull();
 
-            assertion.Should().Throw<ApiException>();
+            assertion.Should().Throw<MoySkladException>();
         }
 
         [Test]
@@ -170,7 +170,7 @@ namespace Confiti.MoySklad.Remap.UnitTests.Client
             if (@operator != "!=")
                 assertion = () => subject.NotBe(guid);
 
-            assertion.Should().Throw<ApiException>();
+            assertion.Should().Throw<MoySkladException>();
         }
 
         [Test]
@@ -192,7 +192,7 @@ namespace Confiti.MoySklad.Remap.UnitTests.Client
                 Expression<Func<GuidAssertionsTestEntity, Guid>> expression = p => p.GuidMember;
                 subject = new GuidFilterAssertions(expression, filters);
 
-                assertion.Should().NotThrow<ApiException>();
+                assertion.Should().NotThrow<MoySkladException>();
             }
         }
 
@@ -241,7 +241,7 @@ namespace Confiti.MoySklad.Remap.UnitTests.Client
             if (@operator != "!=")
                 assertion = () => subject.NotBe(guid);
 
-            assertion.Should().Throw<ApiException>();
+            assertion.Should().Throw<MoySkladException>();
         }
     }
 
