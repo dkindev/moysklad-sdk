@@ -206,7 +206,7 @@ namespace Confiti.MoySklad.Remap.Queries
         }
 
         /// <summary>
-        /// Returns the <see cref="FilterParameterBuilder{NumericAssertions}" /> to build the filter for the <see cref="short" /> parameter.
+        /// Adds the filter by selected property.
         /// </summary>
         /// <param name="propertyExpression">The expression to get the property name.</param>
         /// <returns>The <see cref="FilterParameterBuilder{NumericAssertions}" />.</returns>
@@ -217,7 +217,7 @@ namespace Confiti.MoySklad.Remap.Queries
         }
 
         /// <summary>
-        /// Returns the <see cref="FilterParameterBuilder{NumericAssertions}" /> to build the filter for the <see cref="uint" /> parameter.
+        /// Adds the filter by selected property.
         /// </summary>
         /// <param name="propertyExpression">The expression to get the property name.</param>
         /// <returns>The <see cref="FilterParameterBuilder{NumericAssertions}" />.</returns>
@@ -228,7 +228,7 @@ namespace Confiti.MoySklad.Remap.Queries
         }
 
         /// <summary>
-        /// Returns the <see cref="FilterParameterBuilder{NumericAssertions}" /> to build the filter for the <see cref="int" /> parameter.
+        /// Adds the filter by selected property.
         /// </summary>
         /// <param name="propertyExpression">The expression to get the property name.</param>
         /// <returns>The <see cref="FilterParameterBuilder{NumericAssertions}" /> .</returns>
@@ -239,7 +239,7 @@ namespace Confiti.MoySklad.Remap.Queries
         }
 
         /// <summary>
-        /// Returns the <see cref="FilterParameterBuilder{NumericAssertions}" /> to build the filter for the <see cref="float" /> parameter.
+        /// Adds the filter by selected property.
         /// </summary>
         /// <param name="propertyExpression">The expression to get the property name.</param>
         /// <returns>The <see cref="FilterParameterBuilder{NumericAssertions}" />.</returns>
@@ -250,7 +250,7 @@ namespace Confiti.MoySklad.Remap.Queries
         }
 
         /// <summary>
-        /// Returns the <see cref="FilterParameterBuilder{NumericAssertions}" /> to build the filter for the <see cref="double" /> parameter.
+        /// Adds the filter by selected property.
         /// </summary>
         /// <param name="propertyExpression">The expression to get the property name.</param>
         /// <returns>The <see cref="FilterParameterBuilder{NumericAssertions}" />.</returns>
@@ -261,7 +261,7 @@ namespace Confiti.MoySklad.Remap.Queries
         }
 
         /// <summary>
-        /// Returns the <see cref="FilterParameterBuilder{NumericAssertions}" /> to build the filter for the <see cref="decimal" /> parameter.
+        /// Adds the filter by selected property.
         /// </summary>
         /// <param name="propertyExpression">The expression to get the property name.</param>
         /// <returns>The <see cref="FilterParameterBuilder{NumericAssertions}" />.</returns>

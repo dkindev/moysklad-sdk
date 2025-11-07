@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 namespace Confiti.MoySklad.Remap.Queries
 {
     /// <summary>
-    /// Represents the assertions to build the filter for nullable <see cref="Guid"/> parameter.
+    /// Represents the assertions to build the filter for nullable <see cref="Guid"/> property.
     /// </summary>
     public class NullableGuidFilterAssertions : GuidFilterAssertions
     {
@@ -13,12 +13,12 @@ namespace Confiti.MoySklad.Remap.Queries
 
         /// <summary>
         /// Creates a new instance of the <see cref="NullableGuidFilterAssertions" /> class
-        /// with the parameter expression and the filters.
+        /// with the property expression and the filters.
         /// </summary>
-        /// <param name="parameter">The parameter expression.</param>
+        /// <param name="propertyExpression">The property expression.</param>
         /// <param name="filters">The filters.</param>
-        protected internal NullableGuidFilterAssertions(LambdaExpression parameter, List<FilterItem> filters)
-            : base(parameter, filters)
+        protected internal NullableGuidFilterAssertions(LambdaExpression propertyExpression, List<FilterItem> filters)
+            : base(propertyExpression, filters)
         {
         }
 
@@ -27,9 +27,9 @@ namespace Confiti.MoySklad.Remap.Queries
         #region Methods
 
         /// <summary>
-        /// Asserts that a parameter should has the null value.
+        /// Asserts that a property should has the null value.
         /// </summary>
-        /// <returns>The or constraint.</returns>
+        /// <returns>The <see cref="OrConstraint{NullableGuidFilterAssertions}" /> to add the next filter value.</returns>
         public OrConstraint<NullableGuidFilterAssertions> BeNull()
         {
             AddFilter(null, "=", new[] { "=" });
@@ -37,9 +37,9 @@ namespace Confiti.MoySklad.Remap.Queries
         }
 
         /// <summary>
-        /// Asserts that a parameter should not has the null value.
+        /// Asserts that a property should not has the null value.
         /// </summary>
-        /// <returns>The and constraint.</returns>
+        /// <returns>The <see cref="AndConstraint{NullableGuidFilterAssertions}" /> to add the next filter value.</returns>
         public AndConstraint<NullableGuidFilterAssertions> NotBeNull()
         {
             AddFilter(null, "!=", new[] { "!=" });

@@ -6,7 +6,7 @@ using Confiti.MoySklad.Remap.Client;
 namespace Confiti.MoySklad.Remap.Queries
 {
     /// <summary>
-    /// Represents the assertions to build the filter for <see cref="DateTime"/> parameter.
+    /// Represents the assertions to build the filter for <see cref="DateTime"/> property.
     /// </summary>
     public class DateTimeFilterAssertions : FilterAssertions
     {
@@ -14,12 +14,12 @@ namespace Confiti.MoySklad.Remap.Queries
 
         /// <summary>
         /// Creates a new instance of the <see cref="DateTimeFilterAssertions" /> class
-        /// with the parameter expression and the filters.
+        /// with the property expression and the filters.
         /// </summary>
-        /// <param name="parameter">The parameter expression.</param>
+        /// <param name="propertyExpression">The property expression.</param>
         /// <param name="filters">The filters.</param>
-        protected internal DateTimeFilterAssertions(LambdaExpression parameter, List<FilterItem> filters)
-            : base(parameter, filters)
+        protected internal DateTimeFilterAssertions(LambdaExpression propertyExpression, List<FilterItem> filters)
+            : base(propertyExpression, filters)
         {
         }
 
@@ -28,11 +28,11 @@ namespace Confiti.MoySklad.Remap.Queries
         #region Methods
 
         /// <summary>
-        /// Asserts that a parameter should has the value.
+        /// Asserts that a property should has the value.
         /// </summary>
         /// <param name="value">The value to assert.</param>
         /// <param name="format">The date time format.</param>
-        /// <returns>The or constraint.</returns>
+        /// <returns>The <see cref="OrConstraint{DateTimeFilterAssertions}" /> to add the next filter value.</returns>
         public OrConstraint<DateTimeFilterAssertions> Be(DateTime value, string format = ApiDefaults.DEFAULT_DATETIME_FORMAT)
         {
             AddFilter(value.ToString(format), "=", new[] { "=" });
@@ -40,11 +40,11 @@ namespace Confiti.MoySklad.Remap.Queries
         }
 
         /// <summary>
-        /// Asserts that a parameter should be greater or equal to the value.
+        /// Asserts that a property should be greater or equal to the value.
         /// </summary>
         /// <param name="value">The value to assert.</param>
         /// <param name="format">The date time format.</param>
-        /// <returns>The and constraint.</returns>
+        /// <returns>The <see cref="AndConstraint{DateTimeFilterAssertions}" /> to add the next filter value.</returns>
         public AndConstraint<DateTimeFilterAssertions> BeGreaterOrEqualTo(DateTime value, string format = ApiDefaults.DEFAULT_DATETIME_FORMAT)
         {
             AddFilter(value.ToString(format), ">=", new[] { "<=", "<", ">" });
@@ -52,11 +52,11 @@ namespace Confiti.MoySklad.Remap.Queries
         }
 
         /// <summary>
-        /// Asserts that a parameter should be greater than the value.
+        /// Asserts that a property should be greater than the value.
         /// </summary>
         /// <param name="value">The value to assert.</param>
         /// <param name="format">The date time format.</param>
-        /// <returns>The and constraint.</returns>
+        /// <returns>The <see cref="AndConstraint{DateTimeFilterAssertions}" /> to add the next filter value.</returns>
         public AndConstraint<DateTimeFilterAssertions> BeGreaterThan(DateTime value, string format = ApiDefaults.DEFAULT_DATETIME_FORMAT)
         {
             AddFilter(value.ToString(format), ">", new[] { "<", "<=", ">=" });
@@ -64,11 +64,11 @@ namespace Confiti.MoySklad.Remap.Queries
         }
 
         /// <summary>
-        /// Asserts that a parameter should be less or equal to the value.
+        /// Asserts that a property should be less or equal to the value.
         /// </summary>
         /// <param name="value">The value to assert.</param>
         /// <param name="format">The date time format.</param>
-        /// <returns>The and constraint.</returns>
+        /// <returns>The <see cref="AndConstraint{DateTimeFilterAssertions}" /> to add the next filter value.</returns>
         public AndConstraint<DateTimeFilterAssertions> BeLessOrEqualTo(DateTime value, string format = ApiDefaults.DEFAULT_DATETIME_FORMAT)
         {
             AddFilter(value.ToString(format), "<=", new[] { ">=", "<", ">" });
@@ -76,11 +76,11 @@ namespace Confiti.MoySklad.Remap.Queries
         }
 
         /// <summary>
-        /// Asserts that a parameter should be less than the value.
+        /// Asserts that a property should be less than the value.
         /// </summary>
         /// <param name="value">The value to assert.</param>
         /// <param name="format">The date time format.</param>
-        /// <returns>The and constraint.</returns>
+        /// <returns>The <see cref="AndConstraint{DateTimeFilterAssertions}" /> to add the next filter value.</returns>
         public AndConstraint<DateTimeFilterAssertions> BeLessThan(DateTime value, string format = ApiDefaults.DEFAULT_DATETIME_FORMAT)
         {
             AddFilter(value.ToString(format), "<", new[] { ">", "<=", ">=" });
@@ -88,11 +88,11 @@ namespace Confiti.MoySklad.Remap.Queries
         }
 
         /// <summary>
-        /// Asserts that a parameter should not has the value.
+        /// Asserts that a property should not has the value.
         /// </summary>
         /// <param name="value">The value to assert.</param>
         /// <param name="format">The date time format.</param>
-        /// <returns>The and constraint.</returns>
+        /// <returns>The <see cref="AndConstraint{DateTimeFilterAssertions}" /> to add the next filter value.</returns>
         public AndConstraint<DateTimeFilterAssertions> NotBe(DateTime value, string format = ApiDefaults.DEFAULT_DATETIME_FORMAT)
         {
             AddFilter(value.ToString(format), "!=", new[] { "!=" });

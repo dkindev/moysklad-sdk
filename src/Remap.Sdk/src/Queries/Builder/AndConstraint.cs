@@ -1,4 +1,4 @@
-namespace Confiti.MoySklad.Remap.Queries
+﻿namespace Confiti.MoySklad.Remap.Queries
 {
     /// <summary>
     /// Represents an object to chain another object into a call chain.
@@ -19,7 +19,6 @@ namespace Confiti.MoySklad.Remap.Queries
         /// <summary>
         /// Gets the parent constraint.
         /// </summary>
-        /// <value>The parent constraint.</value>
         public T And { get; }
     }
 }

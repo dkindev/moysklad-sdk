@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 namespace Confiti.MoySklad.Remap.Queries
 {
     /// <summary>
-    /// Represents the assertions to build the filter for <see cref="string"/> parameter.
+    /// Represents the assertions to build the filter for <see cref="string"/> property.
     /// </summary>
     public class StringFilterAssertions : FilterAssertions
     {
@@ -12,12 +12,12 @@ namespace Confiti.MoySklad.Remap.Queries
 
         /// <summary>
         /// Creates a new instance of the <see cref="StringFilterAssertions" /> class
-        /// with the parameter expression and the filters.
+        /// with the property expression and the filters.
         /// </summary>
-        /// <param name="parameter">The parameter expression.</param>
+        /// <param name="propertyExpression">The property expression.</param>
         /// <param name="filters">The filters.</param>
-        internal StringFilterAssertions(LambdaExpression parameter, List<FilterItem> filters)
-            : base(parameter, filters)
+        internal StringFilterAssertions(LambdaExpression propertyExpression, List<FilterItem> filters)
+            : base(propertyExpression, filters)
         {
         }
 
@@ -26,10 +26,10 @@ namespace Confiti.MoySklad.Remap.Queries
         #region Methods
 
         /// <summary>
-        /// Asserts that a parameter should has the value.
+        /// Asserts that a property should has the value.
         /// </summary>
         /// <param name="value">The value to assert.</param>
-        /// <returns>The or constraint.</returns>
+        /// <returns>The <see cref="OrConstraint{StringFilterAssertions}" /> to add the next filter value.</returns>
         public OrConstraint<StringFilterAssertions> Be(string value)
         {
             AddFilter(value, "=", new[] { "=" });
@@ -37,7 +37,7 @@ namespace Confiti.MoySklad.Remap.Queries
         }
 
         /// <summary>
-        /// Asserts that a parameter should contains the value.
+        /// Asserts that a property should contains the value.
         /// </summary>
         /// <param name="value">The value to assert.</param>
         public void Contains(string value)
@@ -46,7 +46,7 @@ namespace Confiti.MoySklad.Remap.Queries
         }
 
         /// <summary>
-        /// Asserts that a parameter should ends with the value.
+        /// Asserts that a property should ends with the value.
         /// </summary>
         /// <param name="value">The value to assert.</param>
         public void EndsWith(string value)
@@ -55,10 +55,10 @@ namespace Confiti.MoySklad.Remap.Queries
         }
 
         /// <summary>
-        /// Asserts that a parameter should not has the value.
+        /// Asserts that a property should not has the value.
         /// </summary>
         /// <param name="value">The value to assert.</param>
-        /// <returns>The and constraint.</returns>
+        /// <returns>The <see cref="AndConstraint{StringFilterAssertions}" /> to add the next filter value.</returns>
         public AndConstraint<StringFilterAssertions> NotBe(string value)
         {
             AddFilter(value, "!=", new[] { "!=" });
@@ -66,7 +66,7 @@ namespace Confiti.MoySklad.Remap.Queries
         }
 
         /// <summary>
-        /// Asserts that a parameter should starts with the value.
+        /// Asserts that a property should starts with the value.
         /// </summary>
         /// <param name="value">The value to assert.</param>
         public void StartsWith(string value)

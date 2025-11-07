@@ -3,7 +3,7 @@
 namespace Confiti.MoySklad.Remap.Queries
 {
     /// <summary>
-    /// Represents the assertions to build the filter for custom parameter.
+    /// Represents the assertions to build the filter for custom property.
     /// </summary>
     public class CustomFilterAssertions : FilterAssertions
     {
@@ -11,13 +11,13 @@ namespace Confiti.MoySklad.Remap.Queries
 
         /// <summary>
         /// Creates a new instance of the <see cref="CustomFilterAssertions" /> class
-        /// with the parameter expression, filter attribute and the filters.
+        /// with the property expression, filter attribute and the filters.
         /// </summary>
-        /// <param name="parameterName">The parameter name.</param>
+        /// <param name="propertyName">The property name.</param>
         /// <param name="filterAttribute">The filter attribute.</param>
         /// <param name="filters">The filters.</param>
-        internal CustomFilterAssertions(string parameterName, FilterAttribute filterAttribute, List<FilterItem> filters)
-            : base(parameterName, filterAttribute, filters)
+        internal CustomFilterAssertions(string propertyName, FilterAttribute filterAttribute, List<FilterItem> filters)
+            : base(propertyName, filterAttribute, filters)
         {
         }
 
@@ -26,10 +26,10 @@ namespace Confiti.MoySklad.Remap.Queries
         #region Methods
 
         /// <summary>
-        /// Asserts that a parameter should has the value.
+        /// Asserts that a property should has the value.
         /// </summary>
         /// <param name="value">The value to assert.</param>
-        /// <returns>The or constraint.</returns>
+        /// <returns>The <see cref="OrConstraint{CustomFilterAssertions}" /> to add the next filter value.</returns>
         public OrConstraint<CustomFilterAssertions> Be(string value)
         {
             AddFilter(value, "=", new[] { "=" });
@@ -37,10 +37,10 @@ namespace Confiti.MoySklad.Remap.Queries
         }
 
         /// <summary>
-        /// Asserts that a parameter should be greater or equal to the value.
+        /// Asserts that a property should be greater or equal to the value.
         /// </summary>
         /// <param name="value">The value to assert.</param>
-        /// <returns>The and constraint.</returns>
+        /// <returns>The <see cref="AndConstraint{CustomFilterAssertions}" /> to add the next filter value.</returns>
         public AndConstraint<CustomFilterAssertions> BeGreaterOrEqualTo(string value)
         {
             AddFilter(value, ">=", new[] { "<=", "<", ">" });
@@ -48,10 +48,10 @@ namespace Confiti.MoySklad.Remap.Queries
         }
 
         /// <summary>
-        /// Asserts that a parameter should be greater than the value.
+        /// Asserts that a property should be greater than the value.
         /// </summary>
         /// <param name="value">The value to assert.</param>
-        /// <returns>The and constraint.</returns>
+        /// <returns>The <see cref="AndConstraint{CustomFilterAssertions}" /> to add the next filter value.</returns>
         public AndConstraint<CustomFilterAssertions> BeGreaterThan(string value)
         {
             AddFilter(value, ">", new[] { "<", "<=", ">=" });
@@ -59,10 +59,10 @@ namespace Confiti.MoySklad.Remap.Queries
         }
 
         /// <summary>
-        /// Asserts that a parameter should be less or equal to the value.
+        /// Asserts that a property should be less or equal to the value.
         /// </summary>
         /// <param name="value">The value to assert.</param>
-        /// <returns>The and constraint.</returns>
+        /// <returns>The <see cref="AndConstraint{CustomFilterAssertions}" /> to add the next filter value.</returns>
         public AndConstraint<CustomFilterAssertions> BeLessOrEqualTo(string value)
         {
             AddFilter(value, "<=", new[] { ">=", "<", ">" });
@@ -70,10 +70,10 @@ namespace Confiti.MoySklad.Remap.Queries
         }
 
         /// <summary>
-        /// Asserts that a parameter should be less than the value.
+        /// Asserts that a property should be less than the value.
         /// </summary>
         /// <param name="value">The value to assert.</param>
-        /// <returns>The and constraint.</returns>
+        /// <returns>The <see cref="AndConstraint{CustomFilterAssertions}" /> to add the next filter value.</returns>
         public AndConstraint<CustomFilterAssertions> BeLessThan(string value)
         {
             AddFilter(value, "<", new[] { ">", "<=", ">=" });
@@ -81,7 +81,7 @@ namespace Confiti.MoySklad.Remap.Queries
         }
 
         /// <summary>
-        /// Asserts that a parameter should contains the value.
+        /// Asserts that a property should contains the value.
         /// </summary>
         /// <param name="value">The value to assert.</param>
         public void Contains(string value)
@@ -90,7 +90,7 @@ namespace Confiti.MoySklad.Remap.Queries
         }
 
         /// <summary>
-        /// Asserts that a parameter should ends with the value.
+        /// Asserts that a property should ends with the value.
         /// </summary>
         /// <param name="value">The value to assert.</param>
         public void EndsWith(string value)
@@ -99,10 +99,10 @@ namespace Confiti.MoySklad.Remap.Queries
         }
 
         /// <summary>
-        /// Asserts that a parameter should not has the value.
+        /// Asserts that a property should not has the value.
         /// </summary>
         /// <param name="value">The value to assert.</param>
-        /// <returns>The and constraint.</returns>
+        /// <returns>The <see cref="AndConstraint{CustomFilterAssertions}" /> to add the next filter value.</returns>
         public AndConstraint<CustomFilterAssertions> NotBe(string value)
         {
             AddFilter(value, "!=", new[] { "!=" });
@@ -110,7 +110,7 @@ namespace Confiti.MoySklad.Remap.Queries
         }
 
         /// <summary>
-        /// Asserts that a parameter should starts with the value.
+        /// Asserts that a property should starts with the value.
         /// </summary>
         /// <param name="value">The value to assert.</param>
         public void StartsWith(string value)

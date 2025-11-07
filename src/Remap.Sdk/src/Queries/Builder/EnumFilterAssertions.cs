@@ -6,7 +6,7 @@ using Confiti.MoySklad.Remap.Extensions;
 namespace Confiti.MoySklad.Remap.Queries
 {
     /// <summary>
-    /// Represents the assertions to build the filter for <see cref="Enum"/> parameter.
+    /// Represents the assertions to build the filter for <see cref="Enum"/> property.
     /// </summary>
     public class EnumFilterAssertions<T> : FilterAssertions where T : Enum
     {
@@ -14,12 +14,12 @@ namespace Confiti.MoySklad.Remap.Queries
 
         /// <summary>
         /// Creates a new instance of the <see cref="EnumFilterAssertions{T}" /> class
-        /// with the parameter expression and the filters.
+        /// with the property expression and the filters.
         /// </summary>
-        /// <param name="parameter">The parameter expression.</param>
+        /// <param name="propertyExpression">The property expression.</param>
         /// <param name="filters">The filters.</param>
-        internal EnumFilterAssertions(LambdaExpression parameter, List<FilterItem> filters)
-            : base(parameter, filters)
+        internal EnumFilterAssertions(LambdaExpression propertyExpression, List<FilterItem> filters)
+            : base(propertyExpression, filters)
         {
         }
 
@@ -28,10 +28,10 @@ namespace Confiti.MoySklad.Remap.Queries
         #region Methods
 
         /// <summary>
-        /// Asserts that a parameter should has the value.
+        /// Asserts that a property should has the value.
         /// </summary>
         /// <param name="value">The value to assert.</param>
-        /// <returns>The or constraint.</returns>
+        /// <returns>The <see cref="OrConstraint{EnumFilterAssertions}" /> to add the next filter value.</returns>
         public OrConstraint<EnumFilterAssertions<T>> Be(T value)
         {
             AddFilter(value.GetParameterName(), "=", new[] { "=" });
@@ -39,10 +39,10 @@ namespace Confiti.MoySklad.Remap.Queries
         }
 
         /// <summary>
-        /// Asserts that a parameter should not has the value.
+        /// Asserts that a property should not has the value.
         /// </summary>
         /// <param name="value">The value to assert.</param>
-        /// <returns>The and constraint.</returns>
+        /// <returns>The <see cref="AndConstraint{EnumFilterAssertions}" /> to add the next filter value.</returns>
         public AndConstraint<EnumFilterAssertions<T>> NotBe(T value)
         {
             AddFilter(value.GetParameterName(), "!=", new[] { "!=" });
