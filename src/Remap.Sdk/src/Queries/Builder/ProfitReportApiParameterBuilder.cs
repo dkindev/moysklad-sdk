@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using Confiti.MoySklad.Remap.Client;
-using Confiti.MoySklad.Remap.Entities;
 
 namespace Confiti.MoySklad.Remap.Queries
 {
     /// <summary>
-    /// Represents an helper class to build API parameters for <see cref="ProfitReportItem"/> query.
+    /// Represents an helper class to build API parameters for <see cref="ProfitReportQuery"/>.
     /// </summary>
-    public class ReportProfitApiParameterBuilder : ApiParameterBuilder
+    public class ProfitReportApiParameterBuilder : ApiParameterBuilder<ProfitReportQuery>
     {
         #region Fields
 
@@ -34,7 +33,7 @@ namespace Confiti.MoySklad.Remap.Queries
         }
 
         /// <summary>
-        /// Builds the moment from API parameter.
+        /// Adds the moment from parameter.
         /// </summary>
         /// <param name="value">The moment from.</param>
         /// <param name="format">The date time format.</param>
@@ -44,7 +43,7 @@ namespace Confiti.MoySklad.Remap.Queries
         }
 
         /// <summary>
-        /// Builds the moment to API parameter.
+        /// Adds the moment to parameter.
         /// </summary>
         /// <param name="value">The moment to.</param>
         /// <param name="format">The date time format.</param>

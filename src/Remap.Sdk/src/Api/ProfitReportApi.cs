@@ -8,7 +8,7 @@ using Confiti.MoySklad.Remap.Queries;
 namespace Confiti.MoySklad.Remap.Api
 {
     /// <summary>
-    /// Represents the API to interact with the <see cref="ProfitReportItem"/> endpoint.
+    /// Represents the API to interact with the profit report endpoint.
     /// </summary>
     public class ProfitReportApi : ApiAccessor
     {
@@ -34,7 +34,7 @@ namespace Confiti.MoySklad.Remap.Api
         /// </summary>
         /// <param name="buildQuery">The action to build the query.</param>
         /// <returns>The <see cref="Task"/> containing the API response with the list of <see cref="ProfitByCounterpartyReportItem"/>.</returns>
-        public virtual Task<ApiResponse<EntitiesResponse<ProfitByCounterpartyReportItem>>> GetByCounterpartyAsync(Action<ReportProfitApiParameterBuilder> buildQuery = null)
+        public virtual Task<ApiResponse<EntitiesResponse<ProfitByCounterpartyReportItem>>> GetByCounterpartyAsync(Action<ProfitReportApiParameterBuilder> buildQuery = null)
         {
             return GetReportAsync<ProfitByCounterpartyReportItem>("/bycounterparty", buildQuery);
         }
@@ -44,7 +44,7 @@ namespace Confiti.MoySklad.Remap.Api
         /// </summary>
         /// <param name="buildQuery">The action to build the query.</param>
         /// <returns>The <see cref="Task"/> containing the API response with the list of <see cref="ProfitByEmployeeReportItem"/>.</returns>
-        public virtual Task<ApiResponse<EntitiesResponse<ProfitByEmployeeReportItem>>> GetByEmployeeAsync(Action<ReportProfitApiParameterBuilder> buildQuery = null)
+        public virtual Task<ApiResponse<EntitiesResponse<ProfitByEmployeeReportItem>>> GetByEmployeeAsync(Action<ProfitReportApiParameterBuilder> buildQuery = null)
         {
             return GetReportAsync<ProfitByEmployeeReportItem>("/byemployee", buildQuery);
         }
@@ -54,7 +54,7 @@ namespace Confiti.MoySklad.Remap.Api
         /// </summary>
         /// <param name="buildQuery">The action to build the query.</param>
         /// <returns>The <see cref="Task"/> containing the API response with the list of <see cref="ProfitByAssortmentReportItem"/>.</returns>
-        public virtual Task<ApiResponse<EntitiesResponse<ProfitByAssortmentReportItem>>> GetByProductAsync(Action<ReportProfitApiParameterBuilder> buildQuery = null)
+        public virtual Task<ApiResponse<EntitiesResponse<ProfitByAssortmentReportItem>>> GetByProductAsync(Action<ProfitReportApiParameterBuilder> buildQuery = null)
         {
             return GetReportAsync<ProfitByAssortmentReportItem>("/byproduct", buildQuery);
         }
@@ -64,7 +64,7 @@ namespace Confiti.MoySklad.Remap.Api
         /// </summary>
         /// <param name="buildQuery">The action to build the query.</param>
         /// <returns>The <see cref="Task"/> containing the API response with the list of <see cref="ProfitBySalesChannelReportItem"/>.</returns>
-        public virtual Task<ApiResponse<EntitiesResponse<ProfitBySalesChannelReportItem>>> GetBySalesChannelAsync(Action<ReportProfitApiParameterBuilder> buildQuery = null)
+        public virtual Task<ApiResponse<EntitiesResponse<ProfitBySalesChannelReportItem>>> GetBySalesChannelAsync(Action<ProfitReportApiParameterBuilder> buildQuery = null)
         {
             return GetReportAsync<ProfitBySalesChannelReportItem>("/bysaleschannel", buildQuery);
         }
@@ -74,7 +74,7 @@ namespace Confiti.MoySklad.Remap.Api
         /// </summary>
         /// <param name="buildQuery">The action to build the query.</param>
         /// <returns>The <see cref="Task"/> containing the API response with the list of <see cref="ProfitByAssortmentReportItem"/>.</returns>
-        public virtual Task<ApiResponse<EntitiesResponse<ProfitByAssortmentReportItem>>> GetByVariantAsync(Action<ReportProfitApiParameterBuilder> buildQuery = null)
+        public virtual Task<ApiResponse<EntitiesResponse<ProfitByAssortmentReportItem>>> GetByVariantAsync(Action<ProfitReportApiParameterBuilder> buildQuery = null)
         {
             return GetReportAsync<ProfitByAssortmentReportItem>("/byvariant", buildQuery);
         }
@@ -83,7 +83,7 @@ namespace Confiti.MoySklad.Remap.Api
 
         #region Utilities
 
-        private async Task<ApiResponse<EntitiesResponse<TReport>>> GetReportAsync<TReport>(string relativePath, Action<ReportProfitApiParameterBuilder> buildQuery = null)
+        private async Task<ApiResponse<EntitiesResponse<TReport>>> GetReportAsync<TReport>(string relativePath, Action<ProfitReportApiParameterBuilder> buildQuery = null)
         {
             return await CallAsync<EntitiesResponse<TReport>>(new RequestContext($"{Path}{relativePath}", HttpMethod.Get).WithQuery(buildQuery))
                 .ConfigureAwait(false);

@@ -370,7 +370,7 @@ namespace Confiti.MoySklad.Remap.Queries
         /// </summary>
         [Filter(overriddenOperators: new[] { "=", "!=" })]
         [Parameter("variant")]
-        public Variant Variant { get; set; }
+        public VariantQuery Variant { get; set; }
 
         /// <summary>
         /// Gets or sets a parameter for considering nested subgroups. Only works if there is a filter on <see cref="ProductFolder"/>.
@@ -382,7 +382,7 @@ namespace Confiti.MoySklad.Remap.Queries
         ///     <item>filtering</item>
         /// </list>
         /// </summary>
-        [Filter]
+        [Filter(allowContinueConstraint: false, overriddenOperators: new[] { "=" })]
         [Parameter("withSubFolders")]
         public bool WithSubFolders { get; set; }
 

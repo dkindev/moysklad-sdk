@@ -39,7 +39,6 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
                     .Or
                     .Be("https://api.moysklad.ru/api/remap/1.2/entity/counterparty/14553caa-2cb2-11e6-8a84-bae500000030");
                 query.FilterBy(x => x.Archived).Should().Be(true).Or.Be(false);
-                query.FilterBy(x => x.WithSubFolders).Should().Be(true).Or.Be(false);
                 query.FilterBy(x => x.ReserveOnly).Should().Be(true);
                 query.FilterBy(x => x.InTransitOnly).Should().Be(false);
                 query.FilterBy(x => x.SoldByWeight).Should().Be(false);
