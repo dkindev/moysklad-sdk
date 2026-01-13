@@ -28,6 +28,11 @@ namespace Confiti.MoySklad.Remap.Client
         public string ContentType { get; set; }
 
         /// <summary>
+        /// Gets or sets the credentials.
+        /// </summary>
+        public MoySkladCredentials Credentials { get; set; }
+
+        /// <summary>
         /// Gets or sets the HTTP request headers.
         /// </summary>
         public Dictionary<string, string> Headers { get; set; } = new Dictionary<string, string>();

@@ -97,6 +97,22 @@ namespace Confiti.MoySklad.Remap.Client
         }
 
         /// <summary>
+        /// Adds the credentials to the request context.
+        /// </summary>
+        /// <param name="context">The request context.</param>
+        /// <param name="credentials">The credentials.</param>
+        /// <returns>The request context.</returns>
+        /// <exception cref="ArgumentNullException">Throws if <paramref name="context"/> is null.</exception>
+        public static RequestContext WithCredentials(this RequestContext context, MoySkladCredentials credentials)
+        {
+            if (context == null)
+                throw new ArgumentNullException(nameof(context));
+
+            context.Credentials = credentials;
+            return context;
+        }
+
+        /// <summary>
         /// Adds the header to the request context.
         /// </summary>
         /// <param name="context">The request context.</param>

@@ -101,20 +101,11 @@ catch (MoySkladException ex)
 ### <a id="remap-api__auth">Аутентификация</a>
 
 ```csharp
-var api = new MoySkladApi(new MoySkladCredentials()
-{
-    Username = "your-username",
-    Password = "your-password",
-});
-
-// или измените текущие 
-api.Credentials = new MoySkladCredentials()
+var response = await api.Security.Token.GetAsync(new MoySkladCredentials
 {
     Username = "new-username",
     Password = "new-password",
-};
-
-var response = await api.Security.Token.GetAsync();
+});
 var accessToken = response.Payload.AccessToken;
 ```
 

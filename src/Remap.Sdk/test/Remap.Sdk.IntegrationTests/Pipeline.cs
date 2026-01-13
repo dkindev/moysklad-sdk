@@ -40,10 +40,7 @@ namespace Confiti.MoySklad.Remap.IntegrationTests
                     Username = account.Username,
                     Password = account.Password
                 },
-                new HttpClient(new HttpClientHandler()
-                {
-                    AutomaticDecompression = DecompressionMethods.GZip
-                }, true)
+                new HttpClient(CreateDefaultHandler(), true)
             );
         }
 
@@ -51,8 +48,33 @@ namespace Confiti.MoySklad.Remap.IntegrationTests
 
         #region Methods
 
+        public static async Task InterceptBeforeSendingAsync<TApi>(TApi api, Func<TApi, Task> action, Func<HttpRequestMessage, Task<HttpResponseMessage>> beforeSend)
+            where TApi : ApiAccessor
+        {
+            ArgumentNullException.ThrowIfNull(api);
+            ArgumentNullException.ThrowIfNull(action);
+
+            var prevClient = api.Client;
+
+            api.Client = new HttpClient(
+                new MockHandler(CreateDefaultHandler(),
+                beforeSend),
+                true
+            );
+
+            try
+            {
+                await action(api);
+            }
+            finally
+            {
+                api.Client.Dispose();
+                api.Client = prevClient;
+            }
+        }
+
         public void AddSampleEntity<T>(T entity, Func<T, Task> clearAction = null)
-            where T : MetaEntity
+                    where T : MetaEntity
         {
             _sampleEntities.Add(new SampleEntity<T>(entity, clearAction));
         }
@@ -117,22 +139,6 @@ namespace Confiti.MoySklad.Remap.IntegrationTests
             return createdEntity;
         }
 
-        public async Task<TEntity> GetOrCreateSampleEntityAsync<TEntity, TEntityBuilder, TEntitiesBuilder>(
-            EntityApiAccessor<TEntity, TEntityBuilder, TEntitiesBuilder> api, Func<TEntity, Task> init = null, bool autoDelete = true)
-            where TEntity : MetaEntity, new()
-            where TEntityBuilder : ApiParameterBuilder, new()
-            where TEntitiesBuilder : ApiParameterBuilder, new()
-        {
-            var sample = _sampleEntities
-                .OfType<ISampleEntity<TEntity>>()
-                .FirstOrDefault();
-
-            if (sample == null)
-                return await CreateSampleEntityAsync(api, init, autoDelete);
-
-            return sample.Entity;
-        }
-
         public async ValueTask DisposeAsync()
         {
             var exceptions = new List<Exception>();
@@ -176,6 +182,34 @@ namespace Confiti.MoySklad.Remap.IntegrationTests
 
             return sample.Entity;
         }
+
+        public async Task<TEntity> GetOrCreateSampleEntityAsync<TEntity, TEntityBuilder, TEntitiesBuilder>(
+            EntityApiAccessor<TEntity, TEntityBuilder, TEntitiesBuilder> api, Func<TEntity, Task> init = null, bool autoDelete = true)
+            where TEntity : MetaEntity, new()
+            where TEntityBuilder : ApiParameterBuilder, new()
+            where TEntitiesBuilder : ApiParameterBuilder, new()
+        {
+            var sample = _sampleEntities
+                .OfType<ISampleEntity<TEntity>>()
+                .FirstOrDefault();
+
+            if (sample == null)
+                return await CreateSampleEntityAsync(api, init, autoDelete);
+
+            return sample.Entity;
+        }
+
+        #region Utilities
+
+        private static HttpMessageHandler CreateDefaultHandler()
+        {
+            return new HttpClientHandler()
+            {
+                AutomaticDecompression = DecompressionMethods.GZip
+            };
+        }
+
+        #endregion Utilities
 
         #endregion Methods
 

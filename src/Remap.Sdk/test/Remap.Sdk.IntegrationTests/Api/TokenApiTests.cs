@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using Confiti.MoySklad.Remap.Api;
 using Confiti.MoySklad.Remap.Client;
@@ -30,23 +33,43 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
         }
 
         [Test]
-        public async Task GetAsync_with_invalid_password_should_throw_api_exception()
+        public async Task GetAsync_with_expicit_basic_credentials_should_call_with_new_credentials()
+        {
+            var newCredentials = new MoySkladCredentials
+            {
+                Username = "foo",
+                Password = "bar",
+            };
+
+            AuthenticationHeaderValue authHeader = null;
+
+            await Pipeline.InterceptBeforeSendingAsync(_subject, 
+                api => api.GetAsync(newCredentials),
+                request =>
+                {
+                    authHeader = request.Headers.Authorization;
+                    return Task.FromResult(new HttpResponseMessage());
+                }
+            );
+
+            authHeader.Scheme.Should().Be("Basic");
+
+            var credentialsData = Encoding.UTF8.GetBytes($"{newCredentials.Username}:{newCredentials.Password}");
+            var convertedCredentialsData = Convert.ToBase64String(credentialsData);
+            authHeader.Parameter.Should().Be(convertedCredentialsData);
+        }
+
+        [Test]
+        public async Task GetAsync_with_invalid_password_should_throw_exception()
         {
             var oldPassword = _subject.Credentials.Password;
 
             _subject.Credentials.Password = null;
 
             Func<Task> getAccessToken = () => _subject.GetAsync();
-            var apiException = await getAccessToken.Should().ThrowAsync<MoySkladException>();
+            await getAccessToken.Should().ThrowAsync<MoySkladException>();
 
-            try
-            {
-                apiException.And.ErrorCode.Should().Be(401);
-            }
-            finally
-            {
-                _subject.Credentials.Password = oldPassword;
-            }
+            _subject.Credentials.Password = oldPassword;
         }
 
         #endregion Methods

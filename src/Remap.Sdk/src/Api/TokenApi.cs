@@ -28,11 +28,39 @@ namespace Confiti.MoySklad.Remap.Api
         #region Methods
 
         /// <summary>
-        /// Gets the access token by credentials from the API configuration.
+        /// Gets the access token by credentials (if null, the <see cref="MoySkladApi.Credentials"/> are used).
         /// </summary>
+        /// <param name="credentials">The credentials, if value is null, default credentials ​​are used (<see cref="MoySkladApi.Credentials"/>).</param>
         /// <returns>The <see cref="Task"/> containing the API response with <see cref="GetTokenResponse"/>.</returns>
-        public virtual Task<ApiResponse<GetTokenResponse>> GetAsync() => CallAsync<GetTokenResponse>(new RequestContext(HttpMethod.Post));
+        public virtual async Task<ApiResponse<GetTokenResponse>> GetAsync(MoySkladCredentials credentials = null)
+        {
+            if (credentials != null)
+                CheckBasicAuthCredentials(credentials);
+            else
+            {
+                if (Credentials == null)
+                    throw new MoySkladException("No credentials provided.");
+
+                CheckBasicAuthCredentials(Credentials);
+            }
+
+            return await CallAsync<GetTokenResponse>(new RequestContext(HttpMethod.Post).WithCredentials(credentials))
+                .ConfigureAwait(false);
+        }
 
         #endregion Methods
+
+        #region Utilities
+
+        private void CheckBasicAuthCredentials(MoySkladCredentials credentials)
+        {
+            if (string.IsNullOrEmpty(credentials.Username))
+                throw new MoySkladException($"{nameof(credentials.Username)} should not be null or empty.");
+
+            if (string.IsNullOrEmpty(credentials.Password))
+                throw new MoySkladException($"{nameof(credentials.Password)} should not be null or empty.");
+        }
+
+        #endregion Utilities
     }
 }

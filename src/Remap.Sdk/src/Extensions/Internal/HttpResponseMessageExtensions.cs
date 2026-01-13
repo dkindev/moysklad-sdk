@@ -31,7 +31,13 @@ namespace System.Net.Http
             if (type == null)
                 throw new ArgumentNullException(nameof(type));
 
-            using (var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
+            var content = response.Content;
+            var headers = content.Headers;
+
+            if (headers?.ContentType == null || headers.ContentLength == 0)
+                return null;
+
+            using (var stream = await content.ReadAsStreamAsync().ConfigureAwait(false))
             {
                 if (type == typeof(Stream))
                 {
@@ -41,7 +47,7 @@ namespace System.Net.Http
                     return memStream;
                 }
 
-                if (response.Content.Headers.ContentType.MediaType.Contains("application/json"))
+                if (headers.ContentType.MediaType.Contains("application/json"))
                 {
                     return await JsonSerializerHelper
                         .ReadFromStreamAsync(stream, type)

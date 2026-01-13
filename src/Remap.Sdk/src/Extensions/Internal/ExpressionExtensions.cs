@@ -55,9 +55,8 @@ namespace Confiti.MoySklad.Remap.Extensions
             for (var i = 0; i < members.Count; i++)
             {
                 var member = members[i];
-                var filter = member.GetFilter();
-                if (filter == null)
-                    throw new MoySkladException(400, $"Filter by member '{member.Name}' isn't available.");
+                var filter = member.GetFilter() 
+                    ?? throw new MoySkladException(400, $"Filter by member '{member.Name}' isn't available.");
 
                 if (!filter.AllowNesting && members.Count - 1 > i)
                     throw new MoySkladException(400, $"Filter by member '{member.Name}' is invalid. Filter nesting level should be {i + 1}.");
