@@ -57,7 +57,26 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
         [Test]
         public async Task GetByOperationAsync_should_return_status_code_200()
         {
-            var supply = await GetOrCreateSupplyAsync();
+            var supply = await Pipeline.Instance.GetOrCreateSampleEntityAsync(
+                Pipeline.Instance.Api.Entity.Supply,
+                async entity =>
+                {
+                    entity.Organization = await Pipeline.Instance.GetDefaultOrganizationAsync();
+                    entity.Agent = await Pipeline.Instance.GetOrCreateSampleEntityAsync(Pipeline.Instance.Api.Entity.Counterparty);
+                    entity.Store = await Pipeline.Instance.GetOrCreateSampleEntityAsync(Pipeline.Instance.Api.Entity.Store);
+                    entity.Positions.Rows = new[]
+                    {
+                        new SupplyPosition
+                        {
+                            Quantity = 10,
+                            Price = 100,
+                            Overhead = 5,
+                            Assortment = await Pipeline.Instance.CreateSampleEntityAsync(Pipeline.Instance.Api.Entity.Product)
+                        }
+                    };
+                }
+            );
+
             supply.Should().NotBeNull();
             supply.Id.Should().NotBeNull();
 
@@ -82,10 +101,10 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
         [Test]
         public async Task GetCurrentBySlotAsync_should_return_status_code_200()
         {
-            var supply = await GetOrCreateSupplyAsync();
+            var store = await Pipeline.Instance.GetOrCreateSampleEntityAsync(Pipeline.Instance.Api.Entity.Store);
             var response = await _subject.GetCurrentBySlotAsync(query =>
             {
-                query.FilterBy(p => p.StoreId).Should().Be(supply.Store.GetId().Value);
+                query.FilterBy(p => p.StoreId).Should().Be(store.GetId().Value);
             });
             response.StatusCode.Should().Be(200);
         }
@@ -105,32 +124,5 @@ namespace Confiti.MoySklad.Remap.IntegrationTests.Api
         }
 
         #endregion Methods
-
-        #region Utilities
-
-        private Task<Supply> GetOrCreateSupplyAsync()
-        {
-            return Pipeline.Instance.GetOrCreateSampleEntityAsync(
-                Pipeline.Instance.Api.Entity.Supply,
-                async entity =>
-                {
-                    entity.Organization = await Pipeline.Instance.GetDefaultOrganizationAsync();
-                    entity.Agent = await Pipeline.Instance.GetOrCreateSampleEntityAsync(Pipeline.Instance.Api.Entity.Counterparty);
-                    entity.Store = await Pipeline.Instance.GetOrCreateSampleEntityAsync(Pipeline.Instance.Api.Entity.Store);
-                    entity.Positions.Rows = new[]
-                    {
-                        new SupplyPosition
-                        {
-                            Quantity = 10,
-                            Price = 100,
-                            Overhead = 5,
-                            Assortment = await Pipeline.Instance.CreateSampleEntityAsync(Pipeline.Instance.Api.Entity.Product)
-                        }
-                    };
-                }
-            );
-        }
-
-        #endregion Utilities
     }
 }
